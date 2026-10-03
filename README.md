@@ -6,13 +6,13 @@
   **Personal finance, on autopilot.**
   Web dashboard + WhatsApp bot + AI agent that log, understand, and explain your expenses for you.
 
-  [![Status](https://img.shields.io/badge/status-in%20development-orange)](#-project-status)
+  [![Edition](https://img.shields.io/badge/edition-public%20showcase-blueviolet)](#-about-this-repository)
   [![API](https://img.shields.io/badge/api-FastAPI%20%2B%20Python%203.12-009688)](#-tech-stack)
   [![Frontend](https://img.shields.io/badge/frontend-Angular%2019%20PWA-DD0031)](#-tech-stack)
   [![Database](https://img.shields.io/badge/database-PostgreSQL%2016%20%2B%20pgvector-336791)](#-tech-stack)
-  [![License](https://img.shields.io/badge/license-private-lightgrey)](#)
+  [![License](https://img.shields.io/badge/license-all%20rights%20reserved-lightgrey)](#-license)
 
-  [Overview](#-overview) · [Features](#-key-differentiators) · [Tech stack](#-tech-stack) · [Getting started](#-getting-started) · [Docs](#-documentation)
+  [Overview](#-overview) · [Features](#-key-differentiators) · [Tech stack](#-tech-stack) · [Architecture](#-architecture) · [Getting started](#-getting-started) · [License](#-license)
 </div>
 
 ---
@@ -21,7 +21,9 @@
 
 Tell Amezia *"spent 50 on groceries"* — by text, voice, or WhatsApp — and it categorizes, saves, and confirms the expense automatically. The AI agent knows the user's real financial history and answers with context, without ever needing to be re-explained who they are.
 
-> 📄 Full product spec: [`prd.md`](./prd.md)
+### 📌 About this repository
+
+This is the **public showcase edition** of Amezia, a personal-finance platform that runs in production. It is a simplified copy of the codebase, published so the architecture and engineering decisions can be reviewed: Clean Architecture/DDD on the API, RAG over pgvector embeddings, an async job queue, and a feature-based Angular PWA. Deployment pipelines and internal documentation are intentionally not included.
 
 ## ✨ Key differentiators
 
@@ -67,12 +69,33 @@ amezia/
 ├── infra/
 │   ├── nginx/               # nginx.conf, routing for /api, /ws, /*
 │   └── docker/               # Dockerfiles for api/worker/frontend
+├── screem/                  # HTML prototypes of the main screens
 ├── docker-compose.yml
 ├── turbo.json
 └── package.json
 ```
 
-`apps/api` follows Clean Architecture (`domain/` → `application/` → `infrastructure/` → `presentation/`). `apps/web` follows a feature-based architecture (`core/`, `shared/`, `layout/`, `features/*`) where each feature maps 1:1 to a backend bounded context. Details in [`memory-bank/systemPatterns.md`](./memory-bank/systemPatterns.md).
+## 🧱 Architecture
+
+`apps/api` follows Clean Architecture, with one package per bounded context (auth, categories, transactions, conversations, reports, subscriptions, WhatsApp bot, admin, ...):
+
+```
+presentation/   →   application/   →   domain/   ←   infrastructure/
+(routers, schemas)  (use cases)        (entities,     (SQLAlchemy repos, AI clients,
+                                        value objects, Redis, Stripe, Evolution,
+                                        ports)         security)
+```
+
+- **Routers hold no business logic.** They validate input with Pydantic and call a use case.
+- **Use cases orchestrate the domain** and depend only on ports (interfaces), never on HTTP or SQLAlchemy directly.
+- **Everything is async:** `AsyncSession` with `asyncpg`, plus an ARQ worker for AI calls, WhatsApp and other heavy I/O.
+- **RAG with pgvector:** transactions, categories and conversation messages are embedded and indexed; the agent retrieves the most relevant context by similarity before answering.
+- **Webhooks answer immediately** and push the real work to the queue; message processing is idempotent.
+- **Data isolation and privacy:** every query on user data is filtered by `user_id`; sensitive fields (phone, descriptions, titles, summaries) are encrypted at rest with Fernet, and phones are indexed through a keyed HMAC.
+- **Stateless auth:** short-lived JWT access tokens and a refresh token in an `HttpOnly` cookie.
+- **Schema is owned by Alembic:** a single linear migration chain for the whole project.
+
+`apps/web` follows a feature-based architecture (`core/`, `shared/`, `layout/`, `features/*`), where each feature maps 1:1 to a backend bounded context and uses standalone components with Signals.
 
 ## 🚀 Getting started
 
@@ -92,6 +115,8 @@ pnpm dev
 docker compose up --build
 ```
 
+Before starting, fill in the secrets in `.env`. The template documents how to generate each one (`JWT_SECRET`, `AES_ENCRYPTION_KEY`, `PHONE_HASH_SECRET`). AI, WhatsApp, e-mail and storage keys are optional for local development and enable the matching features when provided.
+
 The Docker stack serves everything through `nginx` on `http://localhost:${NGINX_PORT:-8080}` (`/api/*` and `/ws` → API, `/*` → frontend). The default port is `8080`, not `80`, to avoid clashing with a system-level web server — override `NGINX_PORT` in `.env` if you want a different one.
 
 ## 📜 Available scripts
@@ -105,41 +130,34 @@ Root scripts fan out to every workspace via Turborepo:
 | `pnpm test` | Test all apps/packages (`turbo run test`, cached) |
 | `pnpm dev` | Run all apps in dev mode (`turbo run dev`, not cached) |
 
-## 📈 Project status
+Backend tests live in [`apps/api/tests`](./apps/api/tests) and cover auth, categories, transactions, conversations, reports, subscriptions, feedback, admin and the WhatsApp bot.
 
-All 9 MVP1 modules are complete end-to-end (backend + frontend + tests + browser validation):
+## 📈 Included modules
 
-| # | Module | Spec | Status |
-|---|---|---|---|
-| 6.1 | Foundation (monorepo, Docker, Nginx, Clean Architecture) | [`build-context-00`](./build-contexts/build-context-00-foundation.md) | ✅ Done |
-| 6.2 | Auth (JWT, Google OAuth2, profile language) | [`build-context-01`](./build-contexts/build-context-01-auth.md) | ✅ Done |
-| 6.3 | Categories (global + private) | [`build-context-02`](./build-contexts/build-context-02-categories.md) | ✅ Done |
-| 6.4 | Transactions (CRUD, budget cap, installments, receipts) | [`build-context-03`](./build-contexts/build-context-03-transactions.md) | ✅ Done |
-| 6.5 | AI Agent / Chat (RAG via pgvector) | [`build-context-04`](./build-contexts/build-context-04-agent.md) | ✅ Done |
-| 6.6 | Reports (CSV + AI narrative) | [`build-context-05`](./build-contexts/build-context-05-reports.md) | ✅ Done |
-| 6.7 | Admin + Evolution API | [`build-context-06`](./build-contexts/build-context-06-admin-evolution.md) | ✅ Done |
-| 6.8 | WhatsApp bot (5 conversational states) | [`build-context-07`](./build-contexts/build-context-07-whatsapp-bot.md) | ✅ Done |
-| 6.9 | Feedback (web + bot) | [`build-context-08`](./build-contexts/build-context-08-feedback.md) | ✅ Done |
+| # | Module | Highlights |
+|---|---|---|
+| 1 | Foundation | Monorepo, Docker, Nginx, Clean Architecture |
+| 2 | Auth | JWT, Google OAuth2, profile language |
+| 3 | Categories | Global + private categories |
+| 4 | Transactions | CRUD, budget cap, installments, receipts |
+| 5 | AI Agent / Chat | RAG via pgvector |
+| 6 | Reports | CSV export + AI narrative |
+| 7 | Admin + Evolution API | Back-office and WhatsApp instance management |
+| 8 | WhatsApp bot | Five conversational states |
+| 9 | Feedback | Web + bot |
 
-Plus a guided onboarding flow (spotlight tour + first-steps checklist) shipped outside the original 9 build-contexts.
+Plus a guided onboarding flow (spotlight tour + first-steps checklist).
 
-Full module-by-module status: [`memory-bank/progress.md`](./memory-bank/progress.md).
+## 📜 License
 
-## 📚 Documentation
+Copyright © 2026 Carlos Adriano Sodré Araújo. **All rights reserved.**
 
-| Document | Purpose |
-|---|---|
-| [`prd.md`](./prd.md) | Full product requirements document |
-| [`memory-bank/`](./memory-bank/) | Living architecture/context docs (brief, product, system patterns, tech context, progress, active context) |
-| [`build-contexts/`](./build-contexts/) | Per-module implementation specs (00–08), each with a task checklist |
-| [`DIARIO.md`](./DIARIO.md) | Chronological log of technical decisions and lessons learned — written to teach, not just record: entries covering new tech/architecture include an in-depth "concepts and technologies" walkthrough (what it is, why it was chosen, how it's used in the actual code), not just a summary of what changed |
-| [`GUIA_TECNICO.md`](./GUIA_TECNICO.md) | Subject-organized technical reference (architecture, infra, security, etc.) |
-| [`CLAUDE.md`](./CLAUDE.md) | Project rules for AI-assisted development |
-
-> Documentation, `prd.md`, `build-contexts/`, `memory-bank/`, and `DIARIO.md` are written in Portuguese (PT-BR) — see the language convention in `prd.md` §4.1. Source code, logs, and the database stay in English regardless.
+The source code is published for evaluation and educational reading. It may not be copied, redistributed, or used commercially without written permission. See [`LICENSE`](./LICENSE).
 
 ---
 
 <div align="center">
   <sub>Built with FastAPI, Angular, and a bit of pgvector magic.</sub>
+  <br/>
+  <sub>By <a href="https://www.linkedin.com/in/carlosadrianosodrearaujo6464">Carlos Adriano Sodré Araújo</a></sub>
 </div>
