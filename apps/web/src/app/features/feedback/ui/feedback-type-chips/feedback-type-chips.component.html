@@ -1,0 +1,16 @@
+<div class="type-chips">
+  @for (type of types; track type) {
+    <button
+      type="button"
+      class="type-chip"
+      [class.sel]="selected() === type"
+      [class.praise]="selected() === type && type === 'praise'"
+      [class.suggestion]="selected() === type && type === 'suggestion'"
+      [class.bug]="selected() === type && type === 'bug'"
+      [class.other]="selected() === type && type === 'other'"
+      (click)="select(type)"
+    >
+      {{ 'feedback.type.' + type + '.label' | transloco }}
+    </button>
+  }
+</div>

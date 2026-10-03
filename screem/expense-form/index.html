@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia · Nova despesa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+ul{list-style:none}
+button,a{font-family:inherit;cursor:pointer;text-decoration:none}
+
+/* ══ TOKENS ══ */
+:root{
+  --bg:#070b12;--bg-card:#0d1526;--bg-elev:#111c30;--bg-sidebar:#09101f;
+  --t1:#f0f4ff;--t2:#8899bb;--t3:#4a5878;
+  --accent:#6366f1;--acc-l:#818cf8;--acc-s:rgba(99,102,241,.1);
+  --bdr:rgba(255,255,255,.07);--bdr-s:rgba(255,255,255,.11);
+  --green:#10b981;--red:#f43f5e;--amber:#f59e0b;--blue:#60a5fa;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+  --sb-w:220px;--radius:.85rem;
+}
+[data-theme="light"]{
+  --bg:#f0f4f8;--bg-card:#ffffff;--bg-elev:#f8fafc;--bg-sidebar:#ffffff;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --bdr:rgba(15,23,42,.08);--bdr-s:rgba(15,23,42,.13);--acc-s:rgba(99,102,241,.08);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;line-height:1.5}
+
+/* ══ APP SHELL ══ */
+.app{display:flex;min-height:100vh}
+
+/* ══ SIDEBAR ══ */
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sb-w);background:var(--bg-sidebar);border-right:1px solid var(--bdr);display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+.sb-brand{display:flex;align-items:center;gap:.65rem;padding:1.1rem 1.1rem .9rem;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.sb-mark{width:1.9rem;height:1.9rem;border-radius:.55rem;background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(96,165,250,.12));border:1px solid rgba(99,102,241,.22);display:flex;align-items:center;justify-content:center;color:var(--acc-l);flex-shrink:0}
+.sb-name{font-size:.88rem;font-weight:800;letter-spacing:-.02em;color:var(--t1)}
+.sb-sub{font-size:.57rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)}
+.sb-nav{flex:1;padding:.65rem .7rem}
+.sb-section{margin-bottom:1.1rem}
+.sb-lbl{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:.2rem .5rem;margin-bottom:.25rem}
+.sb-item{display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border-radius:.6rem;font-size:.82rem;font-weight:500;color:var(--t2);transition:all .15s;border:1px solid transparent}
+.sb-item:hover{background:var(--acc-s);color:var(--t1)}
+.sb-item.active{background:var(--acc-s);color:var(--acc-l);border-color:rgba(99,102,241,.18)}
+.sb-item svg{width:.95rem;height:.95rem;flex-shrink:0;opacity:.65}
+.sb-item.active svg,.sb-item:hover svg{opacity:1}
+.sb-foot{padding:.8rem 1rem;border-top:1px solid var(--bdr);display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.sb-avatar{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:#fff;flex-shrink:0}
+.sb-uname{font-size:.75rem;font-weight:600;color:var(--t1)}
+.sb-uemail{font-size:.62rem;color:var(--t3);max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ══ MAIN ══ */
+.main{margin-left:var(--sb-w);flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* ══ TOPBAR ══ */
+.topbar{position:sticky;top:0;z-index:90;background:var(--bg);border-bottom:1px solid var(--bdr);padding:.65rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem}
+.page-title-tb{font-size:.95rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+.topbar-right{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.tb-avatar{width:2rem;height:2rem;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff}
+.icon-btn{width:2rem;height:2rem;border-radius:.55rem;border:1px solid var(--bdr-s);background:transparent;color:var(--t2);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.icon-btn:hover{background:var(--acc-s);color:var(--acc-l)}
+
+/* ══ MOB TOPBAR ══ */
+.mob-topbar{display:none;position:sticky;top:0;z-index:90;background:var(--bg-card);border-bottom:1px solid var(--bdr);padding:.65rem .95rem;align-items:center;gap:.75rem}
+.mob-ham{width:2rem;height:2rem;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3.5px}
+.mob-ham span{width:17px;height:2px;background:var(--t1);border-radius:1px;display:block}
+.mob-title{font-size:.95rem;font-weight:800;color:var(--t1);flex:1}
+
+/* ══ PAGE CONTENT ══ */
+.page-content{padding:1.1rem 1.4rem 2.5rem;max-width:1280px;display:flex;flex-direction:column;gap:.75rem}
+
+/* ══ PAGE HEADER ══ */
+.comp-page-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-bottom:.25rem}
+.comp-ph-badge{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:.2rem}
+.comp-ph-title{font-size:1.45rem;font-weight:800;letter-spacing:-.03em;color:var(--t1)}
+.comp-ph-back{display:inline-flex;align-items:center;gap:.45rem;padding:.45rem .9rem;border-radius:.6rem;flex-shrink:0;background:transparent;border:1px solid var(--bdr-s);font-size:.8rem;font-weight:600;color:var(--t2);transition:all .15s}
+.comp-ph-back:hover{background:var(--acc-s);color:var(--acc-l);border-color:rgba(99,102,241,.2)}
+
+/* ══ FORM LAYOUT ══ */
+.form-layout{display:grid;grid-template-columns:1fr 290px;gap:.75rem;align-items:start}
+
+/* ══ MAIN FORM CARD ══ */
+.form-card{background:var(--bg-card);border:1px solid var(--bdr);border-radius:var(--radius)}
+.form-card__header{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;border-bottom:1px solid var(--bdr);border-radius:var(--radius) var(--radius) 0 0}
+.form-card__eyebrow{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:.2rem}
+.form-card__title{font-size:.95rem;font-weight:700;color:var(--t1)}
+.form-card__badge{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .65rem;border-radius:999px;background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.2);font-size:.7rem;font-weight:700;color:var(--red)}
+
+/* ══ FORM FIELDS ══ */
+.form-fields{padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.85rem}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.field{display:flex;flex-direction:column;gap:.35rem}
+.field-label{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3)}
+.field-input{padding:.5rem .75rem;border:1px solid var(--bdr-s);border-radius:.6rem;background:var(--bg-elev);color:var(--t1);font:inherit;font-size:.85rem;outline:none;transition:border-color .15s;width:100%}
+.field-input:focus{border-color:rgba(99,102,241,.45)}
+.field-input::placeholder{color:var(--t3)}
+textarea.field-input{resize:none;line-height:1.55}
+.field-hint{font-size:.67rem;color:var(--t3)}
+.field-error{font-size:.67rem;color:var(--red)}
+
+/* ── Status pills ── */
+.status-pills{display:flex;gap:.4rem}
+.status-pill{
+  flex:1;padding:.4rem .5rem;border-radius:.55rem;
+  border:1px solid var(--bdr-s);background:var(--bg-elev);
+  font-size:.75rem;font-weight:600;color:var(--t2);
+  display:flex;align-items:center;justify-content:center;gap:.3rem;
+  transition:all .15s;cursor:pointer;
+}
+.status-pill.pending.active{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--amber)}
+.status-pill.paid.active{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:var(--green)}
+.status-pill.confirmed.active{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.3);color:var(--acc-l)}
+.status-pill:hover:not(.active){background:var(--acc-s);color:var(--t1);border-color:var(--bdr-s)}
+
+/* ── Payment date (conditional) ── */
+.payment-date-wrap{display:none}
+.payment-date-wrap.visible{display:flex;flex-direction:column;gap:.35rem}
+
+/* ── Category select ── */
+.cat-select-wrap{position:relative}
+.cat-select{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.5rem .75rem;border:1px solid var(--bdr-s);border-radius:.6rem;background:var(--bg-elev);cursor:pointer;transition:border-color .15s}
+.cat-select:hover,.cat-select.open{border-color:rgba(99,102,241,.45)}
+.cat-select-left{display:flex;align-items:center;gap:.6rem;min-width:0}
+.cat-icon{width:1.7rem;height:1.7rem;border-radius:.4rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+.cat-info{min-width:0}
+.cat-name{font-size:.83rem;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat-meta{display:flex;align-items:center;gap:.35rem;margin-top:.05rem}
+.cat-scope-badge{font-size:.6rem;font-weight:700;padding:.1rem .35rem;border-radius:999px}
+.cat-scope-badge.global{background:var(--acc-s);color:var(--acc-l);border:1px solid rgba(99,102,241,.2)}
+.cat-scope-badge.private{background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.2)}
+.cat-scope-desc{font-size:.65rem;color:var(--t3)}
+.cat-select-chevron{color:var(--t3);flex-shrink:0}
+.cat-select-empty{font-size:.83rem;color:var(--t3)}
+.cat-dropdown{position:absolute;z-index:200;margin-top:.3rem;background:var(--bg-card);border:1px solid var(--bdr-s);border-radius:.75rem;box-shadow:0 8px 32px rgba(0,0,0,.4);overflow:hidden;min-width:100%}
+.cat-dropdown-search{padding:.6rem .75rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:.4rem}
+.cat-dropdown-search input{flex:1;border:none;background:transparent;font:inherit;font-size:.8rem;color:var(--t1);outline:none}
+.cat-dropdown-group{padding:.4rem 0}
+.cat-dropdown-lbl{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:.2rem .75rem}
+.cat-dropdown-item{display:flex;align-items:center;gap:.6rem;padding:.45rem .75rem;cursor:pointer;transition:background .1s}
+.cat-dropdown-item:hover{background:var(--acc-s)}
+.cat-dropdown-item .cat-icon{width:1.5rem;height:1.5rem;font-size:.65rem}
+
+/* ── Installments section ── */
+.installments-toggle{display:flex;align-items:center;justify-content:space-between;padding:.65rem .9rem;border-radius:.65rem;border:1px solid var(--bdr-s);background:var(--bg-elev);cursor:pointer;transition:all .15s}
+.installments-toggle:hover{border-color:rgba(99,102,241,.3);background:var(--acc-s)}
+.installments-toggle.active{border-color:rgba(99,102,241,.3);background:rgba(99,102,241,.06)}
+.inst-toggle-left{display:flex;align-items:center;gap:.6rem}
+.inst-toggle-icon{width:1.6rem;height:1.6rem;border-radius:.4rem;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.2);display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0}
+.inst-toggle-label{font-size:.83rem;font-weight:600;color:var(--t1)}
+.inst-toggle-sub{font-size:.67rem;color:var(--t3);margin-top:.05rem}
+.toggle-switch{width:2.2rem;height:1.2rem;border-radius:999px;background:var(--bdr-s);position:relative;transition:background .2s;flex-shrink:0}
+.toggle-switch::after{content:'';position:absolute;top:.15rem;left:.15rem;width:.9rem;height:.9rem;border-radius:50%;background:var(--t3);transition:all .2s}
+.toggle-switch.on{background:var(--accent)}
+.toggle-switch.on::after{left:calc(100% - 1.05rem);background:#fff}
+
+.installments-fields{
+  display:none;flex-direction:column;gap:.75rem;
+  padding:.75rem .9rem;border:1px solid rgba(99,102,241,.2);border-top:none;
+  border-radius:0 0 .65rem .65rem;background:rgba(99,102,241,.04);
+  margin-top:-.4rem;
+}
+.installments-fields.visible{display:flex}
+.installments-fields .form-row-2{grid-template-columns:1fr 1fr}
+.inst-preview{font-size:.72rem;color:var(--t3);padding:.4rem .5rem;background:var(--bg-elev);border-radius:.4rem;border:1px solid var(--bdr-s)}
+.inst-preview strong{color:var(--acc-l)}
+
+/* ── Image upload ── */
+.image-upload-area{
+  border:1.5px dashed var(--bdr-s);border-radius:.65rem;
+  padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem;
+  cursor:pointer;transition:all .15s;background:transparent;
+}
+.image-upload-area:hover{border-color:rgba(99,102,241,.4);background:var(--acc-s)}
+.image-upload-area.has-file{border-style:solid;border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.05)}
+.upload-icon{width:2rem;height:2rem;border-radius:.45rem;background:var(--bg-elev);border:1px solid var(--bdr-s);display:flex;align-items:center;justify-content:center;color:var(--t2);flex-shrink:0}
+.has-file .upload-icon{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.2);color:var(--green)}
+.upload-text{flex:1;min-width:0}
+.upload-label{font-size:.82rem;font-weight:600;color:var(--t2)}
+.has-file .upload-label{color:var(--green)}
+.upload-sub{font-size:.67rem;color:var(--t3);margin-top:.1rem}
+.upload-remove{font-size:.7rem;color:var(--red);background:none;border:none;padding:.1rem .3rem;cursor:pointer;display:none}
+.has-file .upload-remove{display:block}
+.upload-badge{font-size:.63rem;font-weight:700;padding:.1rem .4rem;border-radius:999px;background:var(--bg-elev);border:1px solid var(--bdr-s);color:var(--t3);flex-shrink:0}
+
+/* ══ FORM FOOTER ══ */
+.form-footer{display:flex;align-items:center;justify-content:flex-end;gap:.6rem;padding:.85rem 1.1rem;border-top:1px solid var(--bdr)}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;border-radius:.6rem;font:inherit;font-size:.83rem;font-weight:600;transition:all .15s;border:1px solid transparent}
+.btn-secondary{background:var(--bg-elev);border-color:var(--bdr-s);color:var(--t2)}
+.btn-secondary:hover{background:var(--acc-s);color:var(--acc-l);border-color:rgba(99,102,241,.2)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:var(--acc-l);border-color:var(--acc-l)}
+
+/* ══ ASIDE ══ */
+.aside{display:flex;flex-direction:column;gap:.6rem}
+
+.preview-card{background:var(--bg-card);border:1px solid var(--bdr);border-radius:var(--radius);overflow:hidden}
+.preview-card__head{padding:.75rem 1rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:.5rem}
+.preview-card__eyebrow{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)}
+.preview-card__dot{width:.45rem;height:.45rem;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.35}}
+.preview-card__body{display:flex;flex-direction:column}
+.preview-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.55rem 1rem;border-bottom:1px solid var(--bdr)}
+.preview-row:last-child{border-bottom:none}
+.preview-row-label{font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3)}
+.preview-row-val{font-size:.8rem;font-weight:700;color:var(--t1);text-align:right}
+.preview-row-val.red{color:var(--red);font-size:.9rem}
+.preview-row-val.amber{color:var(--amber)}
+.preview-row-val.green-v{color:var(--green)}
+.preview-cat-wrap{display:flex;align-items:center;gap:.4rem}
+.preview-cat-icon{width:1.25rem;height:1.25rem;border-radius:.3rem;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;flex-shrink:0}
+.preview-cat-name{font-size:.78rem;font-weight:600;color:var(--t1)}
+.preview-row-empty{font-size:.72rem;color:var(--t3);font-style:italic}
+
+/* status badge in preview */
+.preview-status{display:inline-flex;align-items:center;gap:.3rem;padding:.15rem .5rem;border-radius:999px;font-size:.68rem;font-weight:700}
+.preview-status.pending{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
+.preview-status.paid{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+.preview-status.confirmed{background:rgba(99,102,241,.12);color:var(--acc-l);border:1px solid rgba(99,102,241,.25)}
+
+.tips-card{background:var(--bg-card);border:1px solid var(--bdr);border-radius:var(--radius);padding:.75rem 1rem}
+.tips-card__title{font-size:.72rem;font-weight:700;color:var(--t2);margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem}
+.tips-list{display:flex;flex-direction:column;gap:.35rem}
+.tip-item{display:flex;align-items:flex-start;gap:.45rem;font-size:.72rem;color:var(--t3);line-height:1.45}
+.tip-check{color:var(--green);flex-shrink:0;margin-top:.1rem}
+
+/* ══ FORM ALERT ══ */
+.form-alert{display:flex;align-items:center;gap:.55rem;padding:.65rem .85rem;margin:.5rem 1.1rem 0;background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2);border-radius:.55rem;font-size:.78rem;color:var(--red)}
+
+/* ══ MOBILE PREVIEW STRIP ══ */
+.mob-preview{display:none}
+.mob-preview-card{background:var(--bg-card);border:1px solid var(--bdr);border-radius:var(--radius);padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+.mob-preview-item{text-align:center}
+.mob-preview-label{font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:.2rem}
+.mob-preview-val{font-size:.82rem;font-weight:700;color:var(--t1)}
+.mob-preview-val.red{color:var(--red)}
+
+/* prototype badge */
+.proto-badge{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:999;display:flex;align-items:center;gap:.5rem;padding:.4rem .9rem;border-radius:999px;background:rgba(9,16,31,.92);border:1px solid rgba(99,102,241,.3);font-size:.68rem;font-weight:700;color:var(--acc-l);white-space:nowrap;pointer-events:none}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:900px){
+  .form-layout{grid-template-columns:1fr}
+  .aside{display:none}
+  .mob-preview{display:block}
+}
+@media(max-width:700px){
+  :root{--sb-w:0px}
+  .sidebar,.topbar{display:none}
+  .main{margin-left:0}
+  .mob-topbar{display:flex}
+  .page-content{padding:.75rem .9rem 2rem;gap:.65rem}
+  .comp-ph-title{font-size:1.2rem}
+  .comp-ph-back{font-size:.75rem;padding:.38rem .7rem}
+  .form-row-2{grid-template-columns:1fr}
+  .status-pills{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-mark"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <div><div class="sb-name">Amezia</div><div class="sb-sub">Expense Intelligence</div></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-lbl">Principal</div>
+      <a href="#" class="sb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+      <a href="#" class="sb-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Despesas</a>
+      <a href="#" class="sb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Categorias</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-lbl">Inteligência</div>
+      <a href="#" class="sb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>Agente IA</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-lbl">Sistema</div>
+      <a href="#" class="sb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configurações</a>
+    </div>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-avatar">CA</div>
+    <div><div class="sb-uname">Carlos Adriano S...</div><div class="sb-uemail">usuario@exemplo.com</div></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="page-title-tb">Despesas</div>
+    <div class="topbar-right">
+      <button class="icon-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+      <button class="icon-btn" id="theme-btn">
+        <svg id="ico-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="ico-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display:none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <div class="tb-avatar">CA</div>
+    </div>
+  </div>
+
+  <div class="mob-topbar">
+    <button class="mob-ham"><span></span><span></span><span></span></button>
+    <div class="mob-title">Nova despesa</div>
+    <div class="sb-avatar" style="width:1.9rem;height:1.9rem;font-size:.65rem">CA</div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- PAGE HEADER -->
+    <div class="comp-page-header">
+      <div>
+        <div class="comp-ph-badge">Despesas</div>
+        <h1 class="comp-ph-title">Nova despesa</h1>
+      </div>
+      <a href="#" class="comp-ph-back">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar para despesas
+      </a>
+    </div>
+
+    <!-- MOBILE PREVIEW STRIP -->
+    <div class="mob-preview">
+      <div class="mob-preview-card">
+        <div class="mob-preview-item"><div class="mob-preview-label">Categoria</div><div class="mob-preview-val" id="mob-cat">—</div></div>
+        <div class="mob-preview-item"><div class="mob-preview-label">Valor</div><div class="mob-preview-val red" id="mob-val">R$ 0,00</div></div>
+        <div class="mob-preview-item"><div class="mob-preview-label">Status</div><div class="mob-preview-val" id="mob-status">Pendente</div></div>
+      </div>
+    </div>
+
+    <div class="form-layout">
+      <!-- MAIN FORM CARD -->
+      <div class="form-card">
+        <div class="form-card__header">
+          <div>
+            <div class="form-card__eyebrow">Lançamento manual</div>
+            <div class="form-card__title">Dados da despesa</div>
+          </div>
+          <div class="form-card__badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+            Despesa
+          </div>
+        </div>
+
+        <div class="form-fields">
+
+          <!-- Descrição -->
+          <div class="field">
+            <label class="field-label" for="f-desc">Descrição</label>
+            <textarea id="f-desc" class="field-input" rows="2" placeholder="Ex.: Compra de teclado novo para o time"></textarea>
+            <span class="field-hint">Uma boa descrição melhora a busca e os relatórios.</span>
+          </div>
+
+          <!-- Valor + Data da despesa -->
+          <div class="form-row-2">
+            <div class="field">
+              <label class="field-label" for="f-val">Valor</label>
+              <input id="f-val" type="text" class="field-input" placeholder="R$ 0,00" oninput="syncVal(this)">
+              <span class="field-error" id="err-val" style="display:none">Informe um valor maior que zero.</span>
+            </div>
+            <div class="field">
+              <label class="field-label" for="f-date">Data da despesa</label>
+              <div style="position:relative">
+                <input id="f-date" type="text" class="field-input" value="14/06/2026" style="padding-right:2.2rem">
+                <svg style="position:absolute;right:.7rem;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status + Data de pagamento -->
+          <div class="form-row-2" style="align-items:start">
+            <div class="field">
+              <div class="field-label">Status</div>
+              <div class="status-pills">
+                <button type="button" class="status-pill pending" onclick="setStatus('pending')">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Pendente
+                </button>
+                <button type="button" class="status-pill paid" onclick="setStatus('paid')">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Pago
+                </button>
+                <button type="button" class="status-pill confirmed" onclick="setStatus('confirmed')">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/><polyline points="20 11 9 22 4 17"/></svg>
+                  Confirmado
+                </button>
+              </div>
+            </div>
+            <div class="payment-date-wrap" id="payment-date-wrap">
+              <label class="field-label" for="f-payment-date">Data de pagamento</label>
+              <div style="position:relative">
+                <input id="f-payment-date" type="text" class="field-input" value="14/06/2026" style="padding-right:2.2rem">
+                <svg style="position:absolute;right:.7rem;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categoria -->
+          <div class="field">
+            <div class="field-label">Categoria</div>
+            <div class="cat-select-wrap">
+              <div class="cat-select" id="cat-trigger" onclick="toggleCatDropdown()">
+                <div class="cat-select-left" id="cat-selected-display">
+                  <span class="cat-select-empty">Selecione uma categoria de despesa</span>
+                </div>
+                <svg class="cat-select-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="cat-dropdown" id="cat-dropdown" style="display:none">
+                <div class="cat-dropdown-search">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input type="text" placeholder="Buscar categoria">
+                </div>
+                <div class="cat-dropdown-group">
+                  <div class="cat-dropdown-lbl">Privadas</div>
+                  <div class="cat-dropdown-item" onclick="selectCat('Saúde','#10b981','private','Sa')"><div class="cat-icon" style="background:rgba(16,185,129,.15);color:#10b981">Sa</div><div><div style="font-size:.8rem;font-weight:600">Saúde</div><div class="cat-meta"><span class="cat-scope-badge private">Privada</span><span class="cat-scope-desc">Disponível apenas para você.</span></div></div></div>
+                  <div class="cat-dropdown-item" onclick="selectCat('Lazer','#f59e0b','private','La')"><div class="cat-icon" style="background:rgba(245,158,11,.15);color:#f59e0b">La</div><div><div style="font-size:.8rem;font-weight:600">Lazer</div><div class="cat-meta"><span class="cat-scope-badge private">Privada</span><span class="cat-scope-desc">Disponível apenas para você.</span></div></div></div>
+                </div>
+                <div class="cat-dropdown-group" style="border-top:1px solid var(--bdr)">
+                  <div class="cat-dropdown-lbl">Globais</div>
+                  <div class="cat-dropdown-item" onclick="selectCat('Alimentação','#6366f1','global','Al')"><div class="cat-icon" style="background:rgba(99,102,241,.15);color:#6366f1">Al</div><div><div style="font-size:.8rem;font-weight:600">Alimentação</div><div class="cat-meta"><span class="cat-scope-badge global">Global</span><span class="cat-scope-desc">Disponível para todo o workspace.</span></div></div></div>
+                  <div class="cat-dropdown-item" onclick="selectCat('Transporte','#818cf8','global','Tr')"><div class="cat-icon" style="background:rgba(129,140,248,.15);color:#818cf8">Tr</div><div><div style="font-size:.8rem;font-weight:600">Transporte</div><div class="cat-meta"><span class="cat-scope-badge global">Global</span><span class="cat-scope-desc">Disponível para todo o workspace.</span></div></div></div>
+                  <div class="cat-dropdown-item" onclick="selectCat('Tecnologia','#a78bfa','global','Te')"><div class="cat-icon" style="background:rgba(167,139,250,.15);color:#a78bfa">Te</div><div><div style="font-size:.8rem;font-weight:600">Tecnologia</div><div class="cat-meta"><span class="cat-scope-badge global">Global</span><span class="cat-scope-desc">Disponível para todo o workspace.</span></div></div></div>
+                </div>
+              </div>
+            </div>
+            <span class="field-hint">Categorias globais e suas categorias privadas.</span>
+            <span class="field-error" id="err-cat" style="display:none">Selecione uma categoria para classificar a despesa.</span>
+          </div>
+
+          <!-- Parcelado / Recorrente -->
+          <div>
+            <div class="installments-toggle" id="inst-toggle" onclick="toggleInstallments()">
+              <div class="inst-toggle-left">
+                <div class="inst-toggle-icon">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div>
+                  <div class="inst-toggle-label">Parcelado / Recorrente</div>
+                  <div class="inst-toggle-sub" id="inst-toggle-sub">Ative para criar múltiplos lançamentos</div>
+                </div>
+              </div>
+              <div class="toggle-switch" id="toggle-switch"></div>
+            </div>
+            <div class="installments-fields" id="inst-fields">
+              <div class="form-row-2">
+                <div class="field">
+                  <label class="field-label" for="f-installments">Nº de parcelas</label>
+                  <input id="f-installments" type="number" class="field-input" value="2" min="2" max="60" oninput="updateInstPreview()">
+                </div>
+                <div class="field">
+                  <label class="field-label" for="f-freq">Frequência</label>
+                  <select id="f-freq" class="field-input" style="cursor:pointer" oninput="updateInstPreview()">
+                    <option value="monthly" selected>Mensal</option>
+                    <option value="weekly">Semanal</option>
+                    <option value="biweekly">Quinzenal</option>
+                    <option value="yearly">Anual</option>
+                  </select>
+                </div>
+              </div>
+              <div class="inst-preview" id="inst-preview">
+                Serão criados <strong>2 lançamentos</strong> mensais com status <strong>Pendente</strong>, a partir de <strong>14/06/2026</strong>.
+              </div>
+            </div>
+          </div>
+
+          <!-- Upload de imagem -->
+          <div class="field">
+            <div class="field-label">Comprovante <span style="color:var(--t3);font-weight:400;font-size:.65rem;text-transform:none;letter-spacing:0">(opcional)</span></div>
+            <div class="image-upload-area" id="upload-area" onclick="simulateUpload()">
+              <div class="upload-icon" id="upload-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <div class="upload-text">
+                <div class="upload-label" id="upload-label">Anexar comprovante</div>
+                <div class="upload-sub" id="upload-sub">PNG, JPG, PDF até 5 MB — arraste ou clique</div>
+              </div>
+              <div class="upload-badge">Opcional</div>
+              <button type="button" class="upload-remove" id="upload-remove" onclick="removeUpload(event)">✕ Remover</button>
+            </div>
+          </div>
+
+        </div><!-- /form-fields -->
+
+        <div class="form-footer">
+          <a href="#" class="btn btn-secondary">Cancelar</a>
+          <button type="button" class="btn btn-primary">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Salvar despesa
+          </button>
+        </div>
+      </div><!-- /form-card -->
+
+      <!-- ASIDE -->
+      <div class="aside">
+        <div class="preview-card">
+          <div class="preview-card__head">
+            <div class="preview-card__dot"></div>
+            <div class="preview-card__eyebrow">Resumo em tempo real</div>
+          </div>
+          <div class="preview-card__body">
+            <div class="preview-row">
+              <span class="preview-row-label">Categoria</span>
+              <div id="preview-cat"><span class="preview-row-empty">Não selecionada</span></div>
+            </div>
+            <div class="preview-row">
+              <span class="preview-row-label">Data</span>
+              <span class="preview-row-val" id="preview-date">14 de junho de 2026</span>
+            </div>
+            <div class="preview-row">
+              <span class="preview-row-label">Valor</span>
+              <span class="preview-row-val red" id="preview-val">R$ 0,00</span>
+            </div>
+            <div class="preview-row">
+              <span class="preview-row-label">Status</span>
+              <span class="preview-status pending" id="preview-status">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Pendente
+              </span>
+            </div>
+            <div class="preview-row" id="preview-payment-row" style="display:none">
+              <span class="preview-row-label">Pago em</span>
+              <span class="preview-row-val green-v" id="preview-payment">14/06/2026</span>
+            </div>
+            <div class="preview-row" id="preview-inst-row" style="display:none">
+              <span class="preview-row-label">Parcelas</span>
+              <span class="preview-row-val" id="preview-inst">2× mensal</span>
+            </div>
+            <div class="preview-row" id="preview-img-row" style="display:none">
+              <span class="preview-row-label">Comprovante</span>
+              <span class="preview-row-val green-v">✓ Anexado</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tips-card">
+          <div class="tips-card__title">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Antes de salvar
+          </div>
+          <ul class="tips-list">
+            <li class="tip-item"><svg class="tip-check" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Só despesas <strong style="color:var(--green)">Pagas</strong> ou <strong style="color:var(--acc-l)">Confirmadas</strong> entram nos gráficos.</li>
+            <li class="tip-item"><svg class="tip-check" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Use parcelado para TV, assinaturas e compras no crédito.</li>
+            <li class="tip-item"><svg class="tip-check" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Anexe o comprovante para facilitar auditorias futuras.</li>
+          </ul>
+        </div>
+      </div>
+    </div><!-- /form-layout -->
+  </div><!-- /page-content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<div class="proto-badge">
+  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+  Protótipo · screem/expense-form · status · parcelas · imagem · Backblaze
+</div>
+
+<script>
+/* ── theme ── */
+const html = document.documentElement;
+document.getElementById('theme-btn').addEventListener('click', () => {
+  const dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  document.getElementById('ico-moon').style.display = dark ? 'none' : 'block';
+  document.getElementById('ico-sun').style.display  = dark ? 'block' : 'none';
+});
+
+/* ── status ── */
+let currentStatus = 'pending';
+function setStatus(s) {
+  currentStatus = s;
+  document.querySelectorAll('.status-pill').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.status-pill.${s}`).classList.add('active');
+  const pdw = document.getElementById('payment-date-wrap');
+  pdw.classList.toggle('visible', s !== 'pending');
+  const ppr = document.getElementById('preview-payment-row');
+  ppr.style.display = s !== 'pending' ? 'flex' : 'none';
+  const labels = { pending: 'Pendente', paid: 'Pago', confirmed: 'Confirmado' };
+  const icons  = {
+    pending:   '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    paid:      '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    confirmed: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/><polyline points="20 11 9 22 4 17"/></svg>',
+  };
+  const ps = document.getElementById('preview-status');
+  ps.className = `preview-status ${s}`;
+  ps.innerHTML = icons[s] + ' ' + labels[s];
+  document.getElementById('mob-status').textContent = labels[s];
+}
+setStatus('pending');
+
+/* ── category ── */
+let selectedCatData = null;
+function toggleCatDropdown() {
+  const dd = document.getElementById('cat-dropdown');
+  const open = dd.style.display !== 'none';
+  dd.style.display = open ? 'none' : 'block';
+  document.getElementById('cat-trigger').classList.toggle('open', !open);
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.cat-select-wrap')) {
+    document.getElementById('cat-dropdown').style.display = 'none';
+    document.getElementById('cat-trigger').classList.remove('open');
+  }
+});
+function selectCat(name, color, scope, initials) {
+  selectedCatData = { name, color, scope, initials };
+  document.getElementById('cat-dropdown').style.display = 'none';
+  document.getElementById('cat-trigger').classList.remove('open');
+  const badge = scope === 'private'
+    ? `<span class="cat-scope-badge private">Privada</span>`
+    : `<span class="cat-scope-badge global">Global</span>`;
+  const desc = scope === 'private' ? 'Disponível apenas para você.' : 'Disponível para todo o workspace.';
+  document.getElementById('cat-selected-display').innerHTML = `
+    <div class="cat-icon" style="background:${color}26;color:${color}">${initials}</div>
+    <div class="cat-info"><div class="cat-name">${name}</div><div class="cat-meta">${badge}<span class="cat-scope-desc">${desc}</span></div></div>`;
+  document.getElementById('preview-cat').innerHTML = `
+    <div class="preview-cat-wrap">
+      <div class="preview-cat-icon" style="background:${color}26;color:${color}">${initials}</div>
+      <div><div class="preview-cat-name">${name}</div></div>
+    </div>`;
+  document.getElementById('mob-cat').textContent = name;
+}
+
+/* ── value ── */
+function syncVal(input) {
+  const num = parseFloat(input.value.replace(/[^\d,\.]/g,'').replace(',','.')) || 0;
+  const fmt = new Intl.NumberFormat('pt-BR', { style:'currency', currency:'BRL' }).format(num);
+  document.getElementById('preview-val').textContent = fmt;
+  document.getElementById('mob-val').textContent = fmt;
+}
+
+/* ── installments ── */
+let instActive = false;
+function toggleInstallments() {
+  instActive = !instActive;
+  document.getElementById('toggle-switch').classList.toggle('on', instActive);
+  document.getElementById('inst-toggle').classList.toggle('active', instActive);
+  document.getElementById('inst-fields').classList.toggle('visible', instActive);
+  document.getElementById('preview-inst-row').style.display = instActive ? 'flex' : 'none';
+  if (instActive) updateInstPreview();
+}
+const freqLabels = { monthly:'mensal', weekly:'semanal', biweekly:'quinzenal', yearly:'anual' };
+function updateInstPreview() {
+  const n = parseInt(document.getElementById('f-installments').value) || 2;
+  const freq = document.getElementById('f-freq').value;
+  document.getElementById('inst-toggle-sub').textContent = `${n} parcelas · ${freqLabels[freq]}`;
+  document.getElementById('inst-preview').innerHTML =
+    `Serão criados <strong>${n} lançamentos</strong> ${freqLabels[freq]}s com status <strong>Pendente</strong>, a partir de <strong>14/06/2026</strong>.`;
+  document.getElementById('preview-inst').textContent = `${n}× ${freqLabels[freq]}`;
+}
+
+/* ── image upload ── */
+let hasFile = false;
+function simulateUpload() {
+  if (hasFile) return;
+  hasFile = true;
+  const area = document.getElementById('upload-area');
+  area.classList.add('has-file');
+  document.getElementById('upload-label').textContent = 'comprovante_padaria.jpg';
+  document.getElementById('upload-sub').textContent = '234 KB · Imagem enviada com sucesso';
+  document.getElementById('upload-icon').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  document.getElementById('preview-img-row').style.display = 'flex';
+}
+function removeUpload(e) {
+  e.stopPropagation();
+  hasFile = false;
+  const area = document.getElementById('upload-area');
+  area.classList.remove('has-file');
+  document.getElementById('upload-label').textContent = 'Anexar comprovante';
+  document.getElementById('upload-sub').textContent = 'PNG, JPG, PDF até 5 MB — arraste ou clique';
+  document.getElementById('upload-icon').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
+  document.getElementById('preview-img-row').style.display = 'none';
+}
+</script>
+</body>
+</html>

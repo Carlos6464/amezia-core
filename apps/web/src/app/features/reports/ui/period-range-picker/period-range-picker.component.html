@@ -1,0 +1,78 @@
+<div class="comp-fb-period-range">
+  <div class="comp-fb-period-group">
+    <span class="comp-fb-period-label">{{ 'reports.filterBar.from' | transloco }}</span>
+    <button
+      class="comp-fb-arrow"
+      type="button"
+      (click)="moveFrom(-1)"
+      [attr.aria-label]="'reports.dashboard.periodPrevious' | transloco"
+    >
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <p-datepicker
+      [ngModel]="fromDate()"
+      (ngModelChange)="onFromDatePickerChange($event)"
+      view="month"
+      dateFormat="mm/yy"
+      styleClass="comp-fb-month-input"
+      panelStyleClass="comp-fb-month-panel"
+      appendTo="body"
+      [readonlyInput]="true"
+      [attr.aria-label]="fromLabel()"
+    />
+    <button
+      class="comp-fb-arrow"
+      type="button"
+      (click)="moveFrom(1)"
+      [attr.aria-label]="'reports.dashboard.periodNext' | transloco"
+    >
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="comp-fb-range-sep">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
+    </svg>
+  </div>
+
+  <div class="comp-fb-period-group">
+    <span class="comp-fb-period-label">{{ 'reports.filterBar.to' | transloco }}</span>
+    <button
+      class="comp-fb-arrow"
+      type="button"
+      (click)="moveTo(-1)"
+      [attr.aria-label]="'reports.dashboard.periodPrevious' | transloco"
+    >
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <p-datepicker
+      [ngModel]="toDate()"
+      (ngModelChange)="onToDatePickerChange($event)"
+      view="month"
+      dateFormat="mm/yy"
+      styleClass="comp-fb-month-input"
+      panelStyleClass="comp-fb-month-panel"
+      appendTo="body"
+      [readonlyInput]="true"
+      [attr.aria-label]="toLabel()"
+    />
+    <button
+      class="comp-fb-arrow"
+      type="button"
+      (click)="moveTo(1)"
+      [attr.aria-label]="'reports.dashboard.periodNext' | transloco"
+    >
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </button>
+  </div>
+</div>

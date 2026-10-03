@@ -1,0 +1,634 @@
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-15
+ * Descrição: Classes de componente do módulo Admin (build-context-06),
+ * seguindo o mesmo vocabulário de category-design.css/transaction-design.css
+ * (comp-page-header, comp-filter-bar, comp-stats-strip, comp-data-table,
+ * state-panel) — cópia própria da feature, não um @import cruzado (cada
+ * feature tem seu próprio *-design.css, ver GUIA_TECNICO §7.9). Os
+ * tokens de cor (--bg, --t1, --accent...) já existem em src/styles.css;
+ * dentro de /admin/*, --accent vira a paleta preta/grafite via
+ * `data-panel="admin"` (ver styles.css), então nenhuma cor é hardcoded
+ * aqui além dos estados semânticos (--green/--amber/--red/--violet).
+ * Importado via @import por cada componente do módulo.
+ */
+
+/* page-header */
+.comp-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+.comp-ph-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 0.2rem;
+}
+.comp-ph-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--t1);
+}
+.comp-ph-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.6rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.comp-ph-cta:hover:not(:disabled) {
+  background: var(--acc-l);
+}
+.comp-ph-cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.comp-ph-cta.secondary {
+  background: var(--bg-elev);
+  color: var(--t1);
+  border: 1px solid var(--bdr-s);
+}
+.comp-ph-cta.secondary:hover:not(:disabled) {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+
+/* filter-bar */
+.comp-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+}
+.comp-fb-search {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.38rem 0.7rem;
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.55rem;
+  background: var(--bg-elev);
+  transition: border-color 0.15s;
+}
+.comp-fb-search:focus-within {
+  border-color: var(--accent);
+}
+.comp-fb-search svg {
+  color: var(--t3);
+  flex-shrink: 0;
+}
+.comp-fb-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.81rem;
+  color: var(--t1);
+  outline: none;
+}
+.comp-fb-search input::placeholder {
+  color: var(--t3);
+}
+.comp-fb-sep {
+  width: 1px;
+  height: 1.5rem;
+  background: var(--bdr-s);
+  margin: 0 0.1rem;
+}
+.comp-fb-select {
+  padding: 0.38rem 0.7rem;
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.55rem;
+  background: var(--bg-elev);
+  color: var(--t1);
+  font: inherit;
+  font-size: 0.81rem;
+  outline: none;
+  cursor: pointer;
+  min-width: 120px;
+}
+.comp-fb-btn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t2);
+  transition: all 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.comp-fb-btn:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border-color: var(--acc-s2);
+}
+
+/* stats-strip */
+.comp-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+}
+.comp-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.comp-stat-ico {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--bdr-s);
+}
+.comp-stat-body {
+  min-width: 0;
+}
+.comp-stat-lbl {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 0.15rem;
+}
+.comp-stat-val {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--t1);
+}
+.comp-stat-sub {
+  font-size: 0.67rem;
+  color: var(--t3);
+  margin-top: 0.1rem;
+}
+
+/* data-table */
+.comp-data-table {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  overflow: hidden;
+}
+.comp-dt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid var(--bdr);
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.comp-dt-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--t1);
+}
+.comp-dt-count {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--t3);
+  margin-left: 0.4rem;
+}
+.table-scroll {
+  /* Só a tabela rola na horizontal quando o conteúdo não cabe (ex.:
+     nome de evento do Stripe, e-mail longo) — nunca a página inteira. */
+  overflow-x: auto;
+}
+.comp-dt-table {
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
+}
+.comp-dt-table thead th {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--t3);
+  padding: 0.6rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--bdr);
+  white-space: nowrap;
+}
+.comp-dt-table thead th:last-child {
+  text-align: center;
+}
+.comp-dt-table tbody tr {
+  border-bottom: 1px solid var(--bdr);
+  transition: background 0.12s;
+  cursor: pointer;
+}
+.comp-dt-table tbody tr:last-child {
+  border-bottom: none;
+}
+.comp-dt-table tbody tr:hover {
+  background: var(--bg-elev);
+}
+.comp-dt-table td {
+  padding: 0.65rem 1rem;
+  font-size: 0.81rem;
+  color: var(--t1);
+  vertical-align: middle;
+}
+
+/* empty / error / no-results states */
+.state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--t2);
+}
+.state-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elev);
+  border: 1px solid var(--bdr-s);
+  color: var(--t3);
+}
+.state-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--t1);
+}
+.state-sub {
+  font-size: 0.78rem;
+  color: var(--t3);
+  max-width: 26rem;
+}
+
+/* role badge */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.role-badge.admin {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border: 1px solid var(--acc-s2);
+}
+.role-badge.user {
+  background: var(--bg-elev);
+  color: var(--t2);
+  border: 1px solid var(--bdr-s);
+}
+
+/* badge "Teste" (2026-09-15) — acesso Premium vitalício concedido pelo admin, sem Stripe */
+.test-access-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.4rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--violet) 14%, transparent);
+  color: var(--violet);
+  border: 1px solid color-mix(in srgb, var(--violet) 35%, transparent);
+}
+
+/* connection status badge (evolution-instance-card) */
+.conn-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.conn-badge::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.conn-badge.connected {
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--green);
+  border: 1px solid rgba(5, 150, 105, 0.22);
+}
+.conn-badge.connecting {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--amber);
+  border: 1px solid rgba(217, 119, 6, 0.22);
+}
+.conn-badge.disconnected {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--red);
+  border: 1px solid rgba(220, 38, 38, 0.22);
+}
+
+/* channel badge (feedback-card) */
+.channel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.channel-badge.web {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border: 1px solid var(--acc-s2);
+}
+.channel-badge.whatsapp {
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--green);
+  border: 1px solid rgba(5, 150, 105, 0.22);
+}
+
+/* type badge (feedback-card, feedback-detail-modal) */
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.type-badge.praise {
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--green);
+  border: 1px solid rgba(5, 150, 105, 0.22);
+}
+.type-badge.suggestion {
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--violet);
+  border: 1px solid rgba(124, 58, 237, 0.22);
+}
+.type-badge.bug {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--red);
+  border: 1px solid rgba(220, 38, 38, 0.22);
+}
+.type-badge.other {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border: 1px solid var(--acc-s2);
+}
+
+/* nps badge (feedback-card, feedback-detail-modal) */
+.nps-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.nps-badge .nps-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+.nps-badge.detractor {
+  color: var(--red);
+}
+.nps-badge.detractor .nps-dot {
+  background: var(--red);
+}
+.nps-badge.neutral {
+  color: var(--amber);
+}
+.nps-badge.neutral .nps-dot {
+  background: var(--amber);
+}
+.nps-badge.promoter {
+  color: var(--green);
+}
+.nps-badge.promoter .nps-dot {
+  background: var(--green);
+}
+
+/* modal overlay (change-role-modal, feedback-detail-modal) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  z-index: 300;
+}
+.modal-card {
+  width: 100%;
+  max-width: 26rem;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.modal-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--t1);
+}
+.modal-close {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.4rem;
+  border: none;
+  background: transparent;
+  color: var(--t3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.modal-close:hover {
+  background: var(--bg-elev);
+  color: var(--t1);
+}
+.modal-body {
+  font-size: 0.85rem;
+  color: var(--t2);
+  line-height: 1.6;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+.modal-btn {
+  padding: 0.55rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.modal-btn.cancel {
+  background: var(--bg-elev);
+  color: var(--t2);
+  border: 1px solid var(--bdr-s);
+}
+.modal-btn.cancel:hover {
+  background: var(--bdr);
+}
+.modal-btn.confirm {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+}
+.modal-btn.confirm:hover:not(:disabled) {
+  background: var(--acc-l);
+}
+.modal-btn.confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* form feedback message */
+.form-msg {
+  font-size: 0.78rem;
+}
+.form-msg.error {
+  color: var(--red);
+}
+
+/* pagination */
+.comp-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1.1rem;
+  border-top: 1px solid var(--bdr);
+  flex-wrap: wrap;
+}
+.pagination-info {
+  font-size: 0.76rem;
+  color: var(--t3);
+}
+.pagination-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.pagination-btn {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.pagination-btn:hover:not(:disabled) {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border-color: var(--acc-s2);
+}
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.pagination-current {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--t1);
+  min-width: 3.5rem;
+  text-align: center;
+}
+
+@media (max-width: 1200px) {
+  .comp-stats-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .comp-stats-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+  .comp-filter-bar {
+    gap: 0.4rem;
+  }
+  .comp-fb-sep {
+    display: none;
+  }
+  /*
+   * Autor: Carlos Adriano
+   * Data: 2026-08-15
+   * Descrição: `font-size` abaixo de 16px num `<input>` faz o Safari/
+   * Chrome mobile aplicar zoom automático ao focar o campo (proteção
+   * de acessibilidade do próprio navegador, não configurável via CSS) —
+   * bug real reportado pelo usuário: campo de busca "horrível" e
+   * "não funcionando" no mobile (era o zoom automático da OS
+   * disparando, não o campo em si). 16px é o limiar mínimo pra evitar
+   * o zoom, então sobe só aqui (mobile) sem afetar o tamanho compacto
+   * do desktop.
+   */
+  .comp-fb-search input,
+  .comp-fb-select {
+    font-size: 1rem;
+  }
+}

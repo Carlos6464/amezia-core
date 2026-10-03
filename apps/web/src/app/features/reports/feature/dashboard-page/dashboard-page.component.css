@@ -1,0 +1,397 @@
+@import '../../ui/reports-design.css';
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 2rem;
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-15
+ * Descrição: `period-picker` ocupa a largura máxima da tela no mobile
+ * (pedido do usuário) — o header empilha (título em cima, período
+ * embaixo, esticado). Fica só neste arquivo (component-scoped), não em
+ * `reports-design.css`: `.comp-page-header` é compartilhada com a tela
+ * de Reports, e uma regra ali vazaria pra lá também (bug real: quebrou
+ * o cabeçalho de Reports numa 1ª tentativa, botão "Filtro" empurrado
+ * pra baixo do título em vez de ficar alinhado ao lado).
+ */
+@media (max-width: 700px) {
+  .comp-page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  app-period-picker {
+    display: block;
+    width: 100%;
+  }
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-09-15
+ * Descrição: Grid dos cards personalizáveis — cada card mantém a
+ * mesma largura relativa que tinha nos 3 pares fixos de antes
+ * (`charts-row`/`bottom-row`/`bottom-row-payment`), só que atribuída
+ * por **identidade do card** (`.card-w-*`), não por posição — assim a
+ * largura de cada um não muda ao ser arrastado pra outra posição.
+ * `flex-wrap` forma pares de ~100% da largura sozinho (as 3 duplas
+ * somam ~98% cada, cabendo 2 por linha); se o usuário reordenar de um
+ * jeito que 2 cards "grandes" fiquem lado a lado, a soma passa de
+ * 100% e eles quebram linha naturalmente, sem layout quebrado.
+ */
+.dashboard-cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: stretch;
+}
+.dashboard-cards-grid > .chart-card {
+  flex: 1 1 auto;
+}
+.card-w-xl {
+  width: calc(62% - 0.35rem);
+}
+.card-w-sm {
+  width: calc(36% - 0.35rem);
+}
+.card-w-half {
+  width: calc(50% - 0.35rem);
+}
+.card-w-md {
+  width: calc(41% - 0.35rem);
+}
+.card-w-lg {
+  width: calc(57% - 0.35rem);
+}
+@media (max-width: 1100px) {
+  .card-w-xl,
+  .card-w-sm,
+  .card-w-half,
+  .card-w-md,
+  .card-w-lg {
+    width: 100%;
+  }
+}
+
+/* painel de personalização — lista arrastável dos 6 cards, nome +
+   interruptor. `.dragging` marca o item sob o cursor (dragOverIndex) */
+.customize-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+.customize-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--bdr);
+  border-radius: 0.6rem;
+  background: var(--bg-elev);
+  transition: border-color 0.15s, background 0.15s;
+}
+.customize-item.dragging {
+  border-color: var(--accent);
+  background: var(--acc-s);
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-09-15
+ * Descrição: `touch-action: none` na alça é obrigatório pro arraste por
+ * toque funcionar — sem isso, o navegador intercepta o gesto como
+ * rolagem da `.customize-list` (que tem `overflow-y: auto`) antes do
+ * `pointermove` do Angular sequer disparar, e o item nunca se move.
+ * `cursor: grab`/`grabbing` fica só na alça agora (não na linha
+ * inteira), já que só ela inicia o arraste (Pointer Events, §14.4 do
+ * GUIA_TECNICO — troca da Drag and Drop API nativa, que não funcionava
+ * em telas de toque).
+ */
+.customize-item-handle {
+  display: flex;
+  color: var(--t3);
+  flex-shrink: 0;
+  padding: 0.2rem;
+  cursor: grab;
+  touch-action: none;
+}
+.customize-item.dragging .customize-item-handle {
+  cursor: grabbing;
+}
+.customize-item-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--t1);
+}
+
+/* interruptor mostrar/esconder card — sem toggle-switch compartilhado
+   no módulo reports (único exemplo é .test-access-switch, no admin,
+   outro bounded context), então este fica local ao painel
+ */
+.customize-item-switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 2.1rem;
+  height: 1.2rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--bdr-s);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.customize-item-switch.on {
+  background: var(--accent);
+}
+.customize-item-switch-knob {
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s;
+}
+.customize-item-switch.on .customize-item-switch-knob {
+  transform: translateX(0.9rem);
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-18
+ * Descrição: Dica de que o donut é clicável — texto discreto abaixo do
+ * gráfico, só aparece com dados (senão não há o que clicar). Pedido do
+ * usuário: deixar claro que o card "é dinâmico".
+ */
+.chart-card-hint {
+  text-align: center;
+  font-size: 0.66rem;
+  color: var(--t3);
+  margin-top: 0.5rem;
+}
+
+/* modal de detalhe da categoria (donut/lista clicáveis) */
+.cat-modal-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-bottom: 0.85rem;
+  margin-bottom: 0.85rem;
+  border-bottom: 1px solid var(--bdr);
+}
+.cat-modal-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cat-modal-totals {
+  display: flex;
+  flex-direction: column;
+}
+.cat-modal-total {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--t1);
+}
+.cat-modal-pct {
+  font-size: 0.72rem;
+  color: var(--t3);
+}
+.cat-modal-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 18rem;
+  overflow-y: auto;
+}
+.cat-modal-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--bdr);
+}
+.cat-modal-item:last-child {
+  border-bottom: none;
+}
+.cat-modal-item-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.cat-modal-item-desc {
+  font-size: 0.81rem;
+  font-weight: 600;
+  color: var(--t1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cat-modal-item-date {
+  font-size: 0.68rem;
+  color: var(--t3);
+}
+.cat-modal-item-val {
+  font-size: 0.83rem;
+  font-weight: 700;
+  color: var(--t1);
+  flex-shrink: 0;
+}
+.cat-modal-more {
+  display: block;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--acc-l);
+  margin-top: 0.8rem;
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-18
+ * Descrição: Banner "chamativo" de configuração rápida (teto mensal +
+ * WhatsApp) — pedido explícito do usuário, então usa o gradiente de
+ * destaque (`--grad`, mesmo tom dos CTAs principais do app) em vez do
+ * estilo neutro dos outros cards da tela, pra realmente saltar aos
+ * olhos em vez de se misturar com o resto do Dashboard.
+ */
+.setup-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  border: none;
+  border-radius: 0.85rem;
+  background: var(--grad);
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.setup-banner:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(79, 70, 229, 0.4);
+}
+.setup-banner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.18);
+  flex-shrink: 0;
+}
+.setup-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1;
+  min-width: 0;
+}
+.setup-banner-text strong {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+.setup-banner-text span {
+  font-size: 0.76rem;
+  opacity: 0.92;
+  line-height: 1.4;
+}
+.setup-banner-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-18
+ * Descrição: No mobile, `.setup-banner-cta` precisa ir pra uma linha
+ * própria — `flex-basis` força isso de verdade (garante a quebra mesmo
+ * com espaço de sobra), diferente de só `flex-wrap: wrap` no pai: como
+ * `.setup-banner-text` tem `min-width: 0`, ele encolhe pra caber
+ * ícone+texto+botão todos na mesma linha em vez de quebrar, espremendo
+ * cada palavra do texto numa linha própria — bug real reportado pelo
+ * usuário (texto "ruim" no card, ilegível de tão estreito). O
+ * `margin-left` alinha o botão embaixo do texto (pulando a largura do
+ * ícone) — por isso o `flex-basis` não pode ser `100%` "cheio": bug
+ * real nº2, reportado em seguida ("vazando" no mobile) — com
+ * `flex-basis: 100%` a caixa já ocupa a largura inteira da linha, e o
+ * `margin-left` positivo por cima disso empurra a borda direita pra
+ * fora do card. `calc(100% - largura do ícone - gap)` desconta
+ * exatamente o que o `margin-left` vai deslocar, então a borda direita
+ * do botão termina alinhada com a do card, não além dela.
+ */
+@media (max-width: 700px) {
+  .setup-banner {
+    flex-wrap: wrap;
+  }
+  .setup-banner-cta {
+    flex-basis: calc(100% - 2.5rem - 0.85rem);
+    margin-left: calc(2.5rem + 0.85rem);
+    margin-top: 0.35rem;
+  }
+}
+
+/* campos do modal de configuração rápida (mesma classe de nome já usada
+   nos formulários de Transações/Categorias, mas reports-design.css não
+   tinha essa família — este modal é o 1º formulário de verdade da tela
+   de Relatórios/Dashboard) */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.field-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--t2);
+}
+.field-input {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.55rem;
+  background: var(--bg-elev);
+  color: var(--t1);
+  font: inherit;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field-input:focus {
+  border-color: rgba(99, 102, 241, 0.45);
+}
+.field-input.invalid {
+  border-color: var(--red);
+}
+.field-hint {
+  font-size: 0.7rem;
+  color: var(--t3);
+}
+.field-error {
+  font-size: 0.7rem;
+  color: var(--red);
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}

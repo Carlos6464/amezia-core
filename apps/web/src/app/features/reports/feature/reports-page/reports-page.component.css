@@ -1,0 +1,142 @@
+@import '../../ui/reports-design.css';
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 2rem;
+}
+
+/*
+ * `.comp-page-header` é `justify-content: space-between` com 3 filhos
+ * diretos (título, CTA de exportar CSV, botão de filtro no mobile) —
+ * ao quebrar linha no mobile (título não cabe ao lado dos dois
+ * botões), `space-between` espalhava CSV e Filtro nas pontas da linha
+ * quebrada, um em cada canto, em vez de ficarem juntos. Agrupando os
+ * dois num wrapper próprio, `space-between` do header passa a operar
+ * entre só 2 itens (título vs. o grupo de ações), e os botões ficam
+ * lado a lado dentro do grupo. Bug real reportado pelo usuário em
+ * 2026-08-18.
+ */
+.comp-ph-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 700px) {
+  .page-content {
+    /* /reports é rota de tab (`.main.has-bottom-nav` já reserva 4.5rem
+       no mobile), mas o `app-onboarding-checklist` é fixo com topo em
+       ~7.5rem a partir do fundo da tela (mesma conta de
+       transaction-list.component.css) — sem esse reforço, ele cobria o
+       rodapé de paginação da tabela de transações do período. Bug real
+       reportado pelo usuário em 2026-08-18, mesma causa raiz já
+       corrigida em Transações/Categorias, faltando aqui. */
+    padding-bottom: 3.5rem;
+  }
+}
+
+.comp-fb-dd {
+  min-width: 150px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.field-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--t2);
+}
+
+/* bottom sheet (mobile) — modal deslizando de baixo pra cima, ocupando
+   a tela inteira, mesmo padrão de
+   transaction-filter-bar.component.css */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  border: none;
+  padding: 0;
+  background: rgba(15, 15, 20, 0.55);
+  cursor: pointer;
+  z-index: 300;
+}
+.sheet-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: 301;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border-radius: 0;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
+  animation: sheet-slide-up 0.22s ease-out;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-top: env(safe-area-inset-top, 0px);
+}
+@keyframes sheet-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.sheet-handle {
+  width: 2.5rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: var(--bdr-s);
+  margin: 0.6rem auto 0;
+  flex-shrink: 0;
+}
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.1rem 0.5rem;
+  flex-shrink: 0;
+}
+.sheet-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--t1);
+}
+.sheet-close {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.4rem;
+  border: 1.5px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.sheet-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem 1.1rem 1rem;
+  overflow-y: auto;
+}
+.sheet-actions {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.75rem 1.1rem;
+  border-top: 1px solid var(--bdr);
+  flex-shrink: 0;
+}
+.sheet-actions .comp-fb-btn {
+  flex: 1;
+  justify-content: center;
+}

@@ -1,0 +1,13 @@
+@if (hasData()) {
+  <div class="chart-legend">
+    <span class="leg"><span class="leg-dot" style="background: var(--green)"></span>{{ 'reports.dashboard.legendPaid' | transloco }}</span>
+    <span class="leg"><span class="leg-dot" style="background: var(--amber)"></span>{{ 'reports.dashboard.legendPending' | transloco }}</span>
+  </div>
+  <div class="bar-chart-wrap">
+    <p-chart type="bar" [data]="chartData()" [options]="chartOptions()" height="165px" />
+  </div>
+} @else {
+  <div class="state-panel">
+    <div class="state-sub">{{ 'reports.dashboard.chartEmpty' | transloco }}</div>
+  </div>
+}

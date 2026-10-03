@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia Admin — Financeiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select{font-family:inherit}
+ul{list-style:none}
+:root{
+  --bg:#070b12;--bg-card:#0d1526;--bg-elev:#111c30;--bg-sidebar:#09101f;
+  --bdr:rgba(255,255,255,.07);--bdr-s:rgba(255,255,255,.11);
+  --t1:#f0f4ff;--t2:#8899bb;--t3:#4a5878;
+  --accent:#6366f1;--acc-l:#818cf8;--acc-s:rgba(99,102,241,.1);--acc-s2:rgba(99,102,241,.2);
+  --green:#10b981;--red:#f43f5e;--amber:#f59e0b;--violet:#a78bfa;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+}
+[data-theme="light"]{
+  --bg:#f0f4f8;--bg-card:#ffffff;--bg-elev:#f8fafc;--bg-sidebar:#ffffff;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --bdr:rgba(15,23,42,.08);--bdr-s:rgba(15,23,42,.13);
+  --acc-s:rgba(99,102,241,.08);--acc-s2:rgba(99,102,241,.16);
+  --accent:#4f46e5;--acc-l:#4f46e5;
+  --green:#059669;--red:#dc2626;--amber:#d97706;--violet:#7c3aed;
+  --grad:linear-gradient(135deg,#4f46e5,#2563eb);
+}
+html,body{height:100%;min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+
+.topbar{height:3.25rem;background:var(--bg-sidebar);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 1.1rem;gap:.75rem;flex-shrink:0;z-index:40;position:sticky;top:0}
+.brand{display:flex;align-items:center;gap:.4rem}
+.brand-mark{width:1.6rem;height:1.6rem;border-radius:.4rem;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;color:#fff}
+.brand-name{font-size:.88rem;font-weight:800}
+.admin-badge{font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.12rem .45rem;border-radius:999px;background:rgba(244,63,94,.12);color:var(--red);border:1px solid rgba(244,63,94,.2);margin-left:.2rem}
+.topbar-sep{width:1px;height:1.1rem;background:var(--bdr-s)}
+.page-title{font-size:.82rem;font-weight:700;color:var(--t2)}
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:.5rem}
+.top-btn{display:flex;align-items:center;gap:.3rem;padding:.28rem .7rem;border-radius:.45rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.75rem;font-weight:600;color:var(--t2);transition:all .15s}
+.top-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.avatar{width:1.75rem;height:1.75rem;border-radius:50%;background:linear-gradient(135deg,#f43f5e,#f97316);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff}
+
+.layout{display:flex;flex:1;overflow:hidden}
+.sidenav{width:200px;flex-shrink:0;background:var(--bg-sidebar);border-right:1px solid var(--bdr);padding:.6rem .55rem;overflow-y:auto}
+.nav-sect{font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);padding:.55rem .5rem .25rem}
+.nav-item{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;border-radius:.45rem;font-size:.78rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s}
+.nav-item:hover{color:var(--t1);background:var(--acc-s)}
+.nav-item.active{color:var(--acc-l);background:var(--acc-s);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.55}
+.nav-item.active svg{opacity:1}
+.nav-badge{margin-left:auto;font-size:.62rem;font-weight:700;background:var(--red);color:#fff;border-radius:999px;padding:.05rem .35rem}
+
+.scroll-main{flex:1;overflow-y:auto;min-width:0}
+.content{padding:1.25rem 1.4rem 3rem;display:flex;flex-direction:column;gap:1.15rem;max-width:1100px}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem}
+.kpi-card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.1rem 1.2rem}
+.kpi-lbl{font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);margin-bottom:.4rem}
+.kpi-val{font-size:1.6rem;font-weight:900;letter-spacing:-.03em;margin-bottom:.2rem}
+.kpi-delta{font-size:.73rem;font-weight:600;display:flex;align-items:center;gap:.2rem}
+.delta-up{color:var(--green)}
+.delta-down{color:var(--red)}
+.delta-good{color:var(--green)}
+
+/* CHART */
+.chart-card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.2rem 1.4rem}
+.chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;flex-wrap:wrap;gap:.5rem}
+.chart-title{font-size:.88rem;font-weight:700}
+.chart-legend{display:flex;align-items:center;gap:.35rem;font-size:.73rem;color:var(--t3)}
+.legend-dot{width:.55rem;height:.55rem;border-radius:50%;background:var(--acc-l)}
+.chart-svg-wrap{overflow-x:auto}
+
+/* TABLE */
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.sec-title{font-size:.88rem;font-weight:700}
+.view-all{font-size:.76rem;color:var(--acc-l);cursor:pointer}
+.pay-table{width:100%;border-collapse:collapse;background:var(--bg-card);border-radius:1rem;overflow:hidden;border:1.5px solid var(--bdr)}
+.pay-table th{font-size:.67rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);text-align:left;padding:.55rem .9rem;border-bottom:1.5px solid var(--bdr);background:var(--bg-elev)}
+.pay-table td{font-size:.8rem;color:var(--t2);padding:.55rem .9rem;border-bottom:1px solid var(--bdr)}
+.pay-table tr:last-child td{border-bottom:none}
+.pay-table tr.failed{background:rgba(244,63,94,.04)}
+.pay-table tr.failed td{color:var(--t2)}
+.user-cell{display:flex;align-items:center;gap:.5rem}
+.u-av-sm{width:1.6rem;height:1.6rem;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;color:#fff}
+.u-name{font-size:.8rem;font-weight:600;color:var(--t1)}
+.badge{font-size:.63rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.1rem .4rem;border-radius:999px}
+.b-pro{background:var(--acc-s);color:var(--acc-l);border:1px solid rgba(99,102,241,.2)}
+.b-prem{background:rgba(167,139,250,.1);color:var(--violet);border:1px solid rgba(167,139,250,.2)}
+.b-free{background:var(--bg-elev);color:var(--t3);border:1px solid var(--bdr-s)}
+.b-card{background:var(--bg-elev);color:var(--t2);border:1px solid var(--bdr-s)}
+.b-pix{background:rgba(16,185,129,.08);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.b-paid{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.b-pending{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.b-failed{background:rgba(244,63,94,.1);color:var(--red);border:1px solid rgba(244,63,94,.2)}
+
+/* FAILED PAYMENTS CARD */
+.alert-card{background:rgba(245,158,11,.06);border:1.5px solid rgba(245,158,11,.2);border-radius:1rem;padding:1.1rem 1.3rem}
+.alert-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem}
+.alert-icon{width:1.5rem;height:1.5rem;border-radius:.4rem;background:rgba(245,158,11,.15);color:var(--amber);display:flex;align-items:center;justify-content:center}
+.alert-title{font-size:.85rem;font-weight:700;color:var(--amber)}
+.failed-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.9rem}
+.failed-row{display:flex;align-items:center;gap:.75rem;padding:.5rem .65rem;background:var(--bg-elev);border-radius:.6rem;border:1px solid var(--bdr-s)}
+.fr-user{flex:1;font-size:.8rem;font-weight:600}
+.fr-detail{font-size:.75rem;color:var(--t3)}
+.fr-val{font-size:.8rem;font-weight:700;color:var(--red)}
+.alert-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.a-btn{display:flex;align-items:center;gap:.3rem;padding:.38rem .75rem;border-radius:.45rem;border:1.5px solid rgba(245,158,11,.3);background:rgba(245,158,11,.08);font-size:.76rem;font-weight:600;color:var(--amber);transition:all .15s}
+.a-btn:hover{background:rgba(245,158,11,.14)}
+
+/* STRIPE EVENTS */
+.events-card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.1rem 1.3rem}
+.ev-list{display:flex;flex-direction:column;gap:.0}
+.ev-row{display:flex;align-items:center;gap:.75rem;padding:.55rem 0;border-bottom:1px solid var(--bdr)}
+.ev-row:last-child{border-bottom:none}
+.ev-type{font-size:.68rem;font-weight:700;font-family:monospace;color:var(--acc-l);flex-shrink:0;min-width:200px}
+.ev-meta{flex:1;font-size:.77rem;color:var(--t2)}
+.ev-time{font-size:.68rem;color:var(--t3);flex-shrink:0}
+
+/* TWO-COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+@media(max-width:900px){
+  .sidenav{display:none}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .two-col{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .content{padding:.9rem .95rem 3rem}
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:.65rem}
+  .kpi-val{font-size:1.25rem}
+  .pay-table th:nth-child(3),.pay-table td:nth-child(3),
+  .pay-table th:nth-child(4),.pay-table td:nth-child(4){display:none}
+  .ev-type{min-width:140px;font-size:.62rem}
+}
+@media(max-width:480px){
+  .topbar{padding:0 .8rem}
+  .brand-name,.topbar-sep,.page-title{display:none}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <span class="brand-name">Amezia</span>
+    <span class="admin-badge">Admin</span>
+  </div>
+  <div class="topbar-sep"></div>
+  <span class="page-title">Financeiro</span>
+  <div class="topbar-r">
+    <button class="top-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>Tema
+    </button>
+    <div class="avatar">AD</div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidenav">
+    <div class="nav-sect">Admin</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Visão geral</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Usuários</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>WhatsApp</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Planos</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pagamentos</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Suporte<span class="nav-badge">4</span></div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Feedback</div>
+    <div class="nav-item active"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Financeiro</div>
+  </aside>
+
+  <div class="scroll-main">
+  <div class="content">
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-lbl">MRR</div>
+        <div class="kpi-val" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">R$4.831</div>
+        <div class="kpi-delta delta-up"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>+12% vs mês anterior</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">ARR (projeção)</div>
+        <div class="kpi-val">R$57.972</div>
+        <div class="kpi-delta" style="color:var(--t3)">12 × MRR atual</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Churn</div>
+        <div class="kpi-val" style="color:var(--amber)">2.3%</div>
+        <div class="kpi-delta delta-good"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>-0.4% melhorou</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Ticket médio</div>
+        <div class="kpi-val">R$38,20</div>
+        <div class="kpi-delta delta-up"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>+R$2,10 vs mês anterior</div>
+      </div>
+    </div>
+
+    <!-- REVENUE CHART -->
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="chart-title">Receita mensal (jan–jun 2026)</div>
+        <div class="chart-legend"><div class="legend-dot"></div>MRR em R$</div>
+      </div>
+      <div class="chart-svg-wrap">
+        <svg viewBox="0 0 620 200" width="100%" style="min-width:320px;display:block">
+          <defs>
+            <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6366f1" stop-opacity=".35"/>
+              <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#818cf8"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+          <!-- Y axis labels -->
+          <text x="8" y="28" font-size="9" fill="#4a5878" font-family="Inter,sans-serif">5k</text>
+          <text x="8" y="78" font-size="9" fill="#4a5878" font-family="Inter,sans-serif">3.75k</text>
+          <text x="8" y="128" font-size="9" fill="#4a5878" font-family="Inter,sans-serif">2.5k</text>
+          <text x="8" y="168" font-size="9" fill="#4a5878" font-family="Inter,sans-serif">1.25k</text>
+          <!-- grid lines -->
+          <line x1="38" y1="24" x2="610" y2="24" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+          <line x1="38" y1="74" x2="610" y2="74" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+          <line x1="38" y1="124" x2="610" y2="124" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+          <line x1="38" y1="164" x2="610" y2="164" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+          <!-- bars: values [2100,2800,3200,3900,4400,4831], max=5000, chart height=160, top=24 -->
+          <!-- bar width ~60, gap ~33, start x=55 -->
+          <!-- 2100 → h=67.2 → y=24+160-67.2=116.8 -->
+          <rect x="55" y="116" width="60" height="68" rx="5" fill="url(#bar)" opacity=".7"/>
+          <text x="85" y="110" font-size="10" fill="#818cf8" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700">2.1k</text>
+          <!-- 2800 → h=89.6 → y=94.4 -->
+          <rect x="148" y="94" width="60" height="90" rx="5" fill="url(#bar)" opacity=".8"/>
+          <text x="178" y="88" font-size="10" fill="#818cf8" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700">2.8k</text>
+          <!-- 3200 → h=102.4 → y=81.6 -->
+          <rect x="241" y="82" width="60" height="102" rx="5" fill="url(#bar)" opacity=".85"/>
+          <text x="271" y="76" font-size="10" fill="#818cf8" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700">3.2k</text>
+          <!-- 3900 → h=124.8 → y=59.2 -->
+          <rect x="334" y="59" width="60" height="125" rx="5" fill="url(#bar)" opacity=".9"/>
+          <text x="364" y="53" font-size="10" fill="#818cf8" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700">3.9k</text>
+          <!-- 4400 → h=140.8 → y=43.2 -->
+          <rect x="427" y="43" width="60" height="141" rx="5" fill="url(#bar)" opacity=".95"/>
+          <text x="457" y="37" font-size="10" fill="#818cf8" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700">4.4k</text>
+          <!-- 4831 → h=154.6 → y=29.4 -->
+          <rect x="520" y="29" width="60" height="155" rx="5" fill="url(#bar)"/>
+          <text x="550" y="23" font-size="10" fill="#818cf8" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700">4.8k</text>
+          <!-- X axis labels -->
+          <text x="85" y="195" font-size="9" fill="#4a5878" text-anchor="middle" font-family="Inter,sans-serif">Jan</text>
+          <text x="178" y="195" font-size="9" fill="#4a5878" text-anchor="middle" font-family="Inter,sans-serif">Fev</text>
+          <text x="271" y="195" font-size="9" fill="#4a5878" text-anchor="middle" font-family="Inter,sans-serif">Mar</text>
+          <text x="364" y="195" font-size="9" fill="#4a5878" text-anchor="middle" font-family="Inter,sans-serif">Abr</text>
+          <text x="457" y="195" font-size="9" fill="#4a5878" text-anchor="middle" font-family="Inter,sans-serif">Mai</text>
+          <text x="550" y="195" font-size="9" fill="#818cf8" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700">Jun ✦</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- TWO COL: FAILED + STRIPE EVENTS -->
+    <div class="two-col">
+
+      <!-- FAILED PAYMENTS -->
+      <div class="alert-card">
+        <div class="alert-head">
+          <div class="alert-icon"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div class="alert-title">2 pagamentos falharam</div>
+        </div>
+        <div class="failed-list">
+          <div class="failed-row">
+            <div>
+              <div class="fr-user">Bruno Faria</div>
+              <div class="fr-detail">Plano Pro · Cartão recusado · 19 jun.</div>
+            </div>
+            <div class="fr-val">R$29</div>
+          </div>
+          <div class="failed-row">
+            <div>
+              <div class="fr-user">Carla Nunes</div>
+              <div class="fr-detail">Plano Pro · Cartão expirado · 18 jun.</div>
+            </div>
+            <div class="fr-val">R$29</div>
+          </div>
+        </div>
+        <div class="alert-actions">
+          <button class="a-btn">Ver todos</button>
+          <button class="a-btn">Notificar usuários</button>
+        </div>
+      </div>
+
+      <!-- STRIPE EVENTS -->
+      <div class="events-card">
+        <div style="font-size:.85rem;font-weight:700;margin-bottom:.75rem">Eventos Stripe recentes</div>
+        <div class="ev-list">
+          <div class="ev-row">
+            <div class="ev-type">checkout.session.completed</div>
+            <div class="ev-meta">João Silva · Pro · R$29</div>
+            <div class="ev-time">19 jun. 14:01</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-type">invoice.payment_failed</div>
+            <div class="ev-meta">Bruno Faria · Pro · R$29</div>
+            <div class="ev-time" style="color:var(--red)">19 jun. 09:22</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-type">customer.subscription.updated</div>
+            <div class="ev-meta">Ana Melo · Free → Premium</div>
+            <div class="ev-time">18 jun. 17:55</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-type">invoice.payment_failed</div>
+            <div class="ev-meta">Carla Nunes · Pro · R$29</div>
+            <div class="ev-time" style="color:var(--red)">18 jun. 11:30</div>
+          </div>
+          <div class="ev-row">
+            <div class="ev-type">customer.subscription.deleted</div>
+            <div class="ev-meta">Rafael Lima · cancelamento</div>
+            <div class="ev-time">17 jun. 08:12</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGAMENTOS RECENTES -->
+    <div>
+      <div class="section-head" style="margin-bottom:.75rem">
+        <div class="sec-title">Pagamentos recentes</div>
+        <span class="view-all">Ver todos →</span>
+      </div>
+      <table class="pay-table">
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Plano</th>
+            <th>Valor</th>
+            <th>Método</th>
+            <th>Status</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="user-cell"><div class="u-av-sm" style="background:linear-gradient(135deg,#6366f1,#60a5fa)">JS</div><span class="u-name">João Silva</span></div></td>
+            <td><span class="badge b-pro">Pro</span></td>
+            <td style="font-weight:700;color:var(--t1)">R$29,00</td>
+            <td><span class="badge b-card">Cartão</span></td>
+            <td><span class="badge b-paid">Pago</span></td>
+            <td>19 jun. 2026</td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><div class="u-av-sm" style="background:linear-gradient(135deg,#a78bfa,#6366f1)">AM</div><span class="u-name">Ana Melo</span></div></td>
+            <td><span class="badge b-prem">Premium</span></td>
+            <td style="font-weight:700;color:var(--t1)">R$59,00</td>
+            <td><span class="badge b-card">Cartão</span></td>
+            <td><span class="badge b-paid">Pago</span></td>
+            <td>18 jun. 2026</td>
+          </tr>
+          <tr class="failed">
+            <td><div class="user-cell"><div class="u-av-sm" style="background:linear-gradient(135deg,#6366f1,#a78bfa)">BF</div><span class="u-name" style="color:var(--red)">Bruno Faria</span></div></td>
+            <td><span class="badge b-pro">Pro</span></td>
+            <td style="font-weight:700;color:var(--red)">R$29,00</td>
+            <td><span class="badge b-card">Cartão</span></td>
+            <td><span class="badge b-failed">Falhou</span></td>
+            <td>19 jun. 2026</td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><div class="u-av-sm" style="background:linear-gradient(135deg,#10b981,#22d3ee)">PL</div><span class="u-name">Pedro Lima</span></div></td>
+            <td><span class="badge b-pro">Pro</span></td>
+            <td style="font-weight:700;color:var(--t1)">R$29,00</td>
+            <td><span class="badge b-pix">PIX</span></td>
+            <td><span class="badge b-paid">Pago</span></td>
+            <td>17 jun. 2026</td>
+          </tr>
+          <tr class="failed">
+            <td><div class="user-cell"><div class="u-av-sm" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)">CN</div><span class="u-name" style="color:var(--red)">Carla Nunes</span></div></td>
+            <td><span class="badge b-pro">Pro</span></td>
+            <td style="font-weight:700;color:var(--red)">R$29,00</td>
+            <td><span class="badge b-card">Cartão</span></td>
+            <td><span class="badge b-failed">Falhou</span></td>
+            <td>18 jun. 2026</td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><div class="u-av-sm" style="background:linear-gradient(135deg,#ec4899,#a78bfa)">LS</div><span class="u-name">Luana Santos</span></div></td>
+            <td><span class="badge b-prem">Premium</span></td>
+            <td style="font-weight:700;color:var(--t1)">R$59,00</td>
+            <td><span class="badge b-card">Cartão</span></td>
+            <td><span class="badge b-paid">Pago</span></td>
+            <td>15 jun. 2026</td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><div class="u-av-sm" style="background:linear-gradient(135deg,#f59e0b,#f43f5e)">RC</div><span class="u-name">Rafael Costa</span></div></td>
+            <td><span class="badge b-pro">Pro</span></td>
+            <td style="font-weight:700;color:var(--t1)">R$29,00</td>
+            <td><span class="badge b-pix">PIX</span></td>
+            <td><span class="badge b-paid">Pago</span></td>
+            <td>14 jun. 2026</td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><div class="u-av-sm" style="background:linear-gradient(135deg,#f43f5e,#f97316)">MO</div><span class="u-name">Maria Oliveira</span></div></td>
+            <td><span class="badge b-pro">Pro</span></td>
+            <td style="font-weight:700;color:var(--t1)">R$29,00</td>
+            <td><span class="badge b-card">Cartão</span></td>
+            <td><span class="badge b-pending">Pendente</span></td>
+            <td>13 jun. 2026</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  </div>
+</div>
+</body>
+</html>

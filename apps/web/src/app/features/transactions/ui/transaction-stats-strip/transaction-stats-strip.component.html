@@ -1,0 +1,38 @@
+<div class="comp-stat">
+  <div class="comp-stat-ico">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <line x1="12" y1="1" x2="12" y2="23" />
+      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+    </svg>
+  </div>
+  <div class="comp-stat-body">
+    <div class="comp-stat-lbl">{{ 'transactions.stats.periodExpenses' | transloco }}</div>
+    <div class="comp-stat-val">{{ totalAmount() | brlAmount }}</div>
+    <div class="comp-stat-sub">{{ 'transactions.stats.count' | transloco: { count: count() } }}</div>
+  </div>
+</div>
+
+<div class="comp-stat">
+  <div class="comp-stat-ico">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  </div>
+  <div class="comp-stat-body">
+    <div class="comp-stat-lbl">{{ 'transactions.stats.monthlyBudget' | transloco }}</div>
+    @if (budgetLimit(); as limit) {
+      <div class="comp-stat-val" [class.red]="isOverBudget()">
+        {{ budgetUsedPercentage() ?? 0 | number: '1.0-1' }}%
+        <span class="comp-stat-sub">{{ 'transactions.stats.of' | transloco }} {{ limit | brlAmount }}</span>
+      </div>
+      <div class="budget-bar-track">
+        <div class="budget-bar-fill" [class.over]="isOverBudget()" [style.width.%]="barWidth()"></div>
+      </div>
+    } @else {
+      <button class="comp-fb-btn" type="button" (click)="editBudget.emit()">
+        {{ 'transactions.stats.setBudget' | transloco }}
+      </button>
+    }
+  </div>
+</div>

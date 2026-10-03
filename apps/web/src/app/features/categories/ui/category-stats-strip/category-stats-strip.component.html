@@ -1,0 +1,64 @@
+<div class="comp-stats-strip">
+  <div class="comp-stat">
+    <div class="comp-stat-ico" style="color:var(--acc-l);background:var(--acc-s)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+        <line x1="7" y1="7" x2="7.01" y2="7" />
+      </svg>
+    </div>
+    <div class="comp-stat-body">
+      <div class="comp-stat-lbl">{{ 'categories.stats.visible' | transloco }}</div>
+      <div class="comp-stat-val" style="color:var(--acc-l)">{{ visibleCount() }}</div>
+      <div class="comp-stat-sub">{{ 'categories.stats.visibleSub' | transloco }}</div>
+    </div>
+  </div>
+
+  <div class="comp-stat">
+    <div class="comp-stat-ico" style="color:var(--green);background:rgba(5,150,105,.1)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    </div>
+    <div class="comp-stat-body">
+      <div class="comp-stat-lbl">{{ 'categories.stats.global' | transloco }}</div>
+      <div class="comp-stat-val" style="color:var(--green)">{{ globalCount() }}</div>
+      <div class="comp-stat-sub">{{ 'categories.stats.globalSub' | transloco }}</div>
+    </div>
+  </div>
+
+  <div class="comp-stat">
+    <div class="comp-stat-ico" style="color:var(--violet);background:rgba(124,58,237,.1)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+    </div>
+    <div class="comp-stat-body">
+      <div class="comp-stat-lbl">{{ 'categories.stats.private' | transloco }}</div>
+      <div class="comp-stat-val" style="color:var(--violet)">{{ privateCount() }}</div>
+      <div class="comp-stat-sub">{{ 'categories.stats.privateSub' | transloco }}</div>
+    </div>
+  </div>
+
+  <div class="comp-stat">
+    <div class="comp-stat-ico" style="color:var(--amber);background:rgba(217,119,6,.1)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+      </svg>
+    </div>
+    <div class="comp-stat-body">
+      <div class="comp-stat-lbl">{{ 'categories.stats.mostUsed' | transloco }}</div>
+      @if (mostUsedCategory(); as category) {
+        <div class="comp-stat-val" style="color:var(--amber)">{{ category.name }}</div>
+        <div class="comp-stat-sub">
+          {{ 'categories.stats.mostUsedCount' | transloco: { count: category.transaction_count } }}
+        </div>
+      } @else {
+        <div class="comp-stat-val" style="color:var(--amber)">—</div>
+        <div class="comp-stat-sub">{{ 'categories.stats.mostUsedEmpty' | transloco }}</div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+@if (onboarding.tourOpen() && onboarding.currentTourStep(); as step) {
+  <div class="tour-overlay"></div>
+
+  @if (spotlightRect(); as rect) {
+    <div
+      class="tour-spotlight"
+      [style.top.px]="rect.top"
+      [style.left.px]="rect.left"
+      [style.width.px]="rect.width"
+      [style.height.px]="rect.height"
+    ></div>
+  }
+
+  <div class="tour-tooltip" [ngStyle]="tooltipStyle()">
+    <div class="tour-progress">
+      <div
+        class="tour-progress-bar"
+        [style.width.%]="((onboarding.tourStep() + 1) / onboarding.tourSteps.length) * 100"
+      ></div>
+    </div>
+    <div class="tour-tooltip-head">
+      <span class="tour-step-count">{{ onboarding.tourStep() + 1 }} / {{ onboarding.tourSteps.length }}</span>
+      <button type="button" class="tour-tooltip-close" (click)="onSkip()" [attr.aria-label]="'onboarding.tour.close' | transloco">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+    <div class="tour-tooltip-title">{{ step.titleKey | transloco }}</div>
+    <div class="tour-tooltip-description">{{ step.descriptionKey | transloco }}</div>
+    <div class="tour-tooltip-footer">
+      <button type="button" class="tour-btn tour-btn-ghost" (click)="onSkip()">
+        {{ 'onboarding.tour.skip' | transloco }}
+      </button>
+      <div class="tour-tooltip-nav">
+        @if (onboarding.tourStep() > 0) {
+          <button type="button" class="tour-btn tour-btn-secondary" (click)="onPrev()">
+            {{ 'onboarding.tour.previous' | transloco }}
+          </button>
+        }
+        <button type="button" class="tour-btn tour-btn-primary" (click)="onNext()">
+          {{ (onboarding.isLastTourStep() ? 'onboarding.tour.finish' : 'onboarding.tour.next') | transloco }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

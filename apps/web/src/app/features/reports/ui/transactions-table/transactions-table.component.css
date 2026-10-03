@@ -1,0 +1,16 @@
+@import '../reports-design.css';
+
+/*
+ * `app-transactions-table` é filho direto de `.bottom-grid` (grid),
+ * junto com `.chart-card` (que já tem `min-width: 0` desde o bug do
+ * gráfico do Dashboard — ver `reports-design.css`). Sem `min-width: 0`
+ * aqui também, o item de grid usa o conteúdo mínimo (texto sem quebra
+ * dos cards mobile) como piso de largura da coluna — estourava a
+ * largura no mobile (~512px numa viewport de 390px), gerando scroll
+ * horizontal na tela de Relatórios. Bug real reportado pelo usuário em
+ * 2026-08-18, mesma causa raiz já documentada pra `.chart-card`.
+ */
+:host {
+  display: block;
+  min-width: 0;
+}

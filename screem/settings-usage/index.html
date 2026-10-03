@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia — Configurações · Uso e Limites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit}
+ul{list-style:none}
+
+:root{
+  --bg:#070b12;--bg-card:#0d1526;--bg-elev:#111c30;--bg-sidebar:#09101f;
+  --bdr:rgba(255,255,255,.07);--bdr-s:rgba(255,255,255,.11);
+  --t1:#f0f4ff;--t2:#8899bb;--t3:#4a5878;
+  --accent:#6366f1;--acc-l:#818cf8;--acc-s:rgba(99,102,241,.1);--acc-s2:rgba(99,102,241,.2);
+  --green:#10b981;--red:#f43f5e;--amber:#f59e0b;--violet:#a78bfa;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+}
+[data-theme="light"]{
+  --bg:#f0f4f8;--bg-card:#ffffff;--bg-elev:#f8fafc;--bg-sidebar:#ffffff;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --bdr:rgba(15,23,42,.08);--bdr-s:rgba(15,23,42,.13);
+  --acc-s:rgba(99,102,241,.08);--acc-s2:rgba(99,102,241,.16);
+  --accent:#4f46e5;--acc-l:#4f46e5;
+  --green:#059669;--red:#dc2626;--amber:#d97706;--violet:#7c3aed;
+  --grad:linear-gradient(135deg,#4f46e5,#2563eb);
+}
+
+html,body{height:100%;min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+
+.topbar{height:3.25rem;background:var(--bg-sidebar);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 1.25rem;gap:.85rem;flex-shrink:0;position:sticky;top:0;z-index:40}
+.brand{display:flex;align-items:center;gap:.4rem}
+.brand-mark{width:1.6rem;height:1.6rem;border-radius:.4rem;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;color:#fff}
+.brand-name{font-size:.88rem;font-weight:800}
+.breadcrumb{display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:var(--t3);margin-left:.3rem}
+.breadcrumb svg{opacity:.4}
+.breadcrumb .bc-cur{color:var(--t2)}
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:.5rem}
+.avatar{width:1.75rem;height:1.75rem;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;cursor:pointer}
+.top-icon-btn{width:1.75rem;height:1.75rem;border-radius:.4rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t2);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.top-icon-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.mob-ham{width:2rem;height:2rem;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:none;cursor:pointer;flex-shrink:0}
+.mob-ham span{width:16px;height:2px;background:var(--t1);border-radius:1px;display:block}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:80;backdrop-filter:blur(4px)}
+.mob-overlay.open{display:block}
+
+.app{display:flex;flex:1;min-height:0}
+
+.sidebar{width:220px;flex-shrink:0;background:var(--bg-sidebar);border-right:1px solid var(--bdr);padding:.75rem .65rem;overflow-y:auto}
+.nav-section{font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);padding:.6rem .5rem .3rem}
+.nav-item{display:flex;align-items:center;gap:.5rem;padding:.45rem .6rem;border-radius:.5rem;font-size:.8rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s}
+.nav-item:hover{color:var(--t1);background:var(--acc-s)}
+.nav-item.active{color:var(--acc-l);background:var(--acc-s);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.6}
+.nav-item.active svg{opacity:1}
+
+.main{flex:1;overflow-y:auto;padding:1.75rem 1.5rem 3rem;max-width:920px}
+
+.page-hd{margin-bottom:1.5rem}
+.page-hd h1{font-size:1.2rem;font-weight:800;margin-bottom:.2rem}
+.page-hd p{font-size:.82rem;color:var(--t2)}
+
+.tabs{display:flex;gap:.2rem;border-bottom:1.5px solid var(--bdr);margin-bottom:1.75rem;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{font-size:.8rem;font-weight:600;padding:.6rem .9rem;color:var(--t2);border-bottom:2px solid transparent;margin-bottom:-1.5px;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.tab:hover{color:var(--t1)}
+.tab.active{color:var(--acc-l);border-bottom-color:var(--accent)}
+
+/* PLAN BANNER */
+.plan-banner{background:var(--bg-card);border:1.5px solid rgba(99,102,241,.25);border-radius:1rem;padding:1.1rem 1.35rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.plan-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.8rem;font-weight:700;padding:.3rem .75rem;border-radius:999px;background:var(--acc-s2);color:var(--acc-l);border:1.5px solid rgba(99,102,241,.3);flex-shrink:0}
+.plan-cycle{font-size:.8rem;color:var(--t2);flex:1}
+.plan-cycle strong{color:var(--t1)}
+.plan-link{font-size:.78rem;font-weight:600;color:var(--acc-l);display:inline-flex;align-items:center;gap:.2rem;white-space:nowrap;text-decoration:underline;text-underline-offset:.2rem}
+
+/* AMBER ALERT */
+.alert-amber{display:flex;align-items:flex-start;gap:.75rem;background:rgba(245,158,11,.07);border:1.5px solid rgba(245,158,11,.22);border-radius:.85rem;padding:.9rem 1.1rem;margin-bottom:1rem}
+.alert-amber svg{flex-shrink:0;margin-top:.1rem;color:var(--amber)}
+.alert-amber-body{flex:1}
+.alert-amber-title{font-size:.82rem;font-weight:700;color:var(--amber);margin-bottom:.2rem}
+.alert-amber-text{font-size:.77rem;color:var(--t2);line-height:1.5}
+.alert-btn{display:inline-flex;align-items:center;gap:.3rem;margin-top:.55rem;font-size:.75rem;font-weight:700;padding:.32rem .75rem;border-radius:.45rem;background:var(--amber);color:#000;border:none;cursor:pointer;transition:filter .15s}
+.alert-btn:hover{filter:brightness(1.1)}
+
+/* CARD */
+.card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.35rem 1.4rem;margin-bottom:1rem}
+.card-title{font-size:.9rem;font-weight:700;margin-bottom:.15rem}
+.card-sub{font-size:.76rem;color:var(--t2);margin-bottom:1.25rem}
+
+/* USAGE ITEMS */
+.usage-list{display:flex;flex-direction:column;gap:1.15rem}
+.usage-item{}
+.usage-hd{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.45rem;flex-wrap:wrap}
+.usage-label{font-size:.83rem;font-weight:600;display:flex;align-items:center;gap:.45rem}
+.usage-ico{width:1.5rem;height:1.5rem;border-radius:.4rem;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ui-violet{background:rgba(167,139,250,.12);color:var(--violet)}
+.ui-green{background:rgba(16,185,129,.12);color:var(--green)}
+.ui-blue{background:rgba(99,102,241,.12);color:var(--acc-l)}
+.usage-nums{font-size:.78rem;color:var(--t2);white-space:nowrap}
+.usage-nums strong{color:var(--t1);font-weight:700}
+.prog-track{height:.55rem;background:var(--bg-elev);border-radius:999px;overflow:hidden;border:1px solid var(--bdr)}
+.prog-fill{height:100%;border-radius:999px;transition:width .6s ease}
+.prog-foot{display:flex;align-items:center;justify-content:space-between;margin-top:.35rem;font-size:.7rem;color:var(--t3)}
+.renews{color:var(--t3);display:flex;align-items:center;gap:.2rem}
+
+/* TABELA */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);padding:.4rem .65rem;text-align:left;border-bottom:1.5px solid var(--bdr)}
+.data-table td{font-size:.81rem;color:var(--t2);padding:.55rem .65rem;border-bottom:1px solid var(--bdr)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table td:first-child{color:var(--t1);font-weight:500}
+.data-table td.hi{color:var(--acc-l);font-weight:700}
+.table-wrap{overflow-x:auto}
+
+/* PLANOS COMPARATIVO */
+.plans-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-top:.5rem}
+.plan-col{background:var(--bg-elev);border:1.5px solid var(--bdr);border-radius:.85rem;padding:1rem;display:flex;flex-direction:column;gap:.6rem}
+.plan-col.current{border-color:rgba(99,102,241,.4);background:var(--acc-s)}
+.plan-col.premium-col{border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.04)}
+.plan-name{font-size:.82rem;font-weight:800;margin-bottom:.1rem}
+.plan-price{font-size:1.25rem;font-weight:900;letter-spacing:-.03em}
+.plan-price span{font-size:.72rem;font-weight:400;color:var(--t3)}
+.plan-curr-badge{display:inline-flex;align-items:center;gap:.2rem;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.1rem .4rem;border-radius:999px;background:var(--acc-s2);color:var(--acc-l);border:1px solid rgba(99,102,241,.25)}
+.plan-divider{height:1px;background:var(--bdr);margin:.1rem 0}
+.plan-row{display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:var(--t2)}
+.plan-row svg{flex-shrink:0}
+.plan-row.yes{color:var(--t1)}
+.plan-row.no{opacity:.5}
+.plan-upgrade-btn{display:flex;align-items:center;justify-content:center;gap:.3rem;padding:.5rem;border-radius:.6rem;font-size:.78rem;font-weight:700;background:linear-gradient(135deg,#a78bfa,#6366f1);color:#fff;border:none;cursor:pointer;margin-top:auto;box-shadow:0 2px 10px rgba(167,139,250,.3);transition:filter .15s}
+.plan-upgrade-btn:hover{filter:brightness(1.1)}
+.plan-current-label{text-align:center;font-size:.72rem;color:var(--acc-l);font-weight:600;margin-top:auto;padding:.4rem 0}
+
+@media(max-width:700px){
+  .sidebar{position:fixed;inset:0 auto 0 0;width:220px;z-index:90;transform:translateX(-100%);transition:transform .25s}
+  .sidebar.open{transform:translateX(0)}
+  .mob-ham{display:flex}
+  .main{padding:1.25rem 1rem 3rem}
+  .plans-grid{grid-template-columns:1fr}
+  .card{padding:1.1rem 1rem}
+}
+@media(max-width:480px){
+  .topbar{padding:0 .85rem}
+  .breadcrumb{font-size:.7rem}
+  .plan-banner{gap:.6rem}
+  .plans-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:380px){
+  .plans-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="mob-overlay" id="mob-overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.classList.remove('open')"></div>
+
+<header class="topbar">
+  <button class="mob-ham" onclick="document.getElementById('sidebar').classList.add('open');document.getElementById('mob-overlay').classList.add('open')"><span></span><span></span><span></span></button>
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <span class="brand-name">Amezia</span>
+  </div>
+  <div class="breadcrumb">
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    Configurações
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    <span class="bc-cur">Uso e Limites</span>
+  </div>
+  <div class="topbar-r">
+    <button class="top-icon-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+    </button>
+    <div class="avatar">CA</div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-section">Menu</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Despesas</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Relatórios</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>WhatsApp</div>
+    <div class="nav-section" style="margin-top:.5rem">Conta</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Planos</div>
+    <div class="nav-item active"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Uso e Limites</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Suporte</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Feedback</div>
+  </aside>
+
+  <main class="main">
+    <div class="page-hd">
+      <h1>Uso e Limites</h1>
+      <p>Acompanhe o consumo do período atual e compare planos</p>
+    </div>
+
+    <div class="tabs">
+      <div class="tab" onclick="window.location='../settings-profile/index.html'">Perfil</div>
+      <div class="tab" onclick="window.location='../settings-plans/index.html'">Planos</div>
+      <div class="tab active">Uso e Limites</div>
+      <div class="tab" onclick="window.location='../settings-support/index.html'">Suporte</div>
+      <div class="tab" onclick="window.location='../settings-feedback/index.html'">Feedback</div>
+    </div>
+
+    <!-- BANNER DO PLANO -->
+    <div class="plan-banner">
+      <div class="plan-badge">
+        <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+        Plano Pro
+      </div>
+      <div class="plan-cycle">Ciclo atual: <strong>21 jun → 21 jul 2026</strong> · Próxima cobrança em 30 dias</div>
+      <a href="../settings-plans/index.html" class="plan-link">
+        Gerenciar assinatura
+        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+
+    <!-- AVISO 68% -->
+    <div class="alert-amber">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="alert-amber-body">
+        <div class="alert-amber-title">Você usou 68% das suas conversas com IA</div>
+        <div class="alert-amber-text">Restam <strong style="color:var(--t1)">16 conversas</strong> neste ciclo. Seu limite renova em <strong style="color:var(--t1)">21 de julho</strong>. Se precisar de mais, considere fazer upgrade para o Premium com IA ilimitada.</div>
+        <button class="alert-btn" onclick="window.location='../settings-plans/index.html'">
+          <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          Ver planos
+        </button>
+      </div>
+    </div>
+
+    <!-- USO DO PERÍODO -->
+    <div class="card">
+      <div class="card-title">Uso do período atual</div>
+      <div class="card-sub">Ciclo 21 jun – 21 jul 2026</div>
+      <div class="usage-list">
+
+        <!-- IA -->
+        <div class="usage-item">
+          <div class="usage-hd">
+            <div class="usage-label">
+              <div class="usage-ico ui-violet">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg>
+              </div>
+              Conversas com IA
+            </div>
+            <div class="usage-nums"><strong>34</strong> / 50 usadas</div>
+          </div>
+          <div class="prog-track">
+            <div class="prog-fill" style="width:68%;background:linear-gradient(90deg,#a78bfa,#6366f1)"></div>
+          </div>
+          <div class="prog-foot">
+            <span style="color:var(--amber);font-weight:600">68% utilizado</span>
+            <span class="renews">
+              <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Renova em 21 jul
+            </span>
+          </div>
+        </div>
+
+        <!-- WHATSAPP -->
+        <div class="usage-item">
+          <div class="usage-hd">
+            <div class="usage-label">
+              <div class="usage-ico ui-green">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              </div>
+              Bot WhatsApp
+            </div>
+            <div class="usage-nums" style="color:var(--green);font-weight:700">Ilimitado</div>
+          </div>
+          <div class="prog-track">
+            <div class="prog-fill" style="width:100%;background:linear-gradient(90deg,#10b981,#22d3ee)"></div>
+          </div>
+          <div class="prog-foot">
+            <span style="color:var(--green);font-weight:600">Incluso no plano Pro</span>
+            <span class="renews">312 msgs este ciclo</span>
+          </div>
+        </div>
+
+        <!-- CATEGORIAS -->
+        <div class="usage-item">
+          <div class="usage-hd">
+            <div class="usage-label">
+              <div class="usage-ico ui-blue">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+              </div>
+              Categorias privadas
+            </div>
+            <div class="usage-nums" style="color:var(--acc-l);font-weight:700">Ilimitadas</div>
+          </div>
+          <div class="prog-track">
+            <div class="prog-fill" style="width:100%;background:linear-gradient(90deg,#6366f1,#60a5fa)"></div>
+          </div>
+          <div class="prog-foot">
+            <span style="color:var(--acc-l);font-weight:600">Incluso no plano Pro</span>
+            <span class="renews">8 categorias criadas</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- HISTÓRICO DE USO IA -->
+    <div class="card">
+      <div class="card-title">Histórico de uso — IA</div>
+      <div class="card-sub">Conversas e relatórios gerados por mês</div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Mês</th>
+              <th>Conversas</th>
+              <th>Relatórios</th>
+              <th>Total usado</th>
+              <th>Limite</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Jun 2026 <span style="font-size:.68rem;color:var(--acc-l);font-weight:600">(atual)</span></td>
+              <td class="hi">30</td>
+              <td class="hi">4</td>
+              <td class="hi">34</td>
+              <td>50</td>
+            </tr>
+            <tr>
+              <td>Mai 2026</td>
+              <td>42</td>
+              <td>3</td>
+              <td style="color:var(--amber);font-weight:700">45</td>
+              <td>50</td>
+            </tr>
+            <tr>
+              <td>Abr 2026</td>
+              <td>28</td>
+              <td>2</td>
+              <td>30</td>
+              <td>50</td>
+            </tr>
+            <tr>
+              <td>Mar 2026</td>
+              <td>18</td>
+              <td>1</td>
+              <td>19</td>
+              <td>50</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- COMPARATIVO DE PLANOS -->
+    <div class="card">
+      <div class="card-title">Comparativo de planos</div>
+      <div class="card-sub">Veja o que cada plano oferece</div>
+      <div class="plans-grid">
+
+        <!-- FREE -->
+        <div class="plan-col">
+          <div>
+            <div class="plan-name" style="color:var(--t2)">Free</div>
+            <div class="plan-price" style="color:var(--t2)">R$0<span>/mês</span></div>
+          </div>
+          <div class="plan-divider"></div>
+          <div class="plan-row yes">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            10 conversas IA/mês
+          </div>
+          <div class="plan-row no">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Bot WhatsApp
+          </div>
+          <div class="plan-row yes">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            3 categorias privadas
+          </div>
+          <div class="plan-row no">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Relatórios automáticos
+          </div>
+          <div class="plan-row no">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Suporte prioritário
+          </div>
+          <div style="font-size:.72rem;color:var(--t3);text-align:center;margin-top:auto;padding-top:.4rem">Plano gratuito</div>
+        </div>
+
+        <!-- PRO (ATUAL) -->
+        <div class="plan-col current">
+          <div>
+            <div class="plan-name" style="color:var(--acc-l)">Pro</div>
+            <div class="plan-price">R$29<span>/mês</span></div>
+            <span class="plan-curr-badge" style="margin-top:.35rem;display:inline-flex">
+              <svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Plano atual
+            </span>
+          </div>
+          <div class="plan-divider"></div>
+          <div class="plan-row yes">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            50 conversas IA/mês
+          </div>
+          <div class="plan-row yes">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Bot WhatsApp incluso
+          </div>
+          <div class="plan-row yes">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Categorias ilimitadas
+          </div>
+          <div class="plan-row no">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Relatórios automáticos
+          </div>
+          <div class="plan-row no">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Suporte prioritário
+          </div>
+          <div class="plan-current-label">✓ Seu plano atual</div>
+        </div>
+
+        <!-- PREMIUM -->
+        <div class="plan-col premium-col">
+          <div>
+            <div class="plan-name" style="color:var(--violet)">Premium</div>
+            <div class="plan-price" style="color:var(--violet)">R$59<span>/mês</span></div>
+          </div>
+          <div class="plan-divider"></div>
+          <div class="plan-row yes">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            IA ilimitada
+          </div>
+          <div class="plan-row yes">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Bot WhatsApp incluso
+          </div>
+          <div class="plan-row yes">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Categorias ilimitadas
+          </div>
+          <div class="plan-row yes">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Relatórios automáticos
+          </div>
+          <div class="plan-row yes">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Suporte prioritário
+          </div>
+          <button class="plan-upgrade-btn" onclick="window.location='../settings-plans/index.html'">
+            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+            Fazer upgrade
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

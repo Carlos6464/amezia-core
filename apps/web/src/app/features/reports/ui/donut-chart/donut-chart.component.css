@@ -1,0 +1,44 @@
+@import '../reports-design.css';
+
+.donut-wrap {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0.35rem auto;
+}
+/*
+ * O tooltip do Chart.js é desenhado dentro do próprio <canvas> (elemento
+ * estático, sem `position`). `.donut-center` é `position: absolute` — por
+ * padrão, elemento posicionado sempre pinta por cima de elemento estático
+ * no mesmo contexto de empilhamento, então o rótulo central ficava acima
+ * do tooltip mesmo estando "atrás" na ordem lógica. `position: relative` +
+ * `z-index` maior no canvas resolve sem mexer no Chart.js.
+ */
+:host ::ng-deep canvas {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+.donut-center {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  pointer-events: none;
+}
+.donut-center-label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--t3);
+}
+.donut-center-value {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--t1);
+}
+

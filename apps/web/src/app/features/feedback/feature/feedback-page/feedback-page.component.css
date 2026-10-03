@@ -1,0 +1,81 @@
+@import "../../ui/feedback-design.css";
+
+:host {
+  display: block;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.page-hd {
+  margin-bottom: 1.5rem;
+}
+.page-hd h1 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 0.2rem;
+  color: var(--t1);
+}
+.page-hd p {
+  font-size: 0.82rem;
+  color: var(--t2);
+}
+
+.tabs {
+  display: flex;
+  gap: 0.2rem;
+  border-bottom: 1.5px solid var(--bdr);
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+.tab {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+  color: var(--t2);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1.5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  font-family: inherit;
+}
+.tab:hover {
+  color: var(--t1);
+}
+.tab.active {
+  color: var(--acc-l);
+  border-bottom-color: var(--accent);
+}
+.tab-badge {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  font-size: 0.62rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  margin-left: 0.3rem;
+  font-weight: 700;
+}
+
+.tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.type-card-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+  color: var(--t1);
+}
+
+.submit-error {
+  font-size: 0.78rem;
+  color: var(--red);
+  margin: 0;
+}

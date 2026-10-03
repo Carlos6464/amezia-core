@@ -1,0 +1,25 @@
+.cat-icon {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 0.45rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--bdr-s);
+}
+
+.cat-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.cat-icon-lg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.cat-icon-lg svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}

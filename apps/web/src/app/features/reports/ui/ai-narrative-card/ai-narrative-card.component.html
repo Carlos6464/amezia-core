@@ -1,0 +1,89 @@
+<div class="ai-card">
+  <div class="ai-card__header">
+    <div class="ai-card__header-left">
+      <div class="ai-card__ico">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+        </svg>
+      </div>
+      <div>
+        <div class="ai-card__title">{{ 'reports.ai.title' | transloco }}</div>
+        <div class="ai-card__sub">{{ 'reports.ai.subtitle' | transloco: { period: periodLabel() } }}</div>
+      </div>
+    </div>
+    <button
+      class="ai-card__btn"
+      type="button"
+      [disabled]="state() === 'loading' || retryBlocked()"
+      (click)="generate.emit()"
+    >
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+      </svg>
+      {{ 'reports.ai.generate' | transloco }}
+    </button>
+  </div>
+
+  @switch (state()) {
+    @case ('ready') {
+      <div class="ai-card__body" [innerHTML]="narrative() | markdown"></div>
+    }
+    @case ('loading') {
+      <div class="ai-card__body--empty">
+        <div class="ai-card__empty-ico">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+          </svg>
+        </div>
+        <p>{{ 'reports.ai.loading' | transloco }}</p>
+      </div>
+    }
+    @case ('throttled') {
+      <div class="ai-card__body--empty ai-card__body--error">
+        <div class="ai-card__empty-ico">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        </div>
+        <p>{{ 'reports.ai.throttled' | transloco }}</p>
+      </div>
+    }
+    @case ('failed') {
+      <div class="ai-card__body--empty ai-card__body--error">
+        <div class="ai-card__empty-ico">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        </div>
+        <p>{{ 'reports.ai.failed' | transloco }}</p>
+      </div>
+    }
+    @case ('limit_reached') {
+      <div class="ai-card__body--empty ai-card__body--limit">
+        <div class="ai-card__empty-ico ai-card__empty-ico--limit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+        </div>
+        <p>{{ 'reports.ai.limitReached' | transloco }}</p>
+        <a routerLink="/settings/plans" class="ai-card__upgrade-link">{{ 'reports.ai.limitReachedCta' | transloco }}</a>
+      </div>
+    }
+    @default {
+      <div class="ai-card__body--empty">
+        <div class="ai-card__empty-ico">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+          </svg>
+        </div>
+        <p>{{ 'reports.ai.empty' | transloco }}</p>
+      </div>
+    }
+  }
+</div>

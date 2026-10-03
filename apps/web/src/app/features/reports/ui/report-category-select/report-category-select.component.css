@@ -1,0 +1,92 @@
+@import '../reports-design.css';
+
+:host {
+  position: relative;
+  display: block;
+}
+
+.rcs-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.38rem 0.7rem;
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.55rem;
+  background: var(--bg-elev);
+  color: var(--t1);
+  font: inherit;
+  font-size: 0.81rem;
+  cursor: pointer;
+  min-width: 160px;
+}
+.rcs-select:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+}
+.rcs-select.open {
+  border-color: rgba(99, 102, 241, 0.5);
+}
+.rcs-select-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.rcs-select-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rcs-select-chevron {
+  flex-shrink: 0;
+  color: var(--t3);
+  transition: transform 0.15s;
+}
+.rcs-select.open .rcs-select-chevron {
+  transform: rotate(180deg);
+}
+
+.rcs-dropdown {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  min-width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.65rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  overflow-y: auto;
+  max-height: 18rem;
+  padding: 0.35rem;
+}
+.rcs-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border: none;
+  background: transparent;
+  border-radius: 0.5rem;
+  font-size: 0.81rem;
+  color: var(--t1);
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+}
+.rcs-item:hover {
+  background: var(--acc-s);
+}
+.rcs-item.active {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+.rcs-group-lbl {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--t3);
+  padding: 0.35rem 0.5rem 0.2rem;
+}

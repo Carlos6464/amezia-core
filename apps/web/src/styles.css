@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+@import "tailwindcss";
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-08
+ * Descrição: Tokens de design system globais (cores, fontes) espelhando
+ * screem/register-form e screem/settings-profile — compartilhados por
+ * todas as telas do módulo auth (build-context-01). Classes de componente
+ * (.form-card, .f-input, .card, etc.) ficam escopadas por componente
+ * Angular, não aqui.
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-15
+ * Descrição: Contraste ajustado a pedido do usuário — no claro,
+ * `--bg` (fundo geral do app, atrás dos cards) escureceu de `#f8fafc`
+ * pra `#e9edf3` (os cards continuam brancos, `--bg-card`, só o "chão"
+ * ficou mais perceptível por trás deles). No escuro, `--bg-card`
+ * clareou de `#0c1220` pra `#172341` (valor exato pedido pelo
+ * usuário) — os cards ficam bem mais distintos do fundo quase-preto
+ * (`--bg` não mudou); `--bg-sidebar` foi igualado ao mesmo `#172341`
+ * ("a cor do menu tem que acompanhar os cards").
+ */
+:root {
+  --bg: #e9edf3;
+  --bg-card: #ffffff;
+  --bg-elev: #f1f5f9;
+  --bg-sidebar: #ffffff;
+  --bdr: #e2e8f0;
+  --bdr-s: #cbd5e1;
+  --t1: #0f172a;
+  --t2: #475569;
+  --t3: #94a3b8;
+  --accent: #4f46e5;
+  --acc-l: #4f46e5;
+  --acc-s: rgba(79, 70, 229, 0.08);
+  --acc-s2: rgba(79, 70, 229, 0.16);
+  --green: #059669;
+  --amber: #d97706;
+  --violet: #7c3aed;
+  --red: #dc2626;
+  --grad: linear-gradient(135deg, #4f46e5, #2563eb);
+  --amb-opacity: 0.35;
+  --nav-bg: rgba(233, 237, 243, 0.92);
+}
+
+:root[data-theme="dark"] {
+  --bg: #070b12;
+  --bg-card: #172341;
+  --bg-elev: #111827;
+  --bg-sidebar: #172341;
+  --bdr: rgba(255, 255, 255, 0.07);
+  --bdr-s: rgba(255, 255, 255, 0.13);
+  --t1: #f1f5f9;
+  --t2: #8b9eb3;
+  --t3: #3d4f63;
+  --accent: #6366f1;
+  --acc-l: #818cf8;
+  --acc-s: rgba(99, 102, 241, 0.12);
+  --acc-s2: rgba(99, 102, 241, 0.22);
+  --green: #34d399;
+  --amber: #fbbf24;
+  --violet: #a78bfa;
+  --red: #f87171;
+  --grad: linear-gradient(135deg, #6366f1, #60a5fa);
+  --amb-opacity: 1;
+  --nav-bg: rgba(7, 11, 18, 0.88);
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-15
+ * Descrição: Identidade visual do Painel Admin (build-context-06) — os
+ * dois painéis (cliente/admin) são telas isoladas (sem link cruzado
+ * entre eles, decisão de produto de 2026-08-15), mas continuam
+ * compartilhando o mesmo Design System: só o token de destaque
+ * (`--accent`/`--acc-l`/`--acc-s`/`--acc-s2`/`--grad`, hoje azul/índigo)
+ * troca pra uma paleta monocromática (preto/grafite) quando
+ * `data-panel="admin"` está presente na raiz do documento — ligado pelo
+ * AdminShellComponent/AdminLoginPageComponent, nunca pelas telas do
+ * cliente. No escuro, o "preto" se inverte pra um cinza claro/prateado
+ * (senão o destaque desapareceria contra um fundo já quase-preto,
+ * `--bg: #070b12`) — mesma identidade "sem cor", adaptada por tema.
+ */
+:root[data-panel="admin"] {
+  --accent: #111827;
+  --acc-l: #1f2937;
+  --acc-s: rgba(17, 24, 39, 0.08);
+  --acc-s2: rgba(17, 24, 39, 0.16);
+  --grad: linear-gradient(135deg, #1f2937, #0b0f19);
+}
+
+:root[data-theme="dark"][data-panel="admin"] {
+  --accent: #cbd5e1;
+  --acc-l: #f1f5f9;
+  --acc-s: rgba(203, 213, 225, 0.14);
+  --acc-s2: rgba(203, 213, 225, 0.24);
+  --grad: linear-gradient(135deg, #94a3b8, #334155);
+}
+
+html,
+body {
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  font-family:
+    "Inter",
+    -apple-system,
+    sans-serif;
+  background: var(--bg);
+  color: var(--t1);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}

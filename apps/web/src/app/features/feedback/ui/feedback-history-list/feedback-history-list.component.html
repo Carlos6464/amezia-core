@@ -1,0 +1,42 @@
+@if (loading()) {
+  <div class="empty">
+    <p>{{ 'feedback.history.loading' | transloco }}</p>
+  </div>
+} @else if (items().length === 0) {
+  <div class="empty">
+    <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+    </svg>
+    <p>{{ 'feedback.history.emptyTitle' | transloco }}</p>
+  </div>
+} @else {
+  <div class="fb-list">
+    @for (item of items(); track item.id) {
+      <div class="fb-item">
+        <div class="fb-icon" [class]="item.type">
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+        </div>
+        <div class="fb-body">
+          @if (item.subject) {
+            <div class="fb-subject">{{ item.subject }}</div>
+          }
+          <div class="fb-preview">{{ preview(item.message) }}</div>
+          <div class="fb-meta">
+            <span class="fb-badge" [class]="item.type">
+              {{ 'feedback.type.' + item.type + '.label' | transloco }}
+            </span>
+            <span class="fb-date">{{ formatDate(item.created_at) }}</span>
+          </div>
+        </div>
+        @if (item.nps_score !== null) {
+          <div class="fb-nps" [class]="npsClass(item.nps_score)">
+            <span class="nps-dot"></span>
+            {{ item.nps_score }}
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

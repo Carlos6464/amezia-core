@@ -1,0 +1,300 @@
+<p-confirmDialog [style]="{ width: '26rem', maxWidth: '92vw' }" [breakpoints]="{ '640px': '92vw' }" />
+
+<p-dialog
+  [visible]="groupDeleteTarget() !== null"
+  (visibleChange)="onGroupDeleteVisibleChange($event)"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [style]="{ width: '26rem', maxWidth: '92vw' }"
+  [breakpoints]="{ '640px': '92vw' }"
+  [header]="(groupDeleteKind() === 'installment' ? 'transactions.confirmDelete.installmentHeader' : 'transactions.confirmDelete.recurringHeader') | transloco"
+>
+  @if (groupDeleteTarget(); as groupTransaction) {
+    <p class="modal-sub">
+      {{
+        (groupDeleteKind() === 'installment'
+          ? 'transactions.confirmDelete.installmentMessage'
+          : 'transactions.confirmDelete.recurringMessage'
+        ) | transloco: { description: groupTransaction.description }
+      }}
+    </p>
+  }
+  <div class="dialog-actions group-delete-actions">
+    <button class="comp-fb-btn" type="button" (click)="groupDeleteTarget.set(null)">
+      {{ 'transactions.confirmDelete.reject' | transloco }}
+    </button>
+    <button class="comp-fb-btn danger" type="button" (click)="deleteGroupTransaction('single')">
+      {{ 'transactions.confirmDelete.deleteOnlyThis' | transloco }}
+    </button>
+    <button class="comp-fb-btn danger" type="button" (click)="deleteGroupTransaction('all')">
+      {{
+        (groupDeleteKind() === 'installment'
+          ? 'transactions.confirmDelete.deleteAllInstallments'
+          : 'transactions.confirmDelete.deleteAllOccurrences'
+        ) | transloco
+      }}
+    </button>
+  </div>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="budgetDialogVisible"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [style]="{ width: '22rem', maxWidth: '92vw' }"
+  [header]="'transactions.stats.monthlyBudget' | transloco"
+>
+  <div class="field">
+    <label class="field-label" for="budget-input">{{ 'transactions.form.amount' | transloco }}</label>
+    <input
+      id="budget-input"
+      class="field-input"
+      [class.invalid]="budgetInvalid()"
+      type="text"
+      inputmode="decimal"
+      placeholder="0,00"
+      [(ngModel)]="budgetDraft"
+    />
+    @if (budgetInvalid()) {
+      <div class="field-error">{{ 'transactions.form.errors.amountInvalid' | transloco }}</div>
+    } @else {
+      <div class="field-hint">{{ 'transactions.stats.clearBudgetHint' | transloco }}</div>
+    }
+  </div>
+  <div class="dialog-actions">
+    <button class="comp-fb-btn" type="button" (click)="budgetDialogVisible.set(false)">
+      {{ 'transactions.form.cancel' | transloco }}
+    </button>
+    <button
+      class="comp-fb-btn primary"
+      type="button"
+      [disabled]="budgetSaving() || budgetInvalid()"
+      (click)="saveBudget()"
+    >
+      {{ (budgetSaving() ? 'transactions.form.saving' : 'transactions.form.save') | transloco }}
+    </button>
+  </div>
+</p-dialog>
+
+<p-dialog
+  [visible]="payDialogTarget() !== null"
+  (visibleChange)="onPayDialogVisibleChange($event)"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [style]="{ width: '24rem', maxWidth: '92vw' }"
+  [header]="'transactions.pay.header' | transloco"
+>
+  @if (payDialogTarget(); as target) {
+    <p class="modal-sub">{{ 'transactions.pay.message' | transloco: { description: target.description } }}</p>
+    <div class="field">
+      <label class="field-label" for="pay-date-input">{{ 'transactions.pay.paidAt' | transloco }}</label>
+      <input id="pay-date-input" class="field-input" type="date" [(ngModel)]="payDateDraft" />
+    </div>
+    <div class="field">
+      <span class="field-label">{{ 'transactions.form.paymentMethod' | transloco }}</span>
+      <app-payment-method-select [(ngModel)]="payPaymentMethodDraft" />
+    </div>
+    <div class="field">
+      <span class="field-label">{{ 'transactions.pay.receipt' | transloco }}</span>
+      @if (payReceiptFile(); as file) {
+        <div class="receipt-preview">
+          <span>{{ file.name }}</span>
+          <button type="button" class="upload-remove" (click)="payReceiptFile.set(null)">
+            {{ 'transactions.form.removeReceipt' | transloco }}
+          </button>
+        </div>
+      } @else {
+        <label class="upload-area">
+          <input
+            type="file"
+            accept="image/png,image/jpeg,application/pdf"
+            (change)="onPayFileSelected($event)"
+            hidden
+          />
+          <span>{{ 'transactions.form.uploadReceipt' | transloco }}</span>
+        </label>
+      }
+    </div>
+  }
+  <div class="dialog-actions">
+    <button class="comp-fb-btn" type="button" (click)="payDialogTarget.set(null)">
+      {{ 'transactions.form.cancel' | transloco }}
+    </button>
+    <button
+      class="comp-fb-btn primary"
+      type="button"
+      [disabled]="paySaving() || !payDateDraft()"
+      (click)="confirmPay()"
+    >
+      {{ (paySaving() ? 'transactions.form.saving' : 'transactions.pay.confirm') | transloco }}
+    </button>
+  </div>
+</p-dialog>
+
+<div class="page-content">
+  <div class="comp-page-header">
+    <div>
+      <div class="comp-ph-badge">{{ 'transactions.header.badge' | transloco }}</div>
+      <h1 class="comp-ph-title">{{ 'transactions.header.title' | transloco }}</h1>
+    </div>
+    <a class="comp-ph-cta" routerLink="/transactions/new" [queryParams]="{ from: 'transactions' }">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+      {{ 'transactions.header.cta' | transloco }}
+    </a>
+    @if (breakpoint.isMobile()) {
+      <button class="comp-ph-filter-btn" type="button" (click)="openFilterSheet()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 5H3" />
+          <path d="M12 19H3" />
+          <path d="M14 3v4" />
+          <path d="M16 17v4" />
+          <path d="M21 12h-9" />
+          <path d="M21 19h-5" />
+          <path d="M21 5h-7" />
+          <path d="M8 10v4" />
+          <path d="M8 12H3" />
+        </svg>
+        {{ 'transactions.filterBar.filterButton' | transloco }}
+        @if (filterBar && filterBar.activeFilterCount() > 0) {
+          <span class="comp-ph-filter-badge">{{ filterBar.activeFilterCount() }}</span>
+        }
+      </button>
+    }
+  </div>
+
+  <div class="comp-stats-strip">
+    <app-transaction-stats-strip
+      [totalAmount]="transactionService.summary().total_amount"
+      [count]="transactionService.summary().count"
+      [budgetLimit]="transactionService.summary().budget_limit"
+      [budgetUsedPercentage]="transactionService.summary().budget_used_percentage"
+      (editBudget)="openBudgetDialog()"
+    />
+  </div>
+
+  <div [class.comp-filter-bar]="!breakpoint.isMobile()">
+    <app-transaction-filter-bar
+      [year]="transactionService.filters().year"
+      [month]="transactionService.filters().month"
+      [(q)]="draftQ"
+      [(status)]="draftStatus"
+      (searchRequested)="search()"
+      (clear)="clearFilters()"
+      (periodChange)="changePeriod($event)"
+    />
+  </div>
+
+  <div class="comp-data-table">
+    <div class="comp-dt-head">
+      <div>
+        <span class="comp-dt-title">{{ 'transactions.table.title' | transloco }}</span>
+        <span class="comp-dt-count">{{ 'transactions.table.resultCount' | transloco: { count: transactionService.pagination().total } }}</span>
+      </div>
+      @if (selectedIds().size > 0) {
+        <button class="comp-fb-btn" type="button" (click)="confirmBulkDelete()">
+          {{ 'transactions.bulkDelete.cta' | transloco: { count: selectedIds().size } }}
+        </button>
+      }
+    </div>
+
+    @switch (viewState()) {
+      @case ('loading') {
+        <div class="state-panel">
+          <div class="state-title">{{ 'transactions.states.loading' | transloco }}</div>
+        </div>
+      }
+      @case ('error') {
+        <div class="state-panel">
+          <div class="state-icon">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <div class="state-title">{{ 'transactions.states.errorTitle' | transloco }}</div>
+          <div class="state-sub">{{ 'transactions.states.errorSub' | transloco }}</div>
+          <button class="comp-fb-btn primary" type="button" (click)="retry()">
+            {{ 'transactions.states.retry' | transloco }}
+          </button>
+        </div>
+      }
+      @case ('empty') {
+        <div class="state-panel">
+          <div class="state-icon">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23" />
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+          </div>
+          <div class="state-title">{{ 'transactions.states.emptyTitle' | transloco }}</div>
+          <div class="state-sub">{{ 'transactions.states.emptySub' | transloco }}</div>
+          <a class="comp-fb-btn primary" routerLink="/transactions/new" [queryParams]="{ from: 'transactions' }">
+            {{ 'transactions.header.cta' | transloco }}
+          </a>
+        </div>
+      }
+      @case ('no-results') {
+        <div class="state-panel">
+          <div class="state-icon">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
+          <div class="state-title">{{ 'transactions.states.noResultsTitle' | transloco }}</div>
+          <button class="comp-fb-btn" type="button" (click)="clearFilters()">
+            {{ 'transactions.filterBar.clear' | transloco }}
+          </button>
+        </div>
+      }
+      @case ('list') {
+        <app-transaction-table
+          [transactions]="transactionService.transactions()"
+          [selectedIds]="selectedIds()"
+          (pay)="openPayDialog($event)"
+          (edit)="editTransaction($event)"
+          (remove)="confirmDelete($event)"
+          (toggleSelect)="toggleSelect($event)"
+        />
+        <div class="comp-dt-foot">
+          <span class="comp-dt-info">
+            {{ 'transactions.table.showing' | transloco: {
+              from: showingFrom(),
+              to: showingTo(),
+              total: transactionService.pagination().total
+            } }}
+          </span>
+          <div class="comp-dt-pages">
+            <button
+              class="pg-btn"
+              type="button"
+              [disabled]="transactionService.pagination().page <= 1"
+              (click)="goToPage(transactionService.pagination().page - 1)"
+            >
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <button
+              class="pg-btn"
+              type="button"
+              [disabled]="transactionService.pagination().page >= transactionService.pagination().total_pages"
+              (click)="goToPage(transactionService.pagination().page + 1)"
+            >
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

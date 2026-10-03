@@ -1,0 +1,47 @@
+<div class="dt-card-list">
+  @for (category of categories(); track category.public_id) {
+    <div class="dt-card-item">
+      <app-category-icon [color]="category.color" [icon]="category.icon" [large]="true" />
+      <div class="dt-card-body">
+        <div class="dt-card-title">
+          {{ category.name }}
+          <span class="scope-badge" style="font-size:.6rem;padding:.1rem .4rem" [class.global]="category.scope === 'global'" [class.private]="category.scope === 'private'">
+            {{ ('categories.scope.' + category.scope) | transloco }}
+          </span>
+        </div>
+        <div class="dt-card-meta">
+          <div class="swatch-dot" style="width:.55rem;height:.55rem" [style.background]="category.color"></div>
+        </div>
+      </div>
+      <div class="dt-card-right">
+        <div class="dt-card-val">{{ category.total_amount | brlAmount }}</div>
+        <div class="dt-card-acts">
+          @if (category.scope === 'global') {
+            <button class="act-btn lock" type="button" [title]="'categories.table.readOnly' | transloco">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </button>
+          } @else {
+            <button class="act-btn edit" type="button" [title]="'categories.table.edit' | transloco" (click)="edit.emit(category)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+            </button>
+            <button class="act-btn del" type="button" [title]="'categories.table.delete' | transloco" (click)="remove.emit(category)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                <path d="M10 11v6" />
+                <path d="M14 11v6" />
+                <path d="M9 6V4h6v2" />
+              </svg>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,84 @@
+<div class="comp-page-header">
+  <div>
+    <div class="comp-ph-badge">{{ 'admin.shell.brand' | transloco }}</div>
+    <h1 class="comp-ph-title">{{ 'admin.plans.title' | transloco }}</h1>
+  </div>
+  <a routerLink="/admin/plans/new" class="comp-ph-cta">
+    <span>{{ 'admin.plans.newCta' | transloco }}</span>
+  </a>
+</div>
+
+@if (loading()) {
+  <div class="state-panel">
+    <div class="state-sub">{{ 'admin.common.loading' | transloco }}</div>
+  </div>
+} @else if (error()) {
+  <div class="state-panel">
+    <div class="state-title">{{ error() | transloco }}</div>
+  </div>
+} @else {
+  <div class="plans-summary">
+    @for (plan of plans; track plan) {
+      <div class="plan-summary-card">
+        <div class="psc-head">{{ 'admin.plans.planNames.' + plan | transloco }}</div>
+        <div class="psc-row">
+          <span class="psc-label">{{ 'admin.plans.cycle.monthly' | transloco }}</span>
+          @if (activePrice()[plan].monthly; as price) {
+            <span class="psc-value">R$ {{ price.unit_amount_cents / 100 | brlAmount }}</span>
+          } @else {
+            <span class="psc-empty">{{ 'admin.plans.noPriceYet' | transloco }}</span>
+          }
+        </div>
+        <div class="psc-row">
+          <span class="psc-label">{{ 'admin.plans.cycle.annual' | transloco }}</span>
+          @if (activePrice()[plan].annual; as price) {
+            <span class="psc-value">R$ {{ price.unit_amount_cents / 100 | brlAmount }}</span>
+          } @else {
+            <span class="psc-empty">{{ 'admin.plans.noPriceYet' | transloco }}</span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="comp-data-table">
+    <div class="comp-dt-head">
+      <span class="comp-dt-title">{{ 'admin.plans.history.title' | transloco }}</span>
+      <span class="comp-dt-count">{{ history().length }}</span>
+    </div>
+    @if (history().length === 0) {
+      <div class="state-panel">
+        <div class="state-sub">{{ 'admin.plans.noPriceYet' | transloco }}</div>
+      </div>
+    } @else {
+      <div class="table-scroll">
+        <table class="comp-dt-table">
+          <thead>
+            <tr>
+              <th>{{ 'admin.plans.history.plan' | transloco }}</th>
+              <th>{{ 'admin.plans.history.cycle' | transloco }}</th>
+              <th>{{ 'admin.plans.history.value' | transloco }}</th>
+              <th>{{ 'admin.plans.history.status' | transloco }}</th>
+              <th>{{ 'admin.plans.history.createdAt' | transloco }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (price of history(); track price.id) {
+              <tr>
+                <td>{{ 'admin.plans.planNames.' + price.plan | transloco }}</td>
+                <td>{{ 'admin.plans.cycle.' + price.billing_cycle | transloco }}</td>
+                <td>R$ {{ price.unit_amount_cents / 100 | brlAmount }}</td>
+                <td>
+                  <span class="price-status-badge" [class.active]="price.active" [class.archived]="!price.active">
+                    {{ (price.active ? 'admin.plans.history.statusActive' : 'admin.plans.history.statusArchived') | transloco }}
+                  </span>
+                </td>
+                <td>{{ price.created_at | date: 'dd/MM/yyyy' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+}

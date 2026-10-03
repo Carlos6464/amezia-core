@@ -1,0 +1,5 @@
+@import "../admin-design.css";
+
+:host {
+  display: contents;
+}

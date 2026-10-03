@@ -1,0 +1,35 @@
+<div class="danger-card">
+  <div class="card-hd">
+    <div>
+      <div class="card-title danger-title">{{ 'auth.profile.danger.title' | transloco }}</div>
+      <div class="card-sub">{{ 'auth.profile.danger.subtitle' | transloco }}</div>
+    </div>
+  </div>
+  <p class="danger-text">{{ 'auth.profile.danger.text' | transloco }}</p>
+
+  @if (!open()) {
+    <button class="btn-danger-outline" type="button" (click)="open.set(true)">
+      {{ 'auth.profile.danger.cta' | transloco }}
+    </button>
+  } @else {
+    <div class="delete-confirm">
+      <div class="dc-label">{{ 'auth.profile.danger.confirmLabel' | transloco }}</div>
+      <input
+        class="dc-input"
+        type="text"
+        [(ngModel)]="confirmText"
+        [placeholder]="confirmWord"
+        autocomplete="off"
+      />
+      <button
+        class="btn-danger-full"
+        [class.enabled]="confirmText === confirmWord"
+        type="button"
+        [disabled]="confirmText !== confirmWord"
+        (click)="confirmed.emit()"
+      >
+        {{ 'auth.profile.danger.confirmCta' | transloco }}
+      </button>
+    </div>
+  }
+</div>

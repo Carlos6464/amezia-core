@@ -1,0 +1,78 @@
+@import "../../ui/admin-design.css";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.whatsapp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+.whatsapp-grid > * {
+  /* Sem isso, a track de 1fr cresce pra caber o min-content do item
+     (a URL do webhook, sem quebra de linha) em vez de encolher com a
+     coluna — mesma classe de bug de GUIA_TECNICO.md §7.10. */
+  min-width: 0;
+}
+
+.create-form {
+  padding: 1rem 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  max-width: 26rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.f-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--t2);
+}
+.f-input {
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.55rem;
+  border: 1.5px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t1);
+  font-size: 0.85rem;
+  outline: none;
+  font-family: inherit;
+}
+.f-input:focus {
+  border-color: var(--accent);
+}
+.f-input.invalid {
+  border-color: var(--red);
+}
+.f-error {
+  font-size: 0.72rem;
+  color: var(--red);
+}
+
+@media (max-width: 900px) {
+  .whatsapp-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-15
+ * Descrição: `font-size` abaixo de 16px num `<input>` faz o navegador
+ * mobile aplicar zoom automático ao focar o campo — mesmo bug já
+ * corrigido em admin-design.css (busca de usuários/feedback), aqui
+ * afeta os campos do formulário "Criar instância" (nome/webhook_url).
+ */
+@media (max-width: 700px) {
+  .f-input {
+    font-size: 1rem;
+  }
+}

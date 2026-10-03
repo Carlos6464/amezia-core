@@ -1,0 +1,7 @@
+@import "../../ui/admin-design.css";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}

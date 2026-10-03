@@ -1,0 +1,15 @@
+@if (hasData()) {
+  @if (budgetValue() !== null) {
+    <div class="chart-legend">
+      <span class="leg"><span class="leg-dot" style="background: var(--accent)"></span>{{ 'reports.dashboard.legendExpense' | transloco }}</span>
+      <span class="leg"><span class="leg-dot" style="background: var(--green)"></span>{{ 'reports.dashboard.legendBudget' | transloco }}</span>
+    </div>
+  }
+  <div class="line-chart-wrap">
+    <p-chart type="line" [data]="chartData()" [options]="chartOptions()" height="165px" />
+  </div>
+} @else {
+  <div class="state-panel">
+    <div class="state-sub">{{ 'reports.dashboard.chartEmpty' | transloco }}</div>
+  </div>
+}

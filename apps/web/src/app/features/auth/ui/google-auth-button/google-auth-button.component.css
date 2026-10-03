@@ -1,0 +1,21 @@
+.google-btn-link {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t1);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.google-btn-link:hover {
+  background: var(--bg-card);
+  filter: brightness(1.06);
+}

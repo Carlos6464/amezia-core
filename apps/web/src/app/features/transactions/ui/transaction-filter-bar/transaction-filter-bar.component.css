@@ -1,0 +1,236 @@
+@import '../transaction-design.css';
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-09
+ * Descrição: `display: contents` remove o host `<app-transaction-filter-bar>`
+ * da árvore de caixas — os elementos de topo do template (search, período,
+ * selects, botões) passam a ser filhos flex diretos do `.comp-filter-bar`
+ * do componente pai (transaction-list), que é quem define `display: flex`.
+ * Sem isso, o host (um elemento normal, display block/inline por padrão)
+ * vira uma única "caixa" dentro do flex do pai, e os itens internos só
+ * empilham verticalmente — era a causa do layout desalinhado.
+ */
+:host {
+  display: contents;
+}
+
+.comp-fb-dd {
+  min-width: 9rem;
+}
+
+/* período em destaque no mobile, fora do bottom sheet de filtro — pedido
+   do usuário (2026-08-12): navegar de mês não deveria exigir abrir o
+   modal de filtro, é o filtro mais usado da tela. */
+.comp-fb-period.standalone {
+  justify-content: center;
+  gap: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  padding: 0.6rem 0.85rem;
+}
+:host ::ng-deep .comp-fb-period.standalone .comp-fb-month-picker.p-datepicker {
+  flex: 1;
+  min-width: 0;
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-15
+ * Descrição: `p-datepicker` (`view="month"`) no navegador de período —
+ * permite escolher o mês/ano direto no calendário, além das setas já
+ * existentes (pedido do usuário em 2026-08-15, mesmo padrão de
+ * `PeriodPickerComponent` do Dashboard). Trigger com `:host ::ng-deep`
+ * (fica dentro da subárvore do componente); painel com `::ng-deep`
+ * sozinho, sem `:host` (o `appendTo="body"` move o calendário pra fora
+ * dessa subárvore — ver `GUIA_TECNICO.md` §7.8 pro porquê).
+ */
+:host ::ng-deep .comp-fb-month-picker.p-datepicker {
+  border-radius: 0.5rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  box-shadow: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+:host ::ng-deep .comp-fb-month-picker.p-datepicker:hover {
+  border-color: var(--accent);
+}
+:host ::ng-deep .comp-fb-month-picker.p-datepicker.p-focus,
+:host ::ng-deep .comp-fb-month-picker.p-datepicker:has(.p-datepicker-input:focus) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--acc-s);
+}
+:host ::ng-deep .comp-fb-month-picker .p-datepicker-input {
+  padding: 0.35rem 0.6rem;
+  border: none;
+  background: transparent;
+  color: var(--t1);
+  font-size: 0.81rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: none;
+  min-width: 8.5rem;
+}
+:host ::ng-deep .comp-fb-month-picker .p-datepicker-dropdown {
+  width: 2rem;
+  border: none;
+  border-left: 1px solid var(--bdr-s);
+  background: transparent;
+  color: var(--t3);
+  padding: 0;
+}
+:host ::ng-deep .comp-fb-month-picker .p-datepicker-dropdown:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+::ng-deep .comp-fb-month-picker-panel {
+  width: auto !important;
+  min-width: 240px !important;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.85rem;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+  overflow: hidden;
+}
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-header {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--bdr);
+  background: var(--bg-card);
+}
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-title,
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-year {
+  color: var(--t1);
+  font-weight: 700;
+}
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-prev-button,
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-next-button {
+  color: var(--t2);
+  border-radius: 0.5rem;
+}
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-prev-button:hover,
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-next-button:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-month-view {
+  padding: 0.75rem;
+}
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-month {
+  border-radius: 0.55rem;
+  color: var(--t2);
+  transition: background 0.15s, color 0.15s;
+}
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-month:not(.p-disabled):hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+::ng-deep .comp-fb-month-picker-panel .p-datepicker-month.p-datepicker-month-selected {
+  background: var(--acc-s2);
+  color: var(--acc-l);
+}
+
+@media (max-width: 700px) {
+  .comp-fb-period.standalone .comp-fb-arrow {
+    border-color: transparent;
+    background: transparent;
+  }
+  .comp-fb-period.standalone .comp-fb-arrow:hover {
+    border-color: var(--bdr-s);
+    background: var(--acc-s);
+  }
+  :host ::ng-deep .comp-fb-period.standalone .comp-fb-month-picker.p-datepicker {
+    border-color: transparent;
+    background: transparent;
+  }
+  :host ::ng-deep .comp-fb-period.standalone .comp-fb-month-picker.p-datepicker:hover,
+  :host ::ng-deep .comp-fb-period.standalone .comp-fb-month-picker.p-datepicker.p-focus {
+    border-color: var(--bdr-s);
+  }
+}
+
+/* bottom sheet — modal deslizando de baixo pra cima, ocupando a tela inteira */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  border: none;
+  padding: 0;
+  background: rgba(15, 15, 20, 0.55);
+  cursor: pointer;
+  z-index: 300;
+}
+.sheet-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: 301;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border-radius: 0;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
+  animation: sheet-slide-up 0.22s ease-out;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-top: env(safe-area-inset-top, 0px);
+}
+@keyframes sheet-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.sheet-handle {
+  width: 2.5rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: var(--bdr-s);
+  margin: 0.6rem auto 0;
+  flex-shrink: 0;
+}
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.1rem 0.5rem;
+  flex-shrink: 0;
+}
+.sheet-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--t1);
+}
+.sheet-close {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.4rem;
+  border: 1.5px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.sheet-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem 1.1rem 1rem;
+  overflow-y: auto;
+}
+.sheet-actions {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.75rem 1.1rem;
+  border-top: 1px solid var(--bdr);
+  flex-shrink: 0;
+}
+.sheet-actions .comp-fb-btn {
+  flex: 1;
+  justify-content: center;
+}

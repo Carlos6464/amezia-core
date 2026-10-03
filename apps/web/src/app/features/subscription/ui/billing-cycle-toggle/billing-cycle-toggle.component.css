@@ -1,0 +1,74 @@
+:host {
+  display: contents;
+}
+
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.t-lbl {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--t3);
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.t-lbl.on {
+  color: var(--t1);
+}
+
+.t-switch {
+  position: relative;
+  width: 2.8rem;
+  height: 1.5rem;
+  background: var(--bg-elev);
+  border: 1.5px solid var(--bdr-s);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+  flex-shrink: 0;
+}
+.t-switch.on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.t-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+.t-switch.on::after {
+  transform: translateX(1.3rem);
+}
+.t-switch.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.t-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: rgba(52, 211, 153, 0.1);
+  color: var(--green);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+}
+.t-badge-soon {
+  background: var(--bg-elev);
+  color: var(--t3);
+  border-color: var(--bdr-s);
+}

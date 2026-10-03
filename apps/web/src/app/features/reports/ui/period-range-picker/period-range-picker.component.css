@@ -1,0 +1,110 @@
+@import '../reports-design.css';
+
+:host {
+  display: contents;
+}
+
+:host ::ng-deep .comp-fb-month-input.p-datepicker {
+  min-width: 6.5rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  box-shadow: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+:host ::ng-deep .comp-fb-month-input.p-datepicker:hover {
+  border-color: var(--accent);
+}
+:host ::ng-deep .comp-fb-month-input.p-datepicker.p-focus,
+:host ::ng-deep .comp-fb-month-input.p-datepicker:has(.p-datepicker-input:focus) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--acc-s);
+}
+:host ::ng-deep .comp-fb-month-input .p-datepicker-input {
+  padding: 0.35rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--t1);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: none;
+  width: 5.5rem;
+}
+
+/* De/Até (mobile) — encolhe o trigger junto do resto do grupo (ver
+   reports-design.css, regra de 2026-08-15 pro bug de "De/Até
+   empilhados"), senão o input sozinho já estoura a largura disponível. */
+@media (max-width: 700px) {
+  :host ::ng-deep .comp-fb-month-input.p-datepicker {
+    min-width: 0;
+    flex: 1;
+  }
+  :host ::ng-deep .comp-fb-month-input .p-datepicker-input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.3rem 0.4rem;
+    font-size: 0.72rem;
+  }
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-14
+ * Descrição: `panelStyleClass` renderiza o calendário como filho direto
+ * de `<body>` (`appendTo="body"`) — fora da subárvore do componente no
+ * DOM. `:host ::ng-deep` compila para `[_nghost-xxx] .classe`, que
+ * exige um ancestral com o atributo do host na árvore real do DOM; como
+ * o painel não tem mais esse ancestral depois de movido pro `<body>`,
+ * essas regras nunca combinavam (bug real: painel saía sem nenhum dos
+ * estilos abaixo, só com o tema padrão do PrimeNG, cujo `width` inline
+ * — calculado a partir do trigger, aqui ~102px — ficava pequeno demais
+ * pra grade de 3 colunas e sobrepunha os meses). `::ng-deep` sozinho
+ * (sem `:host`) vira seletor global sem essa exigência, alcançando o
+ * painel onde quer que ele esteja.
+ */
+::ng-deep .comp-fb-month-panel {
+  width: auto !important;
+  min-width: 240px !important;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.85rem;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+  overflow: hidden;
+}
+::ng-deep .comp-fb-month-panel .p-datepicker-header {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--bdr);
+  background: var(--bg-card);
+}
+::ng-deep .comp-fb-month-panel .p-datepicker-title,
+::ng-deep .comp-fb-month-panel .p-datepicker-year {
+  color: var(--t1);
+  font-weight: 700;
+}
+::ng-deep .comp-fb-month-panel .p-datepicker-prev-button,
+::ng-deep .comp-fb-month-panel .p-datepicker-next-button {
+  color: var(--t2);
+  border-radius: 0.5rem;
+}
+::ng-deep .comp-fb-month-panel .p-datepicker-prev-button:hover,
+::ng-deep .comp-fb-month-panel .p-datepicker-next-button:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+::ng-deep .comp-fb-month-panel .p-datepicker-month-view {
+  padding: 0.75rem;
+}
+::ng-deep .comp-fb-month-panel .p-datepicker-month {
+  border-radius: 0.55rem;
+  color: var(--t2);
+  transition: background 0.15s, color 0.15s;
+}
+::ng-deep .comp-fb-month-panel .p-datepicker-month:not(.p-disabled):hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+::ng-deep .comp-fb-month-panel .p-datepicker-month.p-datepicker-month-selected {
+  background: var(--acc-s2);
+  color: var(--acc-l);
+}

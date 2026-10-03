@@ -1,0 +1,51 @@
+<div class="split">
+  <div class="brand-col">
+    <app-admin-brand-panel />
+  </div>
+
+  <div class="form-col">
+    <div class="form-inner">
+      <div class="form-hd">
+        <h1>{{ 'admin.login.title' | transloco }}</h1>
+        <p>{{ 'admin.login.subtitleForm' | transloco }}</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5">
+        <div class="field">
+          <label class="f-label" for="admin-login-email">{{ 'admin.login.email' | transloco }}</label>
+          <input
+            id="admin-login-email"
+            class="f-input"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            placeholder="admin@amezia.app"
+          />
+        </div>
+
+        <div class="field">
+          <div class="field-label-row">
+            <label class="f-label" for="admin-login-password">{{ 'admin.login.password' | transloco }}</label>
+            <a routerLink="/forgot-password" [queryParams]="{ from: 'admin' }" class="forgot-link">{{ 'admin.login.forgotPassword' | transloco }}</a>
+          </div>
+          <input
+            id="admin-login-password"
+            class="f-input"
+            type="password"
+            formControlName="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+          />
+        </div>
+
+        @if (errorMessage()) {
+          <div class="form-msg error">{{ errorMessage() | transloco }}</div>
+        }
+
+        <button class="submit-btn" type="submit" [disabled]="submitting()">
+          {{ 'admin.login.submit' | transloco }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

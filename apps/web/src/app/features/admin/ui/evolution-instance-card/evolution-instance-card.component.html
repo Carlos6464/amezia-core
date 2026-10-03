@@ -1,0 +1,54 @@
+<div class="comp-data-table instance-card">
+  <div class="comp-dt-head">
+    <span class="comp-dt-title">{{ instance().name }}</span>
+    <span class="conn-badge" [class]="instance().status">
+      {{ 'admin.whatsapp.status.' + instance().status | transloco }}
+    </span>
+  </div>
+
+  <div class="instance-body">
+    @if (instance().status === 'connecting' && qrCodeSrc()) {
+      <div class="qr-block">
+        <img [src]="qrCodeSrc()" [alt]="'admin.whatsapp.qrAlt' | transloco" class="qr-image" />
+        <p class="qr-hint">{{ 'admin.whatsapp.qrHint' | transloco }}</p>
+      </div>
+    }
+
+    <dl class="instance-meta">
+      <div class="meta-row">
+        <dt>{{ 'admin.whatsapp.phoneNumber' | transloco }}</dt>
+        <dd>{{ instance().phone_number ?? '—' }}</dd>
+      </div>
+      <div class="meta-row">
+        <dt>{{ 'admin.whatsapp.connectedSince' | transloco }}</dt>
+        <dd>{{ instance().connected_at ? (instance().connected_at | date: 'dd/MM/yyyy HH:mm') : '—' }}</dd>
+      </div>
+      <div class="meta-row">
+        <dt>{{ 'admin.whatsapp.lastMessage' | transloco }}</dt>
+        <dd>{{ instance().last_message_at ? (instance().last_message_at | date: 'dd/MM/yyyy HH:mm') : '—' }}</dd>
+      </div>
+    </dl>
+
+    <div class="instance-actions">
+      <button
+        class="comp-fb-btn"
+        type="button"
+        [disabled]="pending() || instance().status === 'connected'"
+        (click)="connectClick.emit()"
+      >
+        {{ 'admin.whatsapp.connect' | transloco }}
+      </button>
+      <button class="comp-fb-btn" type="button" [disabled]="pending()" (click)="syncClick.emit()">
+        {{ 'admin.whatsapp.sync' | transloco }}
+      </button>
+      <button
+        class="comp-fb-btn"
+        type="button"
+        [disabled]="pending() || instance().status === 'disconnected'"
+        (click)="disconnectClick.emit()"
+      >
+        {{ 'admin.whatsapp.disconnect' | transloco }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="card">
+  <div class="field">
+    <label class="f-label" for="fb-subject">
+      {{ 'feedback.form.subjectLabel' | transloco }}
+      <span class="f-hint">{{ 'feedback.type.' + type() + '.hint' | transloco }}</span>
+    </label>
+    <input
+      id="fb-subject"
+      class="f-ctrl"
+      type="text"
+      [maxlength]="maxSubjectLength"
+      [placeholder]="'feedback.type.' + type() + '.placeholder' | transloco"
+      [(ngModel)]="subject"
+    />
+  </div>
+
+  <div class="field">
+    <label class="f-label" for="fb-message">{{ 'feedback.form.messageLabel' | transloco }}</label>
+    <textarea
+      id="fb-message"
+      class="f-ctrl f-textarea"
+      rows="4"
+      [maxlength]="maxMessageLength"
+      [placeholder]="'feedback.form.messagePlaceholder' | transloco"
+      [(ngModel)]="message"
+    ></textarea>
+    <div class="f-char">{{ messageLength() }} / {{ maxMessageLength }} {{ 'feedback.form.charCountSuffix' | transloco }}</div>
+  </div>
+
+  <div class="form-footer">
+    @if (userName()) {
+      <span class="sent-as">{{ 'feedback.form.sentAsPrefix' | transloco }} {{ userName() }}</span>
+    }
+    <button type="button" class="submit-btn" [disabled]="!canSubmit()" (click)="onSubmit()">
+      {{ 'feedback.form.submitButton' | transloco }}
+    </button>
+  </div>
+</div>

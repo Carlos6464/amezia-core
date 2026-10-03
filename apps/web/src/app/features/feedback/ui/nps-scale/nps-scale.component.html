@@ -1,0 +1,21 @@
+<div class="nps-card">
+  <div class="nps-q">{{ 'feedback.nps.question' | transloco }}</div>
+  <div class="nps-sub">{{ 'feedback.nps.sub' | transloco }}</div>
+  <div class="nps-scale">
+    @for (score of scores; track score) {
+      <button
+        type="button"
+        class="nps-btn"
+        [class]="scoreClass(score)"
+        [class.sel]="value() === score"
+        (click)="select(score)"
+      >
+        {{ score }}
+      </button>
+    }
+  </div>
+  <div class="nps-labels">
+    <span>{{ 'feedback.nps.notLikely' | transloco }}</span>
+    <span>{{ 'feedback.nps.veryLikely' | transloco }}</span>
+  </div>
+</div>

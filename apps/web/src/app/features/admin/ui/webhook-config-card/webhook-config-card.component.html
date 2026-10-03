@@ -1,0 +1,35 @@
+<div class="comp-data-table">
+  <div class="comp-dt-head">
+    <span class="comp-dt-title">{{ 'admin.whatsapp.webhookTitle' | transloco }}</span>
+  </div>
+
+  <div class="webhook-body">
+    <div class="webhook-row">
+      <span class="webhook-label">{{ 'admin.whatsapp.webhookUrl' | transloco }}</span>
+      <div class="webhook-value-row">
+        <code class="webhook-value">{{ instance().webhook_url }}</code>
+        <button class="copy-btn" type="button" (click)="copyUrl()">
+          @if (copied()) {
+            {{ 'admin.common.copied' | transloco }}
+          } @else {
+            {{ 'admin.common.copy' | transloco }}
+          }
+        </button>
+      </div>
+    </div>
+
+    <div class="webhook-row">
+      <span class="webhook-label">{{ 'admin.whatsapp.webhookSecret' | transloco }}</span>
+      <code class="webhook-value">{{ instance().webhook_secret_masked }}</code>
+    </div>
+
+    <div class="webhook-row">
+      <span class="webhook-label">{{ 'admin.whatsapp.webhookEvents' | transloco }}</span>
+      <div class="event-chips">
+        @for (event of instance().webhook_events; track event) {
+          <span class="event-chip">{{ event }}</span>
+        }
+      </div>
+    </div>
+  </div>
+</div>

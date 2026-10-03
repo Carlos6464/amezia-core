@@ -1,0 +1,14 @@
+<div class="card">
+  <div class="success-card">
+    <div class="success-icon">
+      <svg width="30" height="30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    </div>
+    <h3>{{ 'feedback.success.title' | transloco }}</h3>
+    <p>{{ 'feedback.success.message' | transloco }}</p>
+    <button type="button" class="reset-link" (click)="resetRequested.emit()">
+      {{ 'feedback.success.resetLink' | transloco }}
+    </button>
+  </div>
+</div>

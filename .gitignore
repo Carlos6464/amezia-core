@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Turborepo
+.turbo/
+
+# Build outputs
+dist/
+build/
+.angular/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Environment
+.env
+.env.local
+
+# Docker Compose — override local de dev (ex.: nginx.dev.conf sem TLS).
+# NUNCA versionar: o workflow de deploy roda `docker compose up` sem
+# `-f`, então um override commitado subiria (e quebraria HTTPS) em
+# produção também. Ver infra/nginx/nginx.dev.conf.
+docker-compose.override.yml
+
+# Editor
+.vscode/
+.idea/
+
+# Claude Code (settings.local.json é local por usuário — permissões, tokens de teste; settings.json e commands/ continuam versionados)
+.claude/settings.local.json
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*

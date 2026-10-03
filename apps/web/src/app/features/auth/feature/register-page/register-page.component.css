@@ -1,0 +1,12 @@
+@import "../../ui/auth-split-page.css";
+
+.plan-hint {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--acc-l);
+  background: var(--acc-s);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.85rem;
+  margin-bottom: 1rem;
+}

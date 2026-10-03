@@ -1,0 +1,99 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-amezia}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-amezia}
+      POSTGRES_DB: ${POSTGRES_DB:-amezia}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-amezia}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  worker:
+    build:
+      context: .
+      dockerfile: infra/docker/worker.Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: infra/docker/frontend.Dockerfile
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - certbot_conf:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+    ports:
+      - "${NGINX_PORT:-8080}:80"
+      - "${NGINX_HTTPS_PORT:-8443}:443"
+    depends_on:
+      api:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+
+  # Renova o certificado Let's Encrypt sozinho (checa a cada 12h, só renova
+  # de fato quando falta <30 dias pra expirar). A emissão inicial do
+  # certificado NÃO é feita por este serviço — é um comando manual de
+  # `certonly` rodado uma única vez na VPS (ver runbook de deploy do
+  # domínio), porque o nginx só sobe com `ssl_certificate` se o arquivo já
+  # existir no volume `certbot_conf`.
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done;'"
+
+volumes:
+  postgres_data:
+  certbot_conf:
+  certbot_www:

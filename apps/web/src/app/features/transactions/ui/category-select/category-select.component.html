@@ -1,0 +1,77 @@
+<div class="cat-select-wrap">
+  <button type="button" class="cat-select" [class.open]="open()" [class.invalid]="invalid()" [disabled]="disabled" (click)="toggle()">
+    <span class="cat-select-left">
+      @if (selectedCategory(); as category) {
+        <app-category-icon [color]="category.color" [icon]="category.icon" />
+        <span class="cat-select-name">{{ category.name }}</span>
+      } @else {
+        <span class="cat-select-empty">{{ 'transactions.form.selectCategory' | transloco }}</span>
+      }
+    </span>
+    <svg class="cat-select-chevron" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  </button>
+
+  @if (open()) {
+    <div class="cat-dropdown">
+      <div class="cat-dropdown-search">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input
+          type="text"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+          [placeholder]="'categories.filterBar.searchPlaceholder' | transloco"
+        />
+      </div>
+
+      <div class="cat-dropdown-list">
+        @if (filteredGlobal().length > 0) {
+          <div class="cat-dropdown-group">
+            <div class="cat-dropdown-lbl">{{ 'categories.scope.global' | transloco }}</div>
+            @for (category of filteredGlobal(); track category.public_id) {
+              <button type="button" class="cat-dropdown-item" (click)="select(category)">
+                <app-category-icon [color]="category.color" [icon]="category.icon" />
+                <span>{{ category.name }}</span>
+              </button>
+            }
+          </div>
+        }
+        @if (filteredPrivate().length > 0) {
+          <div class="cat-dropdown-group">
+            <div class="cat-dropdown-lbl">{{ 'categories.scope.private' | transloco }}</div>
+            @for (category of filteredPrivate(); track category.public_id) {
+              <button type="button" class="cat-dropdown-item" (click)="select(category)">
+                <app-category-icon [color]="category.color" [icon]="category.icon" />
+                <span>{{ category.name }}</span>
+              </button>
+            }
+          </div>
+        }
+        @if (filteredGlobal().length === 0 && filteredPrivate().length === 0) {
+          <div class="cat-dropdown-empty">{{ 'transactions.form.noCategoryFound' | transloco }}</div>
+        }
+      </div>
+
+      <button type="button" class="cat-dropdown-create" (click)="openCreateDialog()">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        {{ 'transactions.form.createCategory' | transloco }}
+      </button>
+    </div>
+  }
+</div>
+
+<app-category-form-dialog
+  [visible]="createDialogVisible()"
+  [category]="null"
+  [saving]="creating()"
+  [errorKey]="createError()"
+  (dialogCancel)="createDialogVisible.set(false)"
+  (save)="onCreateSave($event)"
+/>

@@ -1,0 +1,69 @@
+@if (!breakpoint.isMobile()) {
+  <div class="comp-filter-bar">
+    <div class="comp-fb-search">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <input
+        type="text"
+        [placeholder]="'categories.filterBar.searchPlaceholder' | transloco"
+        [(ngModel)]="searchTerm"
+      />
+    </div>
+    <div class="comp-fb-sep"></div>
+    <app-dropdown-select class="comp-fb-dd" [options]="scopeOptions" [(ngModel)]="scopeFilter" />
+    <div class="comp-fb-sep"></div>
+    <button class="comp-fb-btn" type="button" (click)="clear()">
+      {{ 'categories.filterBar.clear' | transloco }}
+    </button>
+  </div>
+}
+
+@if (sheetOpen()) {
+  <button
+    type="button"
+    class="sheet-backdrop"
+    [attr.aria-label]="'categories.filterBar.close' | transloco"
+    (click)="closeSheet()"
+  ></button>
+  <div class="sheet-panel" role="dialog" aria-modal="true">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <span class="sheet-title">{{ 'categories.filterBar.filterButton' | transloco }}</span>
+      <button type="button" class="sheet-close" (click)="closeSheet()" [attr.aria-label]="'categories.filterBar.close' | transloco">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="sheet-body">
+      <div class="field">
+        <label class="field-label" for="cat-sheet-search">{{ 'categories.filterBar.searchLabel' | transloco }}</label>
+        <div class="comp-fb-search">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input id="cat-sheet-search" type="text" [placeholder]="'categories.filterBar.searchPlaceholder' | transloco" [(ngModel)]="searchTerm" />
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">{{ 'categories.filterBar.scopeLabel' | transloco }}</span>
+        <app-dropdown-select [options]="scopeOptions" [(ngModel)]="scopeFilter" />
+      </div>
+    </div>
+
+    <div class="sheet-actions">
+      <button class="comp-fb-btn" type="button" (click)="clear()">
+        {{ 'categories.filterBar.clear' | transloco }}
+      </button>
+      <button class="comp-fb-btn primary" type="button" (click)="closeSheet()">
+        {{ 'categories.filterBar.apply' | transloco }}
+      </button>
+    </div>
+  </div>
+}

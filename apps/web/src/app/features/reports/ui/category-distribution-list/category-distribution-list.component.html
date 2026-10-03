@@ -1,0 +1,36 @@
+@if (items().length > 0) {
+  @if (clickable()) {
+    <div class="dist-hint">{{ 'reports.dashboard.distributionHint' | transloco }}</div>
+  }
+  <div class="dist-list">
+    @for (item of items(); track item.category_id) {
+      <div
+        class="dist-item"
+        [class.clickable]="clickable()"
+        [attr.role]="clickable() ? 'button' : null"
+        [attr.tabindex]="clickable() ? 0 : null"
+        (click)="onItemClick(item)"
+        (keydown.enter)="onItemClick(item)"
+        (keydown.space)="onItemClick(item)"
+      >
+        <div class="dist-row">
+          <div class="dist-name">
+            <span class="cat-dot" [style.background]="item.color"></span>
+            <span class="dist-name-text">{{ item.name }}</span>
+          </div>
+          <div class="dist-nums">
+            <span class="dist-val">{{ item.total | brlAmount }}</span>
+            <span class="dist-pct">{{ item.percentage.toFixed(0) }}%</span>
+          </div>
+        </div>
+        <div class="dist-track">
+          <div class="dist-fill" [style.width.%]="item.percentage" [style.background]="item.color"></div>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="state-panel">
+    <div class="state-sub">{{ 'reports.dashboard.chartEmpty' | transloco }}</div>
+  </div>
+}

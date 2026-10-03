@@ -1,0 +1,28 @@
+@if (transactions().length > 0) {
+  <div class="exp-list">
+    @for (transaction of transactions(); track transaction.public_id) {
+      <div class="exp-item">
+        <span class="exp-dot" style="background: var(--accent)"></span>
+        <div class="exp-body">
+          <div class="exp-name">{{ transaction.description }}</div>
+          <div class="exp-cat">{{ transaction.category_name }}</div>
+        </div>
+        <div class="exp-right">
+          <div class="exp-val expense">{{ transaction.amount | brlAmount }}</div>
+          <div class="exp-date">{{ transaction.occurred_at | brDate }}</div>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="state-panel">
+    <div class="state-sub">{{ 'reports.dashboard.recentEmpty' | transloco }}</div>
+  </div>
+}
+<a routerLink="/transactions" class="see-all">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12h14" />
+    <path d="m12 5 7 7-7 7" />
+  </svg>
+  {{ 'reports.dashboard.seeAll' | transloco }}
+</a>

@@ -1,0 +1,248 @@
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-15
+ * Descrição: Layout split (painel de marca + formulário) da tela
+ * `/admin/login` — cópia própria da feature Admin do mesmo layout usado
+ * por `features/auth/ui/auth-split-page.css` (mesma estrutura visual,
+ * "layout pode ser o mesmo", pedido do usuário em 2026-08-15), sem
+ * importar o CSS de outra feature (`features/*` não deveriam depender
+ * uma da outra). `--accent` já é a paleta preta aqui porque
+ * `AdminLoginPageComponent` liga `data-panel="admin"` antes de
+ * renderizar o formulário.
+ */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+input {
+  font-family: inherit;
+}
+
+.split {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.brand-col {
+  width: 440px;
+  flex-shrink: 0;
+}
+@media (max-width: 900px) {
+  .brand-col {
+    display: none;
+  }
+}
+
+.form-col {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  background: var(--bg);
+}
+
+.form-inner {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-hd h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--t1);
+  margin-bottom: 0.35rem;
+}
+.form-hd p {
+  font-size: 0.85rem;
+  color: var(--t2);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.f-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--t2);
+}
+.f-input {
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.65rem;
+  border: 1.5px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t1);
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  font-family: inherit;
+}
+.f-input::placeholder {
+  color: var(--t3);
+}
+.f-input:focus {
+  border-color: var(--accent);
+  background: var(--bg-card);
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.forgot-link {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.forgot-link:hover {
+  color: var(--t1);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: var(--grad);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 18px var(--acc-s2);
+  font-family: inherit;
+}
+.submit-btn:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-msg {
+  font-size: 0.78rem;
+  text-align: center;
+}
+.form-msg.error {
+  color: var(--red);
+}
+
+.form-foot {
+  text-align: center;
+}
+.back-home {
+  font-size: 0.8rem;
+  color: var(--t3);
+  font-weight: 500;
+}
+.back-home:hover {
+  color: var(--t2);
+}
+
+@media (max-width: 520px) {
+  .form-col {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-15
+ * Descrição: `font-size` abaixo de 16px num `<input>` faz o navegador
+ * mobile aplicar zoom automático ao focar o campo — mesmo bug já
+ * corrigido em admin-design.css, aqui afeta o login admin e a tela de
+ * "esqueci a senha" quando aberta com `?from=admin`.
+ */
+@media (max-width: 700px) {
+  .f-input {
+    font-size: 1rem;
+  }
+}
+
+/* brand panel */
+.panel {
+  height: 100%;
+  background: var(--grad);
+  color: #fff;
+  padding: 2.5rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.brand-logo {
+  height: 1.9rem;
+  width: auto;
+  /* Mesmo tratamento do painel do login do cliente
+     (auth-brand-panel.component.css) — logo original é indigo, forçada
+     pra branco sólido pra manter contraste sobre o painel escuro. */
+  filter: brightness(0) invert(1);
+}
+.brand-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.headline-block h1 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+.headline-block p {
+  font-size: 0.88rem;
+  opacity: 0.85;
+  line-height: 1.6;
+}
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.feature-icon {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 0.55rem;
+  background: rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.feature-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.feature-sub {
+  font-size: 0.76rem;
+  opacity: 0.75;
+}

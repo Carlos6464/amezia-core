@@ -1,0 +1,1234 @@
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-14
+ * Descrição: Classes de componente do módulo Relatórios (Dashboard +
+ * Reports), no mesmo espírito de `category-design.css`/
+ * `transaction-design.css` — reaproveita os tokens globais de cor
+ * (src/styles.css). Fiel aos protótipos `screem/dashboard/index.html` e
+ * `screem/reports/index.html` (nomes de classe herdados de lá quando
+ * fazia sentido), com os ajustes documentados no build-context-05 §1.1
+ * (sem hero de teto/alert banner, 4º stat trocado por "Nº de
+ * transações"/"Maior categoria").
+ */
+
+/* page-header (reaproveita o mesmo desenho de transaction-design.css) */
+.comp-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+.comp-ph-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 0.2rem;
+}
+.comp-ph-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--t1);
+}
+.comp-ph-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.6rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.comp-ph-cta:hover:not(:disabled) {
+  background: var(--acc-l);
+}
+.comp-ph-cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* botão de filtro no cabeçalho (mobile) — abre o bottom sheet, mesmo
+   padrão de transaction-design.css::.comp-ph-filter-btn */
+.comp-ph-filter-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t1);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.comp-ph-filter-btn svg {
+  color: var(--t2);
+  flex-shrink: 0;
+}
+.comp-ph-filter-badge {
+  min-width: 1.1rem;
+  height: 1.1rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* wrapper do period-range-picker (Reports) — só vira card "standalone"
+   no mobile, onde fica sempre visível na tela principal, fora do
+   bottom sheet de filtro (pedido do usuário em 2026-08-15: trocar o
+   período não deveria exigir abrir o modal de filtro) */
+.comp-fb-period-range-wrap.standalone {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  padding: 0.6rem 0.85rem;
+}
+.comp-fb-period-range-wrap.standalone .comp-fb-period-range {
+  justify-content: center;
+}
+
+/* period-picker (Dashboard — mês único) */
+.period-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.period-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+.period-arrow {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.period-arrow:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+.period-shortcuts {
+  display: flex;
+  gap: 0.3rem;
+}
+.pshort {
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: 1px solid var(--bdr-s);
+  background: transparent;
+  color: var(--t3);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.pshort:hover,
+.pshort.on {
+  background: var(--acc-s);
+  border-color: rgba(99, 102, 241, 0.25);
+  color: var(--acc-l);
+}
+
+/* filter-bar (Reports — intervalo De/Até + tipo/categoria) */
+.comp-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+}
+.comp-fb-period-range {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.comp-fb-period-group {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.comp-fb-period-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+.comp-fb-arrow {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.comp-fb-arrow:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+.comp-fb-range-sep {
+  display: flex;
+  align-items: center;
+  padding: 0 0.15rem;
+  color: var(--t3);
+}
+.comp-fb-sep {
+  width: 1px;
+  height: 1.5rem;
+  background: var(--bdr-s);
+  margin: 0 0.1rem;
+}
+.comp-fb-select {
+  padding: 0.38rem 0.7rem;
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.55rem;
+  background: var(--bg-elev);
+  color: var(--t1);
+  font: inherit;
+  font-size: 0.81rem;
+  outline: none;
+  cursor: pointer;
+  min-width: 130px;
+}
+.comp-fb-btn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t2);
+  transition: all 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.comp-fb-btn.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+.comp-fb-btn:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border-color: rgba(99, 102, 241, 0.25);
+}
+.comp-fb-btn.primary:hover {
+  background: var(--acc-l);
+  color: #fff;
+}
+.comp-fb-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--bdr);
+}
+.comp-fb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  background: var(--acc-s);
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  font-size: 0.67rem;
+}
+.comp-fb-pill-lbl {
+  color: var(--t3);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.comp-fb-pill-val {
+  color: var(--acc-l);
+  font-weight: 700;
+}
+
+/* stats-strip (4 cartões — Dashboard e Reports) */
+.comp-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.7rem;
+}
+.comp-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.comp-stat-ico {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--bdr-s);
+}
+.comp-stat-body {
+  min-width: 0;
+  flex: 1;
+}
+.comp-stat-lbl {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 0.15rem;
+}
+.comp-stat-val {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--t1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.comp-stat-val.red {
+  color: var(--red);
+}
+.comp-stat-val.green {
+  color: var(--green);
+}
+.comp-stat-sub {
+  font-size: 0.67rem;
+  color: var(--t3);
+  margin-top: 0.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* chart cards */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 0.7rem;
+  align-items: stretch;
+}
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  align-items: stretch;
+}
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-09-15
+ * Descrição: Variante de `.bottom-row` pro par "Distribuição por tipo
+ * de pagamento" + "Pago x Pendente" — pedido do usuário: o gráfico de
+ * barra dupla deve ficar maior que a lista de distribuição, mas com
+ * uma diferença menor que a de `.charts-row` (`1fr 340px`, quase 2:1
+ * em telas largas). `1fr 1.35fr` dá ~43%/57% — visivelmente assimétrico,
+ * sem ser tão desproporcional quanto o par line-chart/donut lá em cima.
+ */
+.bottom-row-payment {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 0.7rem;
+  align-items: stretch;
+}
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0.75rem;
+  align-items: start;
+}
+.chart-card {
+  /*
+   * Autor: Carlos Adriano
+   * Data: 2026-08-15
+   * Descrição: `min-width: 0` é obrigatório em item de grid/flex que
+   * pode conter conteúdo de largura "pegajosa" (aqui, o `<canvas>` do
+   * Chart.js) — sem isso, o `min-width` default (`auto`) trava a
+   * coluna `1fr` de `.charts-row` no maior conteúdo já renderizado:
+   * bug real reportado pelo usuário — colapsar/expandir a sidebar
+   * (`AppShellComponent.toggleSidebar()`) fazia o gráfico crescer ao
+   * colapsar (`.charts-row` ganha espaço, tudo bem) mas nunca encolher
+   * de volta ao expandir (o `1fr` recalculava um valor menor, só que o
+   * item de grid recusava ficar menor que o `<canvas>` já desenhado
+   * mais largo). Não é bug do Chart.js/PrimeNG — é o comportamento
+   * padrão (e não intuitivo) de `min-width: auto` em itens de grid.
+   */
+  min-width: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  padding: 1.1rem 1.25rem;
+}
+.chart-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  gap: 1rem;
+}
+.chart-card-lbl {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 0.15rem;
+}
+.chart-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--t1);
+}
+.chart-card-sub {
+  font-size: 0.7rem;
+  color: var(--t3);
+  margin-top: 0.1rem;
+}
+.chart-card-badge {
+  padding: 0.22rem 0.55rem;
+  border-radius: 0.4rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--bdr);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--t2);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.chart-legend {
+  display: flex;
+  gap: 0.85rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+.leg {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  color: var(--t2);
+}
+.leg-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.line-svg {
+  width: 100%;
+  height: 165px;
+  display: block;
+  overflow: visible;
+}
+.chart-foot {
+  font-size: 0.68rem;
+  color: var(--t3);
+  margin-top: 0.4rem;
+}
+.donut-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 0.35rem 0;
+}
+.donut-svg {
+  width: 150px;
+  height: 150px;
+  display: block;
+}
+
+/* category distribution list — usado como top-3 (Dashboard) e ranking completo (Reports) */
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-09-15
+ * Descrição: Dica de que a lista é clicável — mesmo texto/estilo de
+ * `.chart-card-hint` (dashboard-page.component.css, já usado no donut),
+ * só que reaproveitável tanto por `category-distribution-list` quanto
+ * por `payment-method-distribution-list` (as duas importam este
+ * arquivo). Pedido do usuário: os dois cards não tinham nenhum
+ * indicativo de que são dinâmicos/clicáveis.
+ */
+.dist-hint {
+  text-align: center;
+  font-size: 0.66rem;
+  color: var(--t3);
+  margin-bottom: 0.5rem;
+}
+.dist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.dist-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.dist-item.clickable {
+  cursor: pointer;
+  padding: 0.3rem;
+  margin: -0.3rem;
+  border-radius: 0.5rem;
+  transition: background 0.12s;
+}
+.dist-item.clickable:hover,
+.dist-item.clickable:focus-visible {
+  background: var(--bg-elev);
+}
+.dist-item.clickable:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.dist-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.dist-name {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--t1);
+  min-width: 0;
+}
+.dist-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cat-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dist-nums {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+.dist-val {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--t1);
+}
+.dist-pct {
+  font-size: 0.68rem;
+  color: var(--t3);
+  min-width: 2.2rem;
+  text-align: right;
+}
+.dist-track {
+  height: 0.28rem;
+  border-radius: 999px;
+  background: var(--bg-elev);
+  overflow: hidden;
+}
+.dist-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+/* recent transactions (Dashboard preview) */
+.exp-list {
+  display: flex;
+  flex-direction: column;
+}
+.exp-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--bdr);
+}
+.exp-item:last-child {
+  border-bottom: none;
+}
+.exp-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.exp-body {
+  flex: 1;
+  min-width: 0;
+}
+.exp-name {
+  font-size: 0.81rem;
+  font-weight: 600;
+  color: var(--t1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.exp-cat {
+  font-size: 0.68rem;
+  color: var(--t3);
+}
+.exp-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+.exp-val {
+  font-size: 0.83rem;
+  font-weight: 700;
+}
+.exp-val.expense {
+  color: var(--t1);
+}
+.exp-val.income {
+  color: var(--green);
+}
+.exp-date {
+  font-size: 0.63rem;
+  color: var(--t3);
+}
+.see-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--acc-l);
+  margin-top: 0.8rem;
+}
+.see-all:hover {
+  gap: 0.6rem;
+}
+
+/* AI narrative card */
+.ai-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 0.85rem;
+  overflow: hidden;
+}
+.ai-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.1rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(96, 165, 250, 0.06));
+  border-bottom: 1px solid rgba(99, 102, 241, 0.12);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ai-card__header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+.ai-card__ico {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 0.45rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(96, 165, 250, 0.15));
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--acc-l);
+  flex-shrink: 0;
+}
+.ai-card__title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--t1);
+}
+.ai-card__sub {
+  font-size: 0.7rem;
+  color: var(--t3);
+  margin-top: 0.05rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ai-card__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.85rem;
+  border-radius: 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.22), rgba(96, 165, 250, 0.14));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: var(--acc-l);
+  transition: all 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.ai-card__btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.32), rgba(96, 165, 250, 0.22));
+  border-color: rgba(99, 102, 241, 0.5);
+}
+.ai-card__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.ai-card__body {
+  padding: 1rem 1.1rem;
+  font-size: 0.82rem;
+  color: var(--t2);
+  line-height: 1.7;
+  white-space: pre-line;
+}
+.ai-card__body strong {
+  color: var(--t1);
+  font-weight: 700;
+}
+.ai-card__body--empty {
+  padding: 1.5rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--t3);
+  font-size: 0.82rem;
+}
+.ai-card__empty-ico {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 0.55rem;
+  background: rgba(99, 102, 241, 0.07);
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--acc-l);
+  flex-shrink: 0;
+}
+.ai-card__body--error {
+  color: var(--red);
+}
+.ai-card__body--limit {
+  color: var(--amber, #d97706);
+}
+.ai-card__empty-ico--limit {
+  background: rgba(217, 119, 6, 0.1);
+  border-color: rgba(217, 119, 6, 0.28);
+  color: inherit;
+}
+.ai-card__upgrade-link {
+  margin-left: auto;
+  font-weight: 700;
+  white-space: nowrap;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* data-table (Reports) */
+.comp-data-table {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  overflow: hidden;
+}
+.comp-dt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid var(--bdr);
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.comp-dt-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--t1);
+}
+.comp-dt-count {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--t3);
+  margin-left: 0.4rem;
+}
+.comp-dt-table {
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
+}
+.comp-dt-table thead th {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--t3);
+  padding: 0.6rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--bdr);
+  white-space: nowrap;
+}
+.comp-dt-table tbody tr {
+  border-bottom: 1px solid var(--bdr);
+}
+.comp-dt-table tbody tr:last-child {
+  border-bottom: none;
+}
+.comp-dt-table tbody tr:hover {
+  background: var(--bg-elev);
+}
+.comp-dt-table td {
+  padding: 0.65rem 1rem;
+  font-size: 0.81rem;
+  color: var(--t1);
+  vertical-align: middle;
+}
+.cell-date {
+  color: var(--t2);
+  white-space: nowrap;
+  font-size: 0.78rem;
+}
+.cell-desc {
+  font-weight: 500;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cell-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+.cell-type {
+  display: inline-flex;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.cell-type.expense {
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  color: var(--red);
+}
+.cell-type.income {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: var(--green);
+}
+.cell-val {
+  font-weight: 700;
+  white-space: nowrap;
+  text-align: right;
+}
+.cell-val.expense {
+  color: var(--red);
+}
+.cell-val.income {
+  color: var(--green);
+}
+
+/* mobile card list */
+.dt-card-list {
+  display: none;
+  flex-direction: column;
+}
+.dt-card-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--bdr);
+}
+.dt-card-item:last-child {
+  border-bottom: none;
+}
+.dt-card-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 0.2rem;
+}
+.dt-card-body {
+  flex: 1;
+  min-width: 0;
+}
+.dt-card-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--t1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dt-card-meta {
+  font-size: 0.68rem;
+  color: var(--t3);
+  margin-top: 0.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.dt-card-badge {
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.3rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--bdr-s);
+  font-size: 0.63rem;
+  font-weight: 600;
+  color: var(--t2);
+}
+.dt-card-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+.dt-card-val {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.dt-card-val.expense {
+  color: var(--red);
+}
+.dt-card-val.income {
+  color: var(--green);
+}
+.dt-card-date {
+  font-size: 0.65rem;
+  color: var(--t3);
+  margin-top: 0.1rem;
+}
+
+/* pagination */
+.comp-dt-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 1.1rem;
+  border-top: 1px solid var(--bdr);
+  flex-wrap: wrap;
+}
+.comp-dt-info {
+  font-size: 0.72rem;
+  color: var(--t3);
+}
+.comp-dt-pages {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.pg-btn {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--t2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.35rem;
+  cursor: pointer;
+}
+.pg-btn:hover:not(:disabled) {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+.pg-btn.on {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border-color: rgba(99, 102, 241, 0.25);
+}
+.pg-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* banner de erro da exportação CSV (2026-09-11) — perto do botão de
+   exportar, nunca troca a tela inteira (ver `.state-panel` abaixo,
+   reservado pra falha de carregamento da página, não de uma ação
+   pontual) */
+.export-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 0.75rem;
+  font-size: 0.8rem;
+}
+.export-alert--limit {
+  background: rgba(217, 119, 6, 0.1);
+  border: 1px solid rgba(217, 119, 6, 0.28);
+  color: var(--amber, #d97706);
+}
+.export-alert--error {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.24);
+  color: var(--red);
+}
+.export-alert span {
+  flex: 1 1 auto;
+}
+.export-alert-link {
+  font-weight: 700;
+  white-space: nowrap;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.export-alert-close {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0 0 0.3rem;
+  opacity: 0.7;
+}
+.export-alert-close:hover {
+  opacity: 1;
+}
+
+/* empty / error / loading states */
+.state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--t2);
+}
+.state-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elev);
+  border: 1px solid var(--bdr-s);
+  color: var(--t3);
+}
+.state-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--t1);
+}
+.state-sub {
+  font-size: 0.78rem;
+  color: var(--t3);
+  max-width: 26rem;
+}
+.state-retry-btn {
+  margin-top: 0.3rem;
+  padding: 0.45rem 1rem;
+  border-radius: 0.55rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t1);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.state-retry-btn:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+
+/* skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-elev) 25%, var(--bdr) 50%, var(--bg-elev) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+  border-radius: 0.5rem;
+}
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+  .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+  .comp-stats-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .comp-ph-cta span {
+    display: none;
+  }
+  .period-picker {
+    width: 100%;
+  }
+  .period-row {
+    width: 100%;
+  }
+  .period-row .period-picker-input {
+    flex: 1;
+    min-width: 0;
+  }
+  .period-row .period-picker-input .p-datepicker-input {
+    width: 100%;
+  }
+  .bottom-row,
+  .bottom-row-payment {
+    grid-template-columns: 1fr;
+  }
+  /*
+   * Autor: Carlos Adriano
+   * Data: 2026-09-15
+   * Descrição: No mobile, `.ai-card__header` é `flex-wrap: wrap` com
+   * `justify-content: space-between` — o botão "Gerar" (`.ai-card__btn`,
+   * `flex-shrink: 0`) e o ícone tomavam boa parte da largura da linha
+   * antes do texto, sobrando pouco espaço pro `.ai-card__header-left`
+   * (`min-width: 0`), que então truncava o subtítulo
+   * ("Narrativa gerada sobre o período ...") bem mais cedo do que devia
+   * — bug real reportado pelo usuário. Empilhar (`.ai-card__header-left`
+   * em cima, ocupando 100%; `.ai-card__btn` embaixo, também 100%) ajudou
+   * mas não resolveu de vez: em telas bem estreitas (~360px) a string
+   * ("Narrativa gerada sobre o período 2026-04 – 2026-09") ainda não
+   * cabe numa linha só, e `.ai-card__sub` (`white-space: nowrap` +
+   * `text-overflow: ellipsis`) continuava cortando. Correção definitiva:
+   * no mobile o subtítulo quebra em quantas linhas precisar
+   * (`white-space: normal`) em vez de truncar — nunca mais corta,
+   * independente do tamanho da tela ou do conteúdo do texto.
+   */
+  .ai-card__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ai-card__header-left {
+    width: 100%;
+  }
+  .ai-card__sub {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+  .ai-card__btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .comp-stats-strip {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .comp-stat {
+    padding: 0.6rem 0.65rem;
+    gap: 0.5rem;
+  }
+  .comp-stat-ico {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+  .comp-stat-lbl {
+    font-size: 0.56rem;
+  }
+  .comp-stat-val {
+    font-size: 0.85rem;
+  }
+  .comp-stat-sub {
+    display: none;
+  }
+  .comp-filter-bar {
+    gap: 0.4rem;
+  }
+  .comp-fb-sep,
+  .comp-fb-range-sep {
+    display: none;
+  }
+  /* De/Até (Reports) lado a lado numa linha só no mobile, em vez de
+     empilhar (bug real reportado pelo usuário em 2026-08-15: os dois
+     grupos não cabiam juntos e o `flex-wrap` da barra jogava "Até" pra
+     uma 2ª linha) — encolhe rótulo/setas/input o suficiente pra caber. */
+  .comp-fb-period-range {
+    flex-wrap: nowrap;
+    gap: 0.3rem;
+  }
+  .comp-fb-period-group {
+    flex: 1;
+    min-width: 0;
+    gap: 0.15rem;
+  }
+  .comp-fb-period-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+  .comp-fb-arrow {
+    width: 1.4rem;
+    height: 1.4rem;
+    flex-shrink: 0;
+  }
+  .comp-dt-table {
+    display: none;
+  }
+  .dt-card-list {
+    display: flex;
+  }
+  .period-shortcuts {
+    display: none;
+  }
+}

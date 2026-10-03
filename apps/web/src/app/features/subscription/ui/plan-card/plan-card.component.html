@@ -1,0 +1,53 @@
+<div
+  class="plan-card"
+  [class.highlighted]="highlighted()"
+  [class.badge-premium]="badge() === 'premium'"
+>
+  <div class="c-badge" [class]="'b-' + badge()">
+    {{ 'subscription.badges.' + badge() | transloco }}
+  </div>
+
+  <div class="p-name">{{ nameKey() | transloco }}</div>
+
+  <div class="p-price-row">
+    <span class="p-curr">R$</span>
+    <span class="p-val">{{ priceReais() | brlAmount }}</span>
+    <span class="p-per">{{ 'subscription.perMonth' | transloco }}</span>
+  </div>
+  @if (billingCycle() === 'annual' && annualMonthlyEquivalentReais() !== null) {
+    <div class="p-annual-info">
+      {{
+        'subscription.annualEquivalent'
+          | transloco: { amount: annualMonthlyEquivalentReais() | brlAmount }
+      }}
+    </div>
+  } @else {
+    <div class="p-annual-info">&nbsp;</div>
+  }
+
+  <p class="p-tagline">{{ taglineKey() | transloco }}</p>
+  <hr class="p-divider" />
+
+  <ul class="p-feats">
+    @for (feature of features(); track feature.labelKey) {
+      <li class="feat" [class.yes]="feature.included" [class.no]="!feature.included">
+        @if (feature.included) {
+          <svg class="fi y" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+        } @else {
+          <svg class="fi n" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+        }
+        {{ feature.labelKey | transloco: feature.labelParams }}
+      </li>
+    }
+  </ul>
+
+  <button
+    type="button"
+    class="p-cta"
+    [class]="'cta-' + ctaVariant()"
+    [disabled]="ctaDisabled()"
+    (click)="onCtaClick()"
+  >
+    {{ ctaLabelKey() | transloco }}
+  </button>
+</div>

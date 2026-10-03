@@ -1,0 +1,16 @@
+<div
+  class="cat-icon"
+  [class.cat-icon-lg]="large()"
+  [style.background]="background()"
+  [style.color]="color()"
+>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    [innerHTML]="iconMarkup()"
+  ></svg>
+</div>

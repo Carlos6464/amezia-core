@@ -1,0 +1,65 @@
+<div class="comp-data-table">
+  <div class="comp-dt-head">
+    <span class="comp-dt-title">
+      {{ 'admin.users.tableTitle' | transloco }}
+      <span class="comp-dt-count">({{ total() }})</span>
+    </span>
+  </div>
+
+  @if (users().length === 0) {
+    <div class="state-panel">
+      <div class="state-icon">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+        </svg>
+      </div>
+      <div class="state-title">{{ 'admin.users.emptyTitle' | transloco }}</div>
+      <div class="state-sub">{{ 'admin.users.emptySub' | transloco }}</div>
+    </div>
+  } @else {
+    <div class="table-scroll">
+      <table class="comp-dt-table">
+        <thead>
+          <tr>
+            <th>{{ 'admin.users.columnName' | transloco }}</th>
+            <th>{{ 'admin.users.columnEmail' | transloco }}</th>
+            <th>{{ 'admin.users.columnPhone' | transloco }}</th>
+            <th>{{ 'admin.users.columnRole' | transloco }}</th>
+            <th>{{ 'admin.users.columnCreatedAt' | transloco }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.id) {
+            <tr (click)="rowClick.emit(user)">
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phone ?? '—' }}</td>
+              <td>
+                <app-role-badge [role]="user.role" />
+                @if (user.is_admin_test_access) {
+                  <span class="test-access-badge">{{ 'admin.users.testAccess.badge' | transloco }}</span>
+                }
+              </td>
+              <td>{{ user.created_at | date: 'dd/MM/yyyy' }}</td>
+              <td class="actions-cell">
+                <button
+                  class="act-btn del"
+                  type="button"
+                  [title]="'admin.users.delete' | transloco"
+                  (click)="onDeleteClick($event, user)"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                    <path d="M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

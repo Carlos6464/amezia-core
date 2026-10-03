@@ -1,0 +1,36 @@
+@if (rows().length > 0) {
+  @if (clickable()) {
+    <div class="dist-hint">{{ 'reports.dashboard.paymentMethodDistributionHint' | transloco }}</div>
+  }
+  <div class="dist-list">
+    @for (row of rows(); track row.paymentMethod) {
+      <div
+        class="dist-item"
+        [class.clickable]="clickable()"
+        [attr.role]="clickable() ? 'button' : null"
+        [attr.tabindex]="clickable() ? 0 : null"
+        (click)="onRowClick(row)"
+        (keydown.enter)="onRowClick(row)"
+        (keydown.space)="onRowClick(row)"
+      >
+        <div class="dist-row">
+          <div class="dist-name">
+            <span class="cat-dot" [style.background]="row.color"></span>
+            <span class="dist-name-text">{{ row.labelKey | transloco }}</span>
+          </div>
+          <div class="dist-nums">
+            <span class="dist-val">{{ row.total | brlAmount }}</span>
+            <span class="dist-pct">{{ row.percentage.toFixed(0) }}%</span>
+          </div>
+        </div>
+        <div class="dist-track">
+          <div class="dist-fill" [style.width.%]="row.percentage" [style.background]="row.color"></div>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="state-panel">
+    <div class="state-sub">{{ 'reports.dashboard.chartEmpty' | transloco }}</div>
+  </div>
+}

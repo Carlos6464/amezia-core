@@ -1,0 +1,47 @@
+<div class="page-hd">
+  <h1>{{ 'feedback.pageTitle' | transloco }}</h1>
+  <p>{{ 'feedback.pageSubtitle' | transloco }}</p>
+</div>
+
+<div class="tabs">
+  <button type="button" class="tab" [class.active]="activeTab() === 'send'" (click)="switchTab('send')">
+    {{ 'feedback.tabs.send' | transloco }}
+  </button>
+  <button type="button" class="tab" [class.active]="activeTab() === 'history'" (click)="switchTab('history')">
+    {{ 'feedback.tabs.history' | transloco }}
+    <span class="tab-badge">{{ feedbackService.historyTotal() }}</span>
+  </button>
+</div>
+
+@if (activeTab() === 'send') {
+  <div class="tab-panel">
+    @if (feedbackService.submitted()) {
+      <app-feedback-success (resetRequested)="onResetForm()" />
+    } @else {
+      <app-nps-scale [value]="selectedNps()" (npsChange)="selectedNps.set($event)" />
+
+      <div class="card type-card">
+        <div class="type-card-title">{{ 'feedback.type.label' | transloco }}</div>
+        <app-feedback-type-chips [selected]="selectedType()" (typeChange)="selectedType.set($event)" />
+      </div>
+
+      @if (feedbackService.submitError(); as error) {
+        <p class="submit-error">{{ error | transloco }}</p>
+      }
+
+      <app-feedback-form
+        [type]="selectedType()"
+        [userName]="userName()"
+        [submitting]="feedbackService.submitting()"
+        (submitRequested)="onSubmit($event)"
+      />
+    }
+  </div>
+} @else {
+  <div class="tab-panel">
+    <app-feedback-history-list
+      [items]="feedbackService.history()"
+      [loading]="feedbackService.loadingHistory()"
+    />
+  </div>
+}

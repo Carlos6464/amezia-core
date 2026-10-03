@@ -1,0 +1,78 @@
+<div
+  class="modal-overlay"
+  tabindex="-1"
+  (click)="onOverlayClick($event)"
+  (keydown.escape)="closeModal.emit()"
+>
+  <div class="modal-card" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-title">{{ 'admin.users.changeRoleTitle' | transloco }}</span>
+      <button class="modal-close" type="button" (click)="closeModal.emit()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <p>{{ 'admin.users.changeRoleDescription' | transloco: { name: user().name } }}</p>
+
+      <div class="role-options">
+        <button
+          type="button"
+          class="role-option"
+          [class.selected]="selectedRole() === 'user'"
+          (click)="selectRole('user')"
+        >
+          <app-role-badge role="user" />
+          <span>{{ 'admin.users.role.user' | transloco }}</span>
+        </button>
+        <button
+          type="button"
+          class="role-option"
+          [class.selected]="selectedRole() === 'admin'"
+          (click)="selectRole('admin')"
+        >
+          <app-role-badge role="admin" />
+          <span>{{ 'admin.users.role.admin' | transloco }}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="modal-btn cancel" type="button" (click)="closeModal.emit()">
+        {{ 'admin.common.cancel' | transloco }}
+      </button>
+      <button
+        class="modal-btn confirm"
+        type="button"
+        [disabled]="saving() || selectedRole() === user().role"
+        (click)="confirm()"
+      >
+        {{ 'admin.common.save' | transloco }}
+      </button>
+    </div>
+
+    <div class="modal-section-divider"></div>
+
+    <div class="modal-body">
+      <div class="test-access-row">
+        <div class="test-access-copy">
+          <span class="test-access-title">{{ 'admin.users.testAccess.title' | transloco }}</span>
+          <p class="test-access-sub">{{ 'admin.users.testAccess.description' | transloco }}</p>
+        </div>
+        <button
+          type="button"
+          class="test-access-switch"
+          [class.on]="user().is_admin_test_access"
+          [disabled]="savingTestAccess()"
+          [attr.aria-pressed]="user().is_admin_test_access"
+          [attr.aria-label]="'admin.users.testAccess.title' | transloco"
+          (click)="onToggleTestAccess()"
+        >
+          <span class="test-access-switch-knob"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

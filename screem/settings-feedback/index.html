@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia — Configurações · Feedback</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit}
+ul{list-style:none}
+
+:root{
+  --bg:#070b12;--bg-card:#0d1526;--bg-elev:#111c30;--bg-sidebar:#09101f;
+  --bdr:rgba(255,255,255,.07);--bdr-s:rgba(255,255,255,.11);
+  --t1:#f0f4ff;--t2:#8899bb;--t3:#4a5878;
+  --accent:#6366f1;--acc-l:#818cf8;--acc-s:rgba(99,102,241,.1);--acc-s2:rgba(99,102,241,.2);
+  --green:#10b981;--red:#f43f5e;--amber:#f59e0b;--violet:#a78bfa;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+}
+[data-theme="light"]{
+  --bg:#f0f4f8;--bg-card:#ffffff;--bg-elev:#f8fafc;--bg-sidebar:#ffffff;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --bdr:rgba(15,23,42,.08);--bdr-s:rgba(15,23,42,.13);
+  --acc-s:rgba(99,102,241,.08);--acc-s2:rgba(99,102,241,.16);
+  --accent:#4f46e5;--acc-l:#4f46e5;
+  --green:#059669;--red:#dc2626;--amber:#d97706;--violet:#7c3aed;
+  --grad:linear-gradient(135deg,#4f46e5,#2563eb);
+}
+
+html,body{height:100%;min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{height:3.25rem;background:var(--bg-sidebar);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 1.25rem;gap:.85rem;flex-shrink:0;position:sticky;top:0;z-index:40}
+.brand{display:flex;align-items:center;gap:.4rem}
+.brand-mark{width:1.6rem;height:1.6rem;border-radius:.4rem;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;color:#fff}
+.brand-name{font-size:.88rem;font-weight:800}
+.breadcrumb{display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:var(--t3);margin-left:.3rem}
+.breadcrumb svg{opacity:.4}
+.breadcrumb .bc-cur{color:var(--t2)}
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:.5rem}
+.avatar{width:1.75rem;height:1.75rem;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;cursor:pointer}
+.top-icon-btn{width:1.75rem;height:1.75rem;border-radius:.4rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t2);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.top-icon-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.mob-ham{width:2rem;height:2rem;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:none;cursor:pointer;flex-shrink:0}
+.mob-ham span{width:16px;height:2px;background:var(--t1);border-radius:1px;display:block}
+
+/* SHELL */
+.app{display:flex;flex:1;min-height:0}
+
+/* SIDEBAR */
+.sidebar{width:220px;flex-shrink:0;background:var(--bg-sidebar);border-right:1px solid var(--bdr);padding:.75rem .65rem;overflow-y:auto}
+.nav-section{font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);padding:.6rem .5rem .3rem}
+.nav-item{display:flex;align-items:center;gap:.5rem;padding:.45rem .6rem;border-radius:.5rem;font-size:.8rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s}
+.nav-item:hover{color:var(--t1);background:var(--acc-s)}
+.nav-item.active{color:var(--acc-l);background:var(--acc-s);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.6}
+.nav-item.active svg{opacity:1}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:1.75rem 1.5rem 3rem}
+
+/* PAGE HEADER */
+.page-hd{margin-bottom:1.5rem}
+.page-hd h1{font-size:1.2rem;font-weight:800;margin-bottom:.2rem}
+.page-hd p{font-size:.82rem;color:var(--t2)}
+
+/* TABS */
+.tabs{display:flex;gap:.2rem;border-bottom:1.5px solid var(--bdr);margin-bottom:1.5rem;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{font-size:.8rem;font-weight:600;padding:.55rem .9rem;color:var(--t2);border-bottom:2px solid transparent;margin-bottom:-1.5px;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.tab:hover{color:var(--t1)}
+.tab.active{color:var(--acc-l);border-bottom-color:var(--accent)}
+
+/* CARDS */
+.card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.4rem 1.5rem}
+
+/* NPS WIDGET */
+.nps-card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.5rem}
+.nps-q{font-size:.92rem;font-weight:700;margin-bottom:.35rem}
+.nps-sub{font-size:.78rem;color:var(--t2);margin-bottom:1.25rem}
+.nps-scale{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.5rem}
+.nps-btn{width:2.55rem;height:2.55rem;border-radius:.65rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.85rem;font-weight:700;color:var(--t2);display:flex;align-items:center;justify-content:center;transition:all .15s;cursor:pointer;flex-shrink:0}
+.nps-btn:hover{transform:translateY(-1px)}
+.nps-btn.det:hover,.nps-btn.det.sel{background:rgba(244,63,94,.15);border-color:rgba(244,63,94,.4);color:var(--red)}
+.nps-btn.neu:hover,.nps-btn.neu.sel{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.35);color:var(--amber)}
+.nps-btn.pro:hover,.nps-btn.pro.sel{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.35);color:var(--green)}
+.nps-labels{display:flex;justify-content:space-between;font-size:.7rem;color:var(--t3);margin-bottom:.2rem}
+
+/* FEEDBACK TYPE CHIPS */
+.type-chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.type-chip{display:flex;align-items:center;gap:.35rem;padding:.38rem .8rem;border-radius:999px;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.78rem;font-weight:600;color:var(--t2);cursor:pointer;transition:all .15s}
+.type-chip:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.type-chip.sel-elogio{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:var(--green)}
+.type-chip.sel-sugestao{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.3);color:var(--violet)}
+.type-chip.sel-bug{background:rgba(244,63,94,.1);border-color:rgba(244,63,94,.3);color:var(--red)}
+.type-chip.sel-outro{background:var(--acc-s2);border-color:rgba(99,102,241,.35);color:var(--acc-l)}
+
+/* FORM ELEMENTS */
+.field{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.9rem}
+.f-label{font-size:.76rem;font-weight:600;color:var(--t2)}
+.f-ctrl{width:100%;padding:.62rem .85rem;border-radius:.65rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t1);font-size:.84rem;outline:none;transition:border-color .15s}
+.f-ctrl::placeholder{color:var(--t3)}
+.f-ctrl:focus{border-color:var(--accent)}
+.f-textarea{resize:vertical;min-height:100px;line-height:1.6}
+.f-char{font-size:.68rem;color:var(--t3);text-align:right;margin-top:.2rem}
+
+/* SUBMIT BTN */
+.submit-btn{display:flex;align-items:center;gap:.4rem;padding:.68rem 1.4rem;border-radius:.7rem;font-size:.85rem;font-weight:700;background:var(--grad);color:#fff;border:none;box-shadow:0 3px 14px rgba(99,102,241,.35);transition:all .15s;cursor:pointer}
+.submit-btn:hover{filter:brightness(1.1)}
+.submit-btn:disabled{opacity:.5;cursor:default;filter:none}
+
+/* SUCCESS CARD */
+.success-card{display:none;flex-direction:column;align-items:center;text-align:center;gap:.85rem;padding:2rem 1.5rem}
+.success-icon{width:4.5rem;height:4.5rem;border-radius:50%;background:rgba(16,185,129,.1);border:2px solid rgba(16,185,129,.25);display:flex;align-items:center;justify-content:center;color:var(--green);animation:pop .4s cubic-bezier(.175,.885,.32,1.275) both}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.success-card h3{font-size:1.05rem;font-weight:700}
+.success-card p{font-size:.82rem;color:var(--t2);max-width:320px}
+.reset-link{font-size:.8rem;color:var(--acc-l);cursor:pointer;text-decoration:underline;text-underline-offset:.2rem}
+
+/* SECTION LABEL */
+.sec-lbl{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:.6rem}
+
+/* FEEDBACK HISTORY ITEMS */
+.fb-list{display:flex;flex-direction:column;gap:.6rem}
+.fb-item{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:.85rem;padding:1rem 1.15rem;display:flex;align-items:flex-start;gap:.85rem;transition:border-color .15s}
+.fb-item:hover{border-color:rgba(99,102,241,.25)}
+.fb-icon{width:2.2rem;height:2.2rem;border-radius:.55rem;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.fi-elogio{background:rgba(16,185,129,.1);color:var(--green)}
+.fi-sugestao{background:rgba(167,139,250,.1);color:var(--violet)}
+.fi-bug{background:rgba(244,63,94,.1);color:var(--red)}
+.fi-outro{background:var(--acc-s);color:var(--acc-l)}
+.fb-body{flex:1;min-width:0}
+.fb-subject{font-size:.83rem;font-weight:600;margin-bottom:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fb-preview{font-size:.76rem;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.35rem}
+.fb-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.fb-badge{font-size:.63rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.1rem .4rem;border-radius:999px}
+.bb-elogio{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.bb-sugestao{background:rgba(167,139,250,.1);color:var(--violet);border:1px solid rgba(167,139,250,.2)}
+.bb-bug{background:rgba(244,63,94,.1);color:var(--red);border:1px solid rgba(244,63,94,.2)}
+.bb-outro{background:var(--acc-s);color:var(--acc-l);border:1px solid rgba(99,102,241,.2)}
+.fb-date{font-size:.68rem;color:var(--t3)}
+.fb-nps{display:flex;align-items:center;gap:.25rem;font-size:.72rem;font-weight:700;margin-left:auto;flex-shrink:0}
+.nps-dot{width:.5rem;height:.5rem;border-radius:50%}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--t3)}
+.empty svg{margin-bottom:.75rem;opacity:.3}
+.empty p{font-size:.82rem}
+
+/* MOBILE OVERLAY */
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:80;backdrop-filter:blur(4px)}
+.mob-overlay.open{display:block}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .sidebar{position:fixed;inset:0 auto 0 0;width:220px;z-index:90;transform:translateX(-100%);transition:transform .25s}
+  .sidebar.open{transform:translateX(0)}
+  .mob-ham{display:flex}
+  .main{padding:1.25rem 1rem 3rem}
+  .page-hd h1{font-size:1.05rem}
+  .nps-scale{gap:.3rem}
+  .nps-btn{width:2.3rem;height:2.3rem;font-size:.8rem}
+}
+@media(max-width:480px){
+  .topbar{padding:0 .85rem;gap:.6rem}
+  .breadcrumb{font-size:.7rem}
+  .nps-btn{width:2rem;height:2rem;font-size:.75rem;border-radius:.5rem}
+  .nps-scale{gap:.22rem}
+  .type-chips{gap:.35rem}
+  .type-chip{font-size:.74rem;padding:.3rem .65rem}
+  .card,.nps-card{padding:1.1rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="mob-overlay" id="mob-overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.classList.remove('open')"></div>
+
+<header class="topbar">
+  <button class="mob-ham" onclick="document.getElementById('sidebar').classList.add('open');document.getElementById('mob-overlay').classList.add('open')"><span></span><span></span><span></span></button>
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <span class="brand-name">Amezia</span>
+  </div>
+  <div class="breadcrumb">
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    Configurações
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    <span class="bc-cur">Feedback</span>
+  </div>
+  <div class="topbar-r">
+    <button class="top-icon-btn" onclick="toggleTheme()">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+    </button>
+    <div class="avatar">CA</div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-section">Menu</div>
+    <div class="nav-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      Despesas
+    </div>
+    <div class="nav-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Relatórios
+    </div>
+    <div class="nav-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      WhatsApp
+    </div>
+    <div class="nav-section" style="margin-top:.5rem">Conta</div>
+    <div class="nav-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Perfil
+    </div>
+    <div class="nav-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Planos
+    </div>
+    <div class="nav-item">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Suporte
+    </div>
+    <div class="nav-item active">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Feedback
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-hd">
+      <h1>Feedback</h1>
+      <p>Sua opinião ajuda a melhorar o Amezia para todos</p>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" id="tab-enviar-btn" onclick="switchTab('enviar',this)">Enviar feedback</div>
+      <div class="tab" id="tab-hist-btn" onclick="switchTab('hist',this)">
+        Histórico
+        <span style="background:var(--acc-s);color:var(--acc-l);font-size:.62rem;padding:.05rem .35rem;border-radius:999px;margin-left:.3rem;font-weight:700">3</span>
+      </div>
+    </div>
+
+    <!-- ══ ABA ENVIAR ══════════════════════════════════════ -->
+    <div id="tab-enviar">
+
+      <!-- NPS -->
+      <div class="nps-card" style="margin-bottom:1rem">
+        <div class="nps-q">De 0 a 10, qual a probabilidade de você recomendar o Amezia para um amigo?</div>
+        <div class="nps-sub">0 = nada provável · 10 = extremamente provável</div>
+        <div class="nps-scale" id="nps-scale">
+          <!-- 0-6 detratores, 7-8 neutros, 9-10 promotores -->
+          <button class="nps-btn det" onclick="selectNps(this,0)">0</button>
+          <button class="nps-btn det" onclick="selectNps(this,1)">1</button>
+          <button class="nps-btn det" onclick="selectNps(this,2)">2</button>
+          <button class="nps-btn det" onclick="selectNps(this,3)">3</button>
+          <button class="nps-btn det" onclick="selectNps(this,4)">4</button>
+          <button class="nps-btn det" onclick="selectNps(this,5)">5</button>
+          <button class="nps-btn det" onclick="selectNps(this,6)">6</button>
+          <button class="nps-btn neu" onclick="selectNps(this,7)">7</button>
+          <button class="nps-btn neu" onclick="selectNps(this,8)">8</button>
+          <button class="nps-btn pro" onclick="selectNps(this,9)">9</button>
+          <button class="nps-btn pro" onclick="selectNps(this,10)">10</button>
+        </div>
+        <div class="nps-labels">
+          <span>Não recomendaria</span>
+          <span>Recomendaria muito</span>
+        </div>
+      </div>
+
+      <!-- TIPO + FORMULÁRIO -->
+      <div class="card" id="form-card">
+        <div style="font-size:.85rem;font-weight:700;margin-bottom:.3rem">Mais detalhes</div>
+        <div style="font-size:.77rem;color:var(--t2);margin-bottom:1.1rem">Escolha o tipo e descreva sua experiência</div>
+
+        <div style="margin-bottom:.85rem">
+          <div class="f-label" style="margin-bottom:.45rem">Tipo de feedback</div>
+          <div class="type-chips">
+            <button class="type-chip sel-elogio" id="chip-elogio" onclick="selectType('elogio')">
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+              Elogio
+            </button>
+            <button class="type-chip" id="chip-sugestao" onclick="selectType('sugestao')">
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Sugestão
+            </button>
+            <button class="type-chip" id="chip-bug" onclick="selectType('bug')">
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 6h8M8 18h8M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              Bug / Problema
+            </button>
+            <button class="type-chip" id="chip-outro" onclick="selectType('outro')">
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              Outro
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="f-label">Assunto <span id="subject-hint" style="color:var(--t3);font-weight:400">— Conta-nos o que está funcionando bem!</span></label>
+          <input class="f-ctrl" type="text" id="subject-input" placeholder="Ex: Gostei muito da experiência com o bot">
+        </div>
+
+        <div class="field">
+          <label class="f-label">Mensagem</label>
+          <textarea class="f-ctrl f-textarea" id="msg-input" placeholder="Descreva com detalhes sua experiência, sugestão ou problema..." oninput="updateChar(this)"></textarea>
+          <div class="f-char"><span id="char-count">0</span> / 1000 caracteres</div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
+          <span style="font-size:.73rem;color:var(--t3);display:flex;align-items:center;gap:.3rem">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Enviado como Carlos Andrade
+          </span>
+          <button class="submit-btn" onclick="submitFeedback()">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Enviar feedback
+          </button>
+        </div>
+      </div>
+
+      <!-- SUCCESS STATE (dentro do form-card) -->
+      <div class="card" id="success-card" style="display:none">
+        <div class="success-card" style="display:flex">
+          <div class="success-icon">
+            <svg width="30" height="30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3>Obrigado pelo feedback!</h3>
+          <p>Sua opinião é muito importante para continuarmos melhorando o Amezia.</p>
+          <div onclick="resetForm()" class="reset-link">Enviar outro feedback</div>
+        </div>
+      </div>
+
+    </div><!-- /tab-enviar -->
+
+    <!-- ══ ABA HISTÓRICO ═══════════════════════════════════ -->
+    <div id="tab-hist" style="display:none">
+      <div class="sec-lbl">Feedbacks enviados (3)</div>
+      <div class="fb-list">
+
+        <div class="fb-item">
+          <div class="fb-icon fi-elogio">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+          </div>
+          <div class="fb-body">
+            <div class="fb-subject">O bot no WhatsApp é incrível!</div>
+            <div class="fb-preview">Estou usando há 2 semanas e já economizei muito tempo registrando despesas...</div>
+            <div class="fb-meta">
+              <span class="fb-badge bb-elogio">Elogio</span>
+              <span class="fb-date">18 jun. 2026</span>
+            </div>
+          </div>
+          <div class="fb-nps">
+            <div class="nps-dot" style="background:var(--green)"></div>
+            <span style="color:var(--green)">9</span>
+          </div>
+        </div>
+
+        <div class="fb-item">
+          <div class="fb-icon fi-sugestao">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="fb-body">
+            <div class="fb-subject">Sugestão: relatório semanal automático</div>
+            <div class="fb-preview">Seria ótimo receber um resumo semanal dos gastos diretamente no WhatsApp, sem precisar...</div>
+            <div class="fb-meta">
+              <span class="fb-badge bb-sugestao">Sugestão</span>
+              <span class="fb-date">10 jun. 2026</span>
+            </div>
+          </div>
+          <div class="fb-nps">
+            <div class="nps-dot" style="background:var(--amber)"></div>
+            <span style="color:var(--amber)">8</span>
+          </div>
+        </div>
+
+        <div class="fb-item">
+          <div class="fb-icon fi-bug">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 6h8M8 18h8M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
+          </div>
+          <div class="fb-body">
+            <div class="fb-subject">Gráfico do dashboard fica em branco às vezes</div>
+            <div class="fb-preview">Quando troco de mês no filtro, o gráfico de linha fica completamente branco até...</div>
+            <div class="fb-meta">
+              <span class="fb-badge bb-bug">Bug</span>
+              <span class="fb-date">2 jun. 2026</span>
+            </div>
+          </div>
+          <div class="fb-nps">
+            <div class="nps-dot" style="background:var(--amber)"></div>
+            <span style="color:var(--amber)">7</span>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /tab-hist -->
+
+  </main>
+</div>
+
+<script>
+let selectedNps = null;
+let selectedType = 'elogio';
+
+function toggleTheme(){
+  document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+}
+
+function switchTab(name, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-enviar').style.display = name==='enviar' ? '' : 'none';
+  document.getElementById('tab-hist').style.display = name==='hist' ? '' : 'none';
+}
+
+function selectNps(btn, val){
+  document.querySelectorAll('.nps-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  selectedNps = val;
+}
+
+function selectType(type){
+  const types = ['elogio','sugestao','bug','outro'];
+  const hints = {
+    elogio: '— Conta-nos o que está funcionando bem!',
+    sugestao: '— Qual funcionalidade você gostaria de ver?',
+    bug: '— Descreva o que aconteceu para reproduzirmos.',
+    outro: '— Qualquer outro comentário é bem-vindo.'
+  };
+  const placeholders = {
+    elogio: 'Ex: Gostei muito da experiência com o bot',
+    sugestao: 'Ex: Relatório semanal automático por WhatsApp',
+    bug: 'Ex: O gráfico fica em branco ao trocar de mês',
+    outro: 'Ex: Dúvida sobre exportação de dados'
+  };
+  types.forEach(t=>{
+    const chip = document.getElementById('chip-'+t);
+    chip.className = 'type-chip';
+    if(t===type) chip.classList.add('sel-'+t);
+  });
+  selectedType = type;
+  document.getElementById('subject-hint').textContent = hints[type];
+  document.getElementById('subject-input').placeholder = placeholders[type];
+}
+
+function updateChar(el){
+  document.getElementById('char-count').textContent = el.value.length;
+}
+
+function submitFeedback(){
+  document.getElementById('form-card').style.display = 'none';
+  document.getElementById('success-card').style.display = '';
+}
+
+function resetForm(){
+  document.getElementById('form-card').style.display = '';
+  document.getElementById('success-card').style.display = 'none';
+  document.querySelectorAll('.nps-btn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('subject-input').value = '';
+  document.getElementById('msg-input').value = '';
+  document.getElementById('char-count').textContent = '0';
+  selectedNps = null;
+  selectType('elogio');
+}
+</script>
+</body>
+</html>

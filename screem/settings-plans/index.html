@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia · Configurações — Planos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+ul{list-style:none}
+
+/* ══ TOKENS ════════════════════════════════ */
+:root{
+  --bg:#070b12; --bg-card:#0d1526; --bg-elev:#111c30; --bg-sidebar:#09101f;
+  --bdr:rgba(255,255,255,.07); --bdr-s:rgba(255,255,255,.11);
+  --t1:#f0f4ff; --t2:#8899bb; --t3:#4a5878;
+  --accent:#6366f1; --acc-l:#818cf8; --acc-s:rgba(99,102,241,.1); --acc-s2:rgba(99,102,241,.2);
+  --green:#10b981; --red:#f43f5e; --amber:#f59e0b; --violet:#a78bfa;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+  --sb-w:220px; --radius:1rem;
+}
+[data-theme="light"]{
+  --bg:#f0f4f8; --bg-card:#ffffff; --bg-elev:#f8fafc; --bg-sidebar:#ffffff;
+  --t1:#0f172a; --t2:#475569; --t3:#94a3b8;
+  --bdr:rgba(15,23,42,.08); --bdr-s:rgba(15,23,42,.13);
+  --acc-s:rgba(99,102,241,.08); --acc-s2:rgba(99,102,241,.16);
+  --accent:#4f46e5; --acc-l:#4f46e5;
+  --green:#059669; --red:#dc2626; --amber:#d97706; --violet:#7c3aed;
+  --grad:linear-gradient(135deg,#4f46e5,#2563eb);
+}
+
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* ══ APP SHELL ══════════════════════════════ */
+.app{display:flex;min-height:100vh}
+
+/* ══ SIDEBAR ════════════════════════════════ */
+.sidebar{
+  position:fixed;inset:0 auto 0 0;width:var(--sb-w);
+  background:var(--bg-sidebar);border-right:1px solid var(--bdr);
+  display:flex;flex-direction:column;z-index:100;overflow-y:auto;
+}
+.sb-brand{display:flex;align-items:center;gap:.65rem;padding:1.1rem 1.1rem .9rem;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.sb-mark{width:1.9rem;height:1.9rem;border-radius:.55rem;background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(96,165,250,.12));border:1px solid rgba(99,102,241,.22);display:flex;align-items:center;justify-content:center;color:var(--acc-l)}
+.sb-name{font-size:.88rem;font-weight:800;letter-spacing:-.02em}
+.sb-sub{font-size:.57rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)}
+.sb-nav{flex:1;padding:.65rem .7rem}
+.sb-section{margin-bottom:1.1rem}
+.sb-lbl{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:.2rem .5rem;margin-bottom:.25rem}
+.sb-item{display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border-radius:.6rem;font-size:.82rem;font-weight:500;color:var(--t2);transition:all .15s;border:1px solid transparent;cursor:pointer}
+.sb-item:hover{background:var(--acc-s);color:var(--t1)}
+.sb-item.active{background:var(--acc-s);color:var(--acc-l);border-color:rgba(99,102,241,.18)}
+.sb-item svg{width:.95rem;height:.95rem;flex-shrink:0;opacity:.65}
+.sb-item.active svg,.sb-item:hover svg{opacity:1}
+.sb-foot{padding:.8rem 1rem;border-top:1px solid var(--bdr);display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.sb-avatar{width:1.9rem;height:1.9rem;border-radius:50%;flex-shrink:0;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:#fff}
+.sb-uname{font-size:.75rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-plan-badge{display:inline-block;font-size:.55rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.12rem .4rem;border-radius:999px;background:var(--acc-s2);color:var(--acc-l);border:1px solid rgba(99,102,241,.25);margin-top:.1rem}
+
+/* ══ MAIN ════════════════════════════════ */
+.main{margin-left:var(--sb-w);flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:90;background:var(--bg);border-bottom:1px solid var(--bdr);padding:.65rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem}
+.page-title{font-size:.95rem;font-weight:700;letter-spacing:-.01em}
+.topbar-right{display:flex;align-items:center;gap:.6rem}
+.icon-btn{width:2rem;height:2rem;border-radius:.55rem;border:1px solid var(--bdr-s);background:transparent;color:var(--t2);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.icon-btn:hover{background:var(--acc-s);color:var(--acc-l);border-color:rgba(99,102,241,.2)}
+.tb-avatar{width:2rem;height:2rem;border-radius:50%;flex-shrink:0;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;cursor:pointer}
+
+/* MOBILE TOPBAR */
+.mob-topbar{display:none;position:sticky;top:0;z-index:90;background:var(--bg-card);border-bottom:1px solid var(--bdr);padding:.65rem .95rem;align-items:center;gap:.75rem}
+.mob-ham{width:2rem;height:2rem;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3.5px}
+.mob-ham span{width:17px;height:2px;background:var(--t1);border-radius:1px;display:block}
+.mob-title{font-size:.95rem;font-weight:800;flex:1}
+
+/* CONTENT */
+.content{padding:1.1rem 1.4rem 3rem;max-width:1100px;display:flex;flex-direction:column;gap:1.1rem}
+
+/* SETTINGS SUBNAV */
+.settings-tabs{
+  display:flex;gap:.3rem;overflow-x:auto;padding-bottom:.1rem;flex-shrink:0;
+  scrollbar-width:none;
+}
+.settings-tabs::-webkit-scrollbar{display:none}
+.s-tab{
+  display:flex;align-items:center;gap:.4rem;
+  padding:.45rem .85rem;border-radius:.6rem;font-size:.8rem;font-weight:600;
+  color:var(--t2);border:1px solid transparent;white-space:nowrap;transition:all .15s;flex-shrink:0;
+}
+.s-tab:hover{color:var(--t1);background:var(--acc-s)}
+.s-tab.active{color:var(--acc-l);background:var(--acc-s);border-color:rgba(99,102,241,.2)}
+.s-tab svg{width:.85rem;height:.85rem;opacity:.7;flex-shrink:0}
+.s-tab.active svg{opacity:1}
+
+/* SECTION TITLE */
+.sec-hd{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.1rem}
+.sec-title{font-size:.95rem;font-weight:700;letter-spacing:-.01em}
+.sec-sub{font-size:.78rem;color:var(--t2)}
+
+/* CURRENT PLAN CARD */
+.curr-plan{
+  background:var(--bg-card);border:1.5px solid rgba(99,102,241,.3);border-radius:var(--radius);
+  padding:1.3rem 1.5rem;display:flex;align-items:stretch;gap:1.25rem;
+  position:relative;overflow:hidden;
+}
+.curr-plan::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:var(--grad)}
+.curr-plan-left{flex:1;min-width:0}
+.curr-plan-top{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;flex-wrap:wrap}
+.curr-name{font-size:1.05rem;font-weight:800;letter-spacing:-.02em}
+.status-badge{
+  display:inline-flex;align-items:center;gap:.3rem;
+  font-size:.65rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:.2rem .55rem;border-radius:999px;
+}
+.status-active{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+.status-trial{background:var(--acc-s2);color:var(--acc-l);border:1px solid rgba(99,102,241,.3)}
+.status-free{background:var(--bg-elev);color:var(--t2);border:1px solid var(--bdr-s)}
+.curr-plan-meta{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;font-size:.78rem;color:var(--t2)}
+.meta-item{display:flex;align-items:center;gap:.3rem}
+.meta-item svg{color:var(--t3);flex-shrink:0}
+.curr-plan-right{display:flex;flex-direction:column;gap:.6rem;justify-content:center;align-items:flex-end;flex-shrink:0}
+.btn-manage{
+  display:flex;align-items:center;gap:.4rem;
+  padding:.6rem 1rem;border-radius:.65rem;font-size:.8rem;font-weight:600;
+  background:var(--bg-elev);color:var(--t1);border:1.5px solid var(--bdr-s);
+  transition:all .15s;white-space:nowrap;
+}
+.btn-manage:hover{border-color:var(--accent);color:var(--acc-l)}
+.btn-cancel{font-size:.73rem;color:var(--t3);text-decoration:underline;text-underline-offset:2px;cursor:pointer;text-align:right}
+.btn-cancel:hover{color:var(--red)}
+.curr-price{font-size:1.3rem;font-weight:900;letter-spacing:-.03em;line-height:1;margin-bottom:.1rem}
+.curr-price-per{font-size:.72rem;color:var(--t2);font-weight:500}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;gap:.65rem}
+.t-lbl{font-size:.79rem;font-weight:600;color:var(--t3);cursor:pointer}
+.t-lbl.on{color:var(--t1)}
+.t-sw{position:relative;width:2.5rem;height:1.35rem;background:var(--bg-elev);border:1.5px solid var(--bdr-s);border-radius:999px;cursor:pointer;transition:background .2s;flex-shrink:0}
+.t-sw.on{background:var(--accent);border-color:var(--accent)}
+.t-sw::after{content:'';position:absolute;top:2px;left:2px;width:.9rem;height:.9rem;border-radius:50%;background:#fff;transition:transform .2s}
+.t-sw.on::after{transform:translateX(1.15rem)}
+.t-save{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(52,211,153,.1);color:var(--green);border:1px solid rgba(52,211,153,.22);border-radius:999px;padding:.15rem .45rem}
+
+/* PLAN COMPARISON */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem}
+
+.p-card{
+  background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:.9rem;
+  padding:1.2rem 1.1rem;display:flex;flex-direction:column;
+  transition:border-color .2s;
+}
+.p-card.current{border-color:rgba(99,102,241,.45);background:linear-gradient(160deg,var(--bg-card),#0f1633)}
+[data-theme="light"] .p-card.current{background:linear-gradient(160deg,#fff,#f0f0ff)}
+.p-card.popular-nc{border-color:rgba(99,102,241,.22)}
+.p-card.premium-nc{border-color:rgba(167,139,250,.2)}
+
+.pc-badge{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.pc-tag{
+  display:inline-flex;align-items:center;gap:.25rem;
+  font-size:.6rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  border-radius:999px;padding:.18rem .5rem;
+}
+.tag-curr{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+.tag-pop{background:var(--acc-s2);color:var(--acc-l);border:1px solid rgba(99,102,241,.3)}
+.tag-prem{background:rgba(167,139,250,.12);color:var(--violet);border:1px solid rgba(167,139,250,.25)}
+.tag-empty{height:1.2rem}
+
+.pc-name{font-size:.95rem;font-weight:800;letter-spacing:-.01em;margin-bottom:.3rem}
+.pc-price{font-size:1.45rem;font-weight:900;letter-spacing:-.03em;line-height:1;margin-bottom:.1rem}
+.pc-price span{font-size:.75rem;font-weight:500;color:var(--t2)}
+.pc-price-alt{font-size:.68rem;color:var(--t3);margin-bottom:.85rem;min-height:1rem}
+.pc-green{color:var(--green)!important}
+
+.pc-divider{border:none;border-top:1px solid var(--bdr);margin:.2rem 0 .75rem}
+
+.pc-feats{display:flex;flex-direction:column;gap:.38rem;flex:1;margin-bottom:1rem}
+.pf{display:flex;align-items:center;gap:.38rem;font-size:.76rem;color:var(--t2)}
+.pf.y{color:var(--t1)} .pf.n{opacity:.4}
+.pf svg{flex-shrink:0}
+.pf.y svg{color:var(--green)} .pf.n svg{color:var(--t3)}
+
+.pc-cta{
+  width:100%;padding:.62rem .8rem;border-radius:.65rem;font-size:.8rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:.35rem;transition:all .15s;
+  margin-top:auto;
+}
+.cta-curr{background:var(--bg-elev);color:var(--t2);border:1.5px solid var(--bdr-s);cursor:default}
+.cta-up{background:var(--grad);color:#fff;border:none;box-shadow:0 3px 12px rgba(99,102,241,.35)}
+.cta-up:hover{filter:brightness(1.1)}
+.cta-down{background:var(--bg-elev);color:var(--t1);border:1.5px solid var(--bdr-s)}
+.cta-down:hover{border-color:var(--t2);color:var(--t1)}
+.cta-free-up{background:var(--bg-elev);color:var(--acc-l);border:1.5px solid rgba(99,102,241,.3)}
+.cta-free-up:hover{background:var(--acc-s);border-color:var(--accent)}
+
+/* FAQ / CANCEL SECTION */
+.cancel-section{
+  background:var(--bg-card);border:1px solid var(--bdr);border-radius:var(--radius);
+  padding:1.1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+}
+.cs-left{display:flex;flex-direction:column;gap:.2rem}
+.cs-title{font-size:.82rem;font-weight:700}
+.cs-sub{font-size:.75rem;color:var(--t2)}
+.cs-btn{
+  padding:.5rem 1rem;border-radius:.6rem;font-size:.78rem;font-weight:600;
+  border:1.5px solid rgba(244,63,94,.25);color:var(--red);background:rgba(244,63,94,.06);
+  transition:all .15s;white-space:nowrap;
+}
+.cs-btn:hover{background:rgba(244,63,94,.12);border-color:rgba(244,63,94,.45)}
+
+/* MOBILE OVERLAY */
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;backdrop-filter:blur(4px)}
+.mob-overlay.open{display:block}
+
+/* THEME BTN */
+.theme-btn{position:fixed;bottom:1.25rem;right:1.25rem;z-index:99;width:2.2rem;height:2.2rem;border-radius:50%;background:var(--bg-card);border:1.5px solid var(--bdr-s);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.theme-btn:hover{color:var(--t1);border-color:var(--accent)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){.plans-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:860px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .topbar{display:none}
+  .mob-topbar{display:flex}
+}
+@media(max-width:640px){
+  .plans-grid{grid-template-columns:1fr}
+  .curr-plan{flex-direction:column}
+  .curr-plan-right{flex-direction:row;align-items:center;justify-content:space-between;border-top:1px solid var(--bdr);padding-top:.85rem}
+  .content{padding:.9rem .95rem 3rem}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-mark">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    </div>
+    <div>
+      <div class="sb-name">Amezia</div>
+      <div class="sb-sub">Finanças & IA</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-lbl">Menu</div>
+      <a class="sb-item" href="../dashboard/index.html">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a class="sb-item" href="../expenses/index.html">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Despesas
+      </a>
+      <a class="sb-item" href="../reports/index.html">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Relatórios
+      </a>
+      <a class="sb-item" href="#">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Inteligência IA
+      </a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-lbl">Sistema</div>
+      <a class="sb-item" href="#">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Categorias
+      </a>
+      <a class="sb-item active" href="#">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+        Configurações
+      </a>
+    </div>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-avatar">CA</div>
+    <div style="min-width:0">
+      <div class="sb-uname">Carlos Andrade</div>
+      <div class="sb-plan-badge">Pro</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MOB OVERLAY -->
+<div class="mob-overlay" id="mob-overlay" onclick="closeSb()"></div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR DESKTOP -->
+  <header class="topbar">
+    <span class="page-title">Configurações</span>
+    <div class="topbar-right">
+      <button class="icon-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'" title="Tema">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <div class="tb-avatar">CA</div>
+    </div>
+  </header>
+
+  <!-- TOPBAR MOBILE -->
+  <header class="mob-topbar">
+    <button class="mob-ham" onclick="openSb()"><span></span><span></span><span></span></button>
+    <span class="mob-title">Configurações</span>
+    <button class="icon-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+    </button>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- SETTINGS TABS -->
+    <div class="settings-tabs">
+      <button class="s-tab" onclick="goto('perfil')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Perfil
+      </button>
+      <button class="s-tab active">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Planos
+      </button>
+      <button class="s-tab" onclick="goto('uso')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Uso e Limites
+      </button>
+      <button class="s-tab" onclick="goto('suporte')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Suporte
+      </button>
+      <button class="s-tab" onclick="goto('feedback')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Feedback
+      </button>
+    </div>
+
+    <!-- CURRENT PLAN -->
+    <div>
+      <div class="sec-hd" style="margin-bottom:.75rem">
+        <div>
+          <div class="sec-title">Plano atual</div>
+          <div class="sec-sub">Gerencie sua assinatura ou altere de plano</div>
+        </div>
+        <!-- TOGGLE MENSAL/ANUAL (para comparação de preços) -->
+        <div class="toggle-row">
+          <span class="t-lbl on" id="lbl-m2">Mensal</span>
+          <div class="t-sw" id="t-sw2" onclick="toggleBilling()"></div>
+          <span class="t-lbl" id="lbl-a2">Anual</span>
+          <span class="t-save">-17%</span>
+        </div>
+      </div>
+
+      <div class="curr-plan">
+        <div class="curr-plan-left">
+          <div class="curr-plan-top">
+            <span class="curr-name">Pro</span>
+            <span class="status-badge status-active">
+              <svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg>
+              Ativo
+            </span>
+          </div>
+          <div class="curr-plan-meta">
+            <span class="meta-item">
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Próxima cobrança: <strong style="color:var(--t1)">21/07/2026</strong>
+            </span>
+            <span class="meta-item">
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              R$29,90/mês · Mensal
+            </span>
+            <span class="meta-item">
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              Visa •••• 4242
+            </span>
+          </div>
+        </div>
+        <div class="curr-plan-right">
+          <div style="text-align:right">
+            <div class="curr-price">R$29,90<span class="curr-price-per">/mês</span></div>
+          </div>
+          <button class="btn-manage" onclick="window.open('#stripe-portal','_blank')">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Gerenciar assinatura
+          </button>
+          <span class="btn-cancel" onclick="confirmCancel()">Cancelar plano</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAN COMPARISON -->
+    <div>
+      <div class="sec-hd" style="margin-bottom:.75rem">
+        <div>
+          <div class="sec-title">Todos os planos</div>
+          <div class="sec-sub">Faça upgrade ou downgrade a qualquer momento</div>
+        </div>
+      </div>
+
+      <div class="plans-grid" id="plans-cmp">
+
+        <!-- FREE -->
+        <div class="p-card">
+          <div class="pc-badge">
+            <div class="tag-empty"></div>
+          </div>
+          <div class="pc-name">Free</div>
+          <div class="pc-price">R$0 <span>/mês</span></div>
+          <div class="pc-price-alt">&nbsp;</div>
+          <hr class="pc-divider">
+          <ul class="pc-feats">
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Dashboard e análises</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Despesas ilimitadas</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>3 categorias privadas</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>10 chats IA / mês</li>
+            <li class="pf n"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Bot WhatsApp</li>
+            <li class="pf n"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Exportação CSV</li>
+          </ul>
+          <button class="pc-cta cta-down">
+            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="19 9 12 16 5 9"/></svg>
+            Fazer downgrade
+          </button>
+        </div>
+
+        <!-- PRO (CURRENT) -->
+        <div class="p-card current">
+          <div class="pc-badge">
+            <span class="pc-tag tag-curr">
+              <svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg>
+              Plano atual
+            </span>
+          </div>
+          <div class="pc-name">Pro</div>
+          <div class="pc-price" id="pro-price-cmp">R$29,90 <span>/mês</span></div>
+          <div class="pc-price-alt" id="pro-alt-cmp">&nbsp;</div>
+          <hr class="pc-divider">
+          <ul class="pc-feats">
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Tudo do Free</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Categorias ilimitadas</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>50 chats IA / mês</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Bot WhatsApp (texto + áudio)</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Exportação CSV</li>
+            <li class="pf n"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>IA ilimitada</li>
+          </ul>
+          <button class="pc-cta cta-curr" disabled>
+            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Plano atual
+          </button>
+        </div>
+
+        <!-- PREMIUM -->
+        <div class="p-card premium-nc">
+          <div class="pc-badge">
+            <span class="pc-tag tag-prem">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M2 20h20l-2-12-5 7-3-8-3 8-5-7z"/></svg>
+              Completo
+            </span>
+          </div>
+          <div class="pc-name">Premium</div>
+          <div class="pc-price" id="prem-price-cmp">R$59,90 <span>/mês</span></div>
+          <div class="pc-price-alt pc-green" id="prem-alt-cmp">&nbsp;</div>
+          <hr class="pc-divider">
+          <ul class="pc-feats">
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Tudo do Pro</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Chats IA ilimitados</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Relatórios ilimitados</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Suporte prioritário</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Bot WhatsApp (texto + áudio)</li>
+            <li class="pf y"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Acesso antecipado</li>
+          </ul>
+          <button class="pc-cta cta-up" onclick="upgradeTo('premium')">
+            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="5 15 12 8 19 15"/></svg>
+            Fazer upgrade
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CANCELAR SEÇÃO -->
+    <div class="cancel-section">
+      <div class="cs-left">
+        <div class="cs-title">Cancelar assinatura</div>
+        <div class="cs-sub">Ao cancelar, você continua com acesso Pro até o fim do período pago (21/07/2026). Depois disso, volta ao plano Free.</div>
+      </div>
+      <button class="cs-btn" onclick="confirmCancel()">Cancelar assinatura</button>
+    </div>
+
+  </main>
+</div><!-- /main -->
+</div><!-- /app -->
+
+<button class="theme-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'" title="Tema">
+  <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
+<script>
+// SIDEBAR MOBILE
+function openSb(){document.getElementById('sidebar').classList.add('open');document.getElementById('mob-overlay').classList.add('open')}
+function closeSb(){document.getElementById('sidebar').classList.remove('open');document.getElementById('mob-overlay').classList.remove('open')}
+
+// BILLING TOGGLE
+let annual = false;
+function toggleBilling(){
+  annual = !annual;
+  document.getElementById('t-sw2').classList.toggle('on', annual);
+  document.getElementById('lbl-m2').classList.toggle('on', !annual);
+  document.getElementById('lbl-a2').classList.toggle('on', annual);
+
+  if(annual){
+    document.getElementById('pro-price-cmp').innerHTML = 'R$24,90 <span>/mês</span>';
+    document.getElementById('pro-alt-cmp').innerHTML = '<span style="color:var(--t3);text-decoration:line-through">R$29,90</span> · R$298,80/ano';
+    document.getElementById('prem-price-cmp').innerHTML = 'R$49,90 <span>/mês</span>';
+    document.getElementById('prem-alt-cmp').innerHTML = '<span style="color:var(--t3);text-decoration:line-through">R$59,90</span> · R$598,80/ano';
+  } else {
+    document.getElementById('pro-price-cmp').innerHTML = 'R$29,90 <span>/mês</span>';
+    document.getElementById('pro-alt-cmp').innerHTML = '&nbsp;';
+    document.getElementById('prem-price-cmp').innerHTML = 'R$59,90 <span>/mês</span>';
+    document.getElementById('prem-alt-cmp').innerHTML = '&nbsp;';
+  }
+}
+
+function upgradeTo(plan){
+  alert(`Redireciona para Stripe Checkout — plano ${plan} · ${annual?'anual':'mensal'}`);
+}
+function confirmCancel(){
+  alert('Modal de confirmação de cancelamento — após confirmar, redireciona para Stripe Customer Portal para processar o cancelamento.');
+}
+function goto(tab){
+  alert(`Navega para aba: ${tab}`);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+.danger-card {
+  border: 1.5px solid rgba(244, 63, 94, 0.18);
+  background: rgba(244, 63, 94, 0.04);
+  border-radius: 1rem;
+  padding: 1.4rem 1.5rem;
+}
+.card-hd {
+  margin-bottom: 1.15rem;
+}
+.card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.danger-title {
+  color: var(--red);
+}
+.card-sub {
+  font-size: 0.76rem;
+  color: var(--t2);
+  margin-top: 0.15rem;
+}
+.danger-text {
+  font-size: 0.8rem;
+  color: var(--t2);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+.btn-danger-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.55rem;
+  border: 1.5px solid rgba(244, 63, 94, 0.3);
+  color: var(--red);
+  background: rgba(244, 63, 94, 0.05);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.btn-danger-outline:hover {
+  background: rgba(244, 63, 94, 0.1);
+  border-color: rgba(244, 63, 94, 0.5);
+}
+.delete-confirm {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 0.7rem;
+  background: rgba(244, 63, 94, 0.06);
+  border: 1.5px solid rgba(244, 63, 94, 0.2);
+}
+.dc-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--red);
+  margin-bottom: 0.5rem;
+}
+.dc-input {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.55rem;
+  border: 1.5px solid rgba(244, 63, 94, 0.3);
+  background: var(--bg-elev);
+  color: var(--t1);
+  font-size: 0.83rem;
+  outline: none;
+  transition: border-color 0.15s;
+  margin-bottom: 0.65rem;
+  font-family: inherit;
+}
+.dc-input:focus {
+  border-color: var(--red);
+}
+.btn-danger-full {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 0.55rem;
+  background: var(--red);
+  color: #fff;
+  font-size: 0.83rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  opacity: 0.45;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+.btn-danger-full.enabled {
+  opacity: 1;
+}

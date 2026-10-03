@@ -1,0 +1,20 @@
+@if (hasData()) {
+  <div class="donut-wrap">
+    <p-chart
+      type="doughnut"
+      [data]="chartData()"
+      [options]="chartOptions()"
+      height="150px"
+      width="150px"
+      (onDataSelect)="onChartClick($event)"
+    />
+    <div class="donut-center">
+      <span class="donut-center-label">{{ 'reports.dashboard.donutTotal' | transloco }}</span>
+      <strong class="donut-center-value">{{ centerLabel() }}</strong>
+    </div>
+  </div>
+} @else {
+  <div class="state-panel">
+    <div class="state-sub">{{ 'reports.dashboard.chartEmpty' | transloco }}</div>
+  </div>
+}

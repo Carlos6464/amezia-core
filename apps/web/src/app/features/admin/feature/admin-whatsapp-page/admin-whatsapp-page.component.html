@@ -1,0 +1,70 @@
+<div class="comp-page-header">
+  <div>
+    <div class="comp-ph-badge">{{ 'admin.shell.brand' | transloco }}</div>
+    <h1 class="comp-ph-title">{{ 'admin.whatsapp.title' | transloco }}</h1>
+  </div>
+</div>
+
+@if (instance(); as current) {
+  <div class="whatsapp-grid">
+    <app-evolution-instance-card
+      [instance]="current"
+      [pending]="actionPending()"
+      (connectClick)="connect()"
+      (syncClick)="sync()"
+      (disconnectClick)="disconnect()"
+    />
+    <app-webhook-config-card [instance]="current" />
+  </div>
+} @else if (loading()) {
+  <div class="state-panel">
+    <div class="state-sub">{{ 'admin.common.loading' | transloco }}</div>
+  </div>
+} @else if (error()) {
+  <div class="state-panel">
+    <div class="state-title">{{ 'admin.errors.loadFailed' | transloco }}</div>
+  </div>
+} @else {
+  <div class="comp-data-table">
+    <div class="comp-dt-head">
+      <span class="comp-dt-title">{{ 'admin.whatsapp.createTitle' | transloco }}</span>
+    </div>
+    <form [formGroup]="createForm" (ngSubmit)="createInstance()" class="create-form">
+      <div class="field">
+        <label class="f-label" for="instance-name">{{ 'admin.whatsapp.instanceName' | transloco }}</label>
+        <input
+          id="instance-name"
+          class="f-input"
+          type="text"
+          formControlName="name"
+          placeholder="amezia-bot-prod"
+          [class.invalid]="fieldInvalid('name')"
+        />
+        @if (fieldInvalid('name')) {
+          <span class="f-error">{{ 'admin.whatsapp.instanceNameRequired' | transloco }}</span>
+        }
+      </div>
+      <div class="field">
+        <label class="f-label" for="instance-webhook">{{ 'admin.whatsapp.instanceWebhookUrl' | transloco }}</label>
+        <input
+          id="instance-webhook"
+          class="f-input"
+          type="text"
+          formControlName="webhook_url"
+          placeholder="https://api.amezia.app/api/v1/webhook/evolution"
+          [class.invalid]="fieldInvalid('webhook_url')"
+        />
+        @if (fieldInvalid('webhook_url')) {
+          <span class="f-error">{{ 'admin.whatsapp.instanceWebhookUrlRequired' | transloco }}</span>
+        }
+      </div>
+      @if (createError()) {
+        <div class="form-msg error">{{ createError() | transloco }}</div>
+      }
+
+      <button class="comp-ph-cta" type="submit" [disabled]="creating()">
+        <span>{{ 'admin.whatsapp.createSubmit' | transloco }}</span>
+      </button>
+    </form>
+  </div>
+}

@@ -1,0 +1,56 @@
+<div class="comp-page-header">
+  <div>
+    <div class="comp-ph-badge">{{ 'admin.shell.brand' | transloco }}</div>
+    <h1 class="comp-ph-title">{{ 'admin.plans.form.title' | transloco }}</h1>
+  </div>
+  <a routerLink="/admin/plans" class="comp-ph-cta secondary">
+    <span>{{ 'admin.plans.form.back' | transloco }}</span>
+  </a>
+</div>
+
+<div class="comp-data-table">
+  <form [formGroup]="priceForm" (ngSubmit)="submitPrice()" class="price-form">
+    <p class="form-hint">{{ 'admin.plans.form.hint' | transloco }}</p>
+    <div class="price-form-fields">
+      <div class="field">
+        <label class="f-label" for="price-plan">{{ 'admin.plans.form.planLabel' | transloco }}</label>
+        <select id="price-plan" class="f-input" formControlName="plan">
+          @for (plan of plans; track plan) {
+            <option [value]="plan">{{ 'admin.plans.planNames.' + plan | transloco }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label class="f-label" for="price-cycle">{{ 'admin.plans.form.cycleLabel' | transloco }}</label>
+        <select id="price-cycle" class="f-input" formControlName="billing_cycle">
+          @for (cycle of cycles; track cycle) {
+            <option [value]="cycle">{{ 'admin.plans.cycle.' + cycle | transloco }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label class="f-label" for="price-amount">{{ 'admin.plans.form.amountLabel' | transloco }}</label>
+        <input
+          id="price-amount"
+          class="f-input"
+          type="text"
+          inputmode="decimal"
+          formControlName="amount"
+          placeholder="19,90"
+          [class.invalid]="fieldInvalid()"
+        />
+        @if (fieldInvalid()) {
+          <span class="f-error">{{ 'admin.plans.form.amountInvalid' | transloco }}</span>
+        }
+      </div>
+    </div>
+
+    @if (formError()) {
+      <div class="form-msg error">{{ formError() | transloco }}</div>
+    }
+
+    <button class="comp-ph-cta price-form-submit" type="submit" [disabled]="saving()">
+      <span>{{ 'admin.plans.form.submit' | transloco }}</span>
+    </button>
+  </form>
+</div>

@@ -1,0 +1,257 @@
+<div class="page-content">
+  <div class="comp-page-header">
+    <div>
+      <div class="comp-ph-badge">{{ 'reports.dashboard.badge' | transloco }}</div>
+      <h1 class="comp-ph-title">{{ 'reports.page.title' | transloco }}</h1>
+    </div>
+    <div class="comp-ph-actions">
+      <button class="comp-ph-cta" type="button" [disabled]="state.exportLoading()" (click)="exportCsv()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        <span>{{ (state.exportLoading() ? 'reports.page.exporting' : 'reports.page.exportCsv') | transloco }}</span>
+      </button>
+      @if (breakpoint.isMobile()) {
+        <button class="comp-ph-filter-btn" type="button" (click)="openFilterSheet()">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 5H3" />
+            <path d="M12 19H3" />
+            <path d="M14 3v4" />
+            <path d="M16 17v4" />
+            <path d="M21 12h-9" />
+            <path d="M21 19h-5" />
+            <path d="M21 5h-7" />
+            <path d="M8 10v4" />
+            <path d="M8 12H3" />
+          </svg>
+          {{ 'reports.filterBar.filterButton' | transloco }}
+          @if (activeFilterCount() > 0) {
+            <span class="comp-ph-filter-badge">{{ activeFilterCount() }}</span>
+          }
+        </button>
+      }
+    </div>
+  </div>
+
+  <div [class.comp-filter-bar]="!breakpoint.isMobile()">
+    <div class="comp-fb-period-range-wrap" [class.standalone]="breakpoint.isMobile()">
+      <app-period-range-picker
+        [dateFrom]="draftRange().dateFrom"
+        [dateTo]="draftRange().dateTo"
+        (rangeChange)="onDraftRangeChange($event)"
+      />
+    </div>
+
+    @if (!breakpoint.isMobile()) {
+      <div class="comp-fb-sep"></div>
+
+      <app-report-category-select [(categoryId)]="draftCategoryId" />
+
+      <div class="comp-fb-sep"></div>
+
+      <button class="comp-fb-btn primary" type="button" (click)="apply()">
+        {{ 'reports.filterBar.apply' | transloco }}
+      </button>
+      <button class="comp-fb-btn" type="button" (click)="clear()">
+        {{ 'reports.filterBar.clear' | transloco }}
+      </button>
+    }
+
+    <div class="comp-fb-pills">
+      <div class="comp-fb-pill">
+        <span class="comp-fb-pill-lbl">{{ 'reports.filterBar.periodPill' | transloco }}</span>
+        <span class="comp-fb-pill-val">{{ periodLabel() }}</span>
+      </div>
+    </div>
+  </div>
+
+  @if (sheetOpen()) {
+    <button
+      type="button"
+      class="sheet-backdrop"
+      [attr.aria-label]="'reports.filterBar.close' | transloco"
+      (click)="sheetOpen.set(false)"
+    ></button>
+    <div class="sheet-panel" role="dialog" aria-modal="true">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <span class="sheet-title">{{ 'reports.filterBar.filterButton' | transloco }}</span>
+        <button type="button" class="sheet-close" (click)="sheetOpen.set(false)" [attr.aria-label]="'reports.filterBar.close' | transloco">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="sheet-body">
+        <div class="field">
+          <span class="field-label">{{ 'reports.filterBar.categoryLabel' | transloco }}</span>
+          <app-report-category-select [(categoryId)]="draftCategoryId" />
+        </div>
+      </div>
+
+      <div class="sheet-actions">
+        <button class="comp-fb-btn" type="button" (click)="clear()">
+          {{ 'reports.filterBar.clear' | transloco }}
+        </button>
+        <button class="comp-fb-btn primary" type="button" (click)="apply()">
+          {{ 'reports.filterBar.apply' | transloco }}
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (state.exportError(); as exportError) {
+    <div class="export-alert" [class.export-alert--limit]="exportError === 'limit_reached'" [class.export-alert--error]="exportError === 'failed'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+      <span>{{ (exportError === 'limit_reached' ? 'reports.page.exportLimitReached' : 'reports.page.exportFailed') | transloco }}</span>
+      @if (exportError === 'limit_reached') {
+        <a routerLink="/settings/plans" class="export-alert-link">{{ 'reports.page.exportLimitReachedCta' | transloco }}</a>
+      }
+      <button type="button" class="export-alert-close" (click)="state.dismissExportError()" [attr.aria-label]="'reports.page.close' | transloco">×</button>
+    </div>
+  }
+
+  @if (state.reportsError()) {
+    <div class="state-panel">
+      <div class="state-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+      </div>
+      <div class="state-title">{{ 'reports.page.errorTitle' | transloco }}</div>
+      <button class="state-retry-btn" type="button" (click)="retry()">
+        {{ 'reports.dashboard.retry' | transloco }}
+      </button>
+    </div>
+  } @else {
+    <div class="comp-stats-strip">
+      @if (state.summaryLoading()) {
+        @for (row of [1, 2, 3, 4]; track row) {
+          <div class="comp-stat"><div class="skeleton" style="height: 2.2rem; width: 100%"></div></div>
+        }
+      } @else {
+        <app-metric-card
+          [label]="'reports.page.metricTotal' | transloco"
+          [value]="(state.summary()?.total_expense ?? '0') | brlAmount"
+          [subtitle]="'reports.page.metricTotalSub' | transloco: { count: state.summary()?.transaction_count ?? 0 }"
+          tone="red"
+          iconColor="var(--red)"
+          iconBackground="rgba(244, 63, 94, 0.1)"
+          iconBorderColor="rgba(244, 63, 94, 0.18)"
+        >
+          <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
+        </app-metric-card>
+        <app-metric-card
+          [label]="'reports.page.metricBiggest' | transloco"
+          [value]="(state.summary()?.biggest_transaction?.amount ?? '0') | brlAmount"
+          [subtitle]="state.summary()?.biggest_transaction?.description ?? null"
+          tone="red"
+          iconColor="var(--amber)"
+          iconBackground="rgba(245, 158, 11, 0.1)"
+          iconBorderColor="rgba(245, 158, 11, 0.18)"
+        >
+          <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" />
+            <line x1="1" y1="10" x2="23" y2="10" />
+          </svg>
+        </app-metric-card>
+        <app-metric-card
+          [label]="'reports.page.metricAverage' | transloco"
+          [value]="averageMonthly() | brlAmount"
+        >
+          <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+        </app-metric-card>
+        <app-metric-card
+          [label]="'reports.page.metricCount' | transloco"
+          [value]="(state.summary()?.transaction_count ?? 0).toString()"
+          iconColor="var(--green)"
+          iconBackground="rgba(16, 185, 129, 0.1)"
+          iconBorderColor="rgba(16, 185, 129, 0.18)"
+        >
+          <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+            <polyline points="16 7 22 7 22 13" />
+          </svg>
+        </app-metric-card>
+      }
+    </div>
+
+    <app-ai-narrative-card
+      [state]="state.narrativeState()"
+      [narrative]="state.narrativeText()"
+      [periodLabel]="periodLabel()"
+      [retryAfterSeconds]="state.narrativeRetryAfterSeconds()"
+      (generate)="generateNarrative()"
+    />
+
+    <div class="bottom-row-payment">
+      <div class="chart-card">
+        <div class="chart-card-head">
+          <div>
+            <div class="chart-card-lbl">{{ 'reports.page.paymentMethodBadge' | transloco }}</div>
+            <div class="chart-card-title">{{ 'reports.page.paymentMethodTitle' | transloco }}</div>
+          </div>
+        </div>
+        @if (state.paymentMethodDistributionLoading()) {
+          <div class="skeleton" style="height: 8rem; width: 100%"></div>
+        } @else {
+          <app-payment-method-distribution-list [items]="state.paymentMethodDistribution()" />
+        }
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-head">
+          <div>
+            <div class="chart-card-lbl">{{ 'reports.page.paidPendingBadge' | transloco }}</div>
+            <div class="chart-card-title">{{ 'reports.page.paidPendingTitle' | transloco }}</div>
+          </div>
+        </div>
+        @if (state.paidPendingLoading()) {
+          <div class="skeleton" style="height: 165px; width: 100%"></div>
+        } @else {
+          <app-paid-pending-bar-chart [points]="state.monthlyPaidPending()" />
+        }
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <div class="chart-card">
+        <div class="chart-card-head">
+          <div>
+            <div class="chart-card-lbl">{{ 'reports.page.rankingBadge' | transloco }}</div>
+            <div class="chart-card-title">{{ 'reports.page.rankingTitle' | transloco }}</div>
+          </div>
+        </div>
+        @if (state.distributionLoading()) {
+          <div class="skeleton" style="height: 10rem; width: 100%"></div>
+        } @else {
+          <app-category-distribution-list [items]="state.categoryDistribution()" />
+        }
+      </div>
+
+      <app-transactions-table
+        [page]="state.transactionsPage()"
+        [loading]="state.transactionsLoading()"
+        (pageChange)="goToPage($event)"
+      />
+    </div>
+  }
+</div>

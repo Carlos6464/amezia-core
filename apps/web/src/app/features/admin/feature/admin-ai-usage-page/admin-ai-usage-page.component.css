@@ -1,0 +1,16 @@
+@import '../../ui/admin-design.css';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.consumer-name {
+  font-weight: 600;
+  color: var(--t1);
+}
+.consumer-email {
+  font-size: 0.72rem;
+  color: var(--t3);
+}

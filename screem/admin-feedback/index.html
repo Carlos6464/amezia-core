@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia Admin — Feedback</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit}
+ul{list-style:none}
+
+:root{
+  --bg:#070b12;--bg-card:#0d1526;--bg-elev:#111c30;--bg-sidebar:#09101f;
+  --bdr:rgba(255,255,255,.07);--bdr-s:rgba(255,255,255,.11);
+  --t1:#f0f4ff;--t2:#8899bb;--t3:#4a5878;
+  --accent:#6366f1;--acc-l:#818cf8;--acc-s:rgba(99,102,241,.1);--acc-s2:rgba(99,102,241,.2);
+  --green:#10b981;--red:#f43f5e;--amber:#f59e0b;--violet:#a78bfa;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+}
+[data-theme="light"]{
+  --bg:#f0f4f8;--bg-card:#ffffff;--bg-elev:#f8fafc;--bg-sidebar:#ffffff;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --bdr:rgba(15,23,42,.08);--bdr-s:rgba(15,23,42,.13);
+  --acc-s:rgba(99,102,241,.08);--acc-s2:rgba(99,102,241,.16);
+  --accent:#4f46e5;--acc-l:#4f46e5;
+  --green:#059669;--red:#dc2626;--amber:#d97706;--violet:#7c3aed;
+  --grad:linear-gradient(135deg,#4f46e5,#2563eb);
+}
+
+html,body{height:100%;min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{height:3.25rem;background:var(--bg-sidebar);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 1.1rem;gap:.75rem;flex-shrink:0;z-index:40;position:sticky;top:0}
+.brand{display:flex;align-items:center;gap:.4rem}
+.brand-mark{width:1.6rem;height:1.6rem;border-radius:.4rem;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;color:#fff}
+.brand-name{font-size:.88rem;font-weight:800}
+.admin-badge{font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.12rem .45rem;border-radius:999px;background:rgba(244,63,94,.12);color:var(--red);border:1px solid rgba(244,63,94,.2);margin-left:.2rem}
+.topbar-sep{width:1px;height:1.1rem;background:var(--bdr-s)}
+.page-title{font-size:.82rem;font-weight:700;color:var(--t2)}
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:.5rem}
+.top-btn{display:flex;align-items:center;gap:.3rem;padding:.28rem .7rem;border-radius:.45rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.75rem;font-weight:600;color:var(--t2);transition:all .15s}
+.top-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.avatar{width:1.75rem;height:1.75rem;border-radius:50%;background:linear-gradient(135deg,#f43f5e,#f97316);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff}
+
+/* LAYOUT */
+.layout{display:flex;flex:1;overflow:hidden}
+
+/* SIDENAV */
+.sidenav{width:200px;flex-shrink:0;background:var(--bg-sidebar);border-right:1px solid var(--bdr);padding:.6rem .55rem;overflow-y:auto}
+.nav-sect{font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);padding:.55rem .5rem .25rem}
+.nav-item{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;border-radius:.45rem;font-size:.78rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s}
+.nav-item:hover{color:var(--t1);background:var(--acc-s)}
+.nav-item.active{color:var(--acc-l);background:var(--acc-s);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.55}
+.nav-item.active svg{opacity:1}
+.nav-badge{margin-left:auto;font-size:.62rem;font-weight:700;background:var(--red);color:#fff;border-radius:999px;padding:.05rem .35rem}
+
+/* MAIN SCROLL */
+.scroll-main{flex:1;overflow-y:auto;min-width:0}
+
+/* CONTENT */
+.content{padding:1.25rem 1.4rem 3rem;display:flex;flex-direction:column;gap:1.15rem;max-width:1200px}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:.9rem}
+.stat-card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.1rem 1.25rem}
+
+/* NPS SCORE BIG */
+.nps-score-card{padding:1.1rem 1.5rem;display:flex;align-items:center;gap:1.25rem;min-width:220px}
+.nps-big{font-size:3.2rem;font-weight:900;letter-spacing:-.04em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.nps-info{flex:1}
+.nps-label{font-size:.73rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);margin-bottom:.3rem}
+.nps-class{font-size:.82rem;font-weight:700;color:var(--green)}
+.nps-bar-wrap{margin-top:.55rem}
+.nps-bar{display:flex;border-radius:999px;overflow:hidden;height:.5rem;gap:2px}
+.nb-det{background:rgba(244,63,94,.5)}
+.nb-neu{background:rgba(245,158,11,.5)}
+.nb-pro{background:rgba(16,185,129,.6)}
+.nps-bar-labels{display:flex;justify-content:space-between;font-size:.62rem;color:var(--t3);margin-top:.3rem}
+
+.stat-val{font-size:1.65rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.15rem}
+.stat-lbl{font-size:.72rem;color:var(--t3)}
+.stat-delta{font-size:.72rem;font-weight:600;display:flex;align-items:center;gap:.2rem;margin-top:.25rem}
+.delta-up{color:var(--green)}
+.delta-down{color:var(--red)}
+
+/* TYPE BREAKDOWN */
+.breakdown-card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.1rem 1.25rem}
+.bk-title{font-size:.77rem;font-weight:700;margin-bottom:.85rem}
+.bk-row{display:flex;align-items:center;gap:.65rem;margin-bottom:.55rem}
+.bk-icon{width:1.6rem;height:1.6rem;border-radius:.4rem;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.bi-elogio{background:rgba(16,185,129,.1);color:var(--green)}
+.bi-sugestao{background:rgba(167,139,250,.1);color:var(--violet)}
+.bi-bug{background:rgba(244,63,94,.1);color:var(--red)}
+.bi-outro{background:var(--acc-s);color:var(--acc-l)}
+.bk-label{font-size:.76rem;font-weight:500;width:70px;flex-shrink:0}
+.bk-bar-wrap{flex:1;background:var(--bg-elev);border-radius:999px;height:.45rem;overflow:hidden}
+.bk-bar{height:100%;border-radius:999px;transition:width .5s ease}
+.bk-count{font-size:.73rem;font-weight:600;color:var(--t2);flex-shrink:0;width:30px;text-align:right}
+
+/* FILTER ROW */
+.filter-row{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.filter-chips{display:flex;gap:.3rem;flex-wrap:wrap;flex:1}
+.f-chip{display:flex;align-items:center;gap:.25rem;padding:.25rem .6rem;border-radius:999px;font-size:.72rem;font-weight:600;cursor:pointer;border:1.5px solid var(--bdr);color:var(--t3);transition:all .15s;white-space:nowrap}
+.f-chip:hover{color:var(--t2);border-color:var(--bdr-s)}
+.f-chip.on{background:var(--acc-s2);border-color:rgba(99,102,241,.35);color:var(--acc-l)}
+.f-chip.on-g{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:var(--green)}
+.f-chip.on-v{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.3);color:var(--violet)}
+.f-chip.on-r{background:rgba(244,63,94,.1);border-color:rgba(244,63,94,.3);color:var(--red)}
+.f-chip.on-a{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--amber)}
+.search-wrap{position:relative}
+.search-ico{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none}
+.search-input{padding:.4rem .7rem .4rem 1.85rem;border-radius:.55rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t1);font-size:.78rem;outline:none;width:190px;transition:border-color .15s}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--t3)}
+
+/* SORT ROW */
+.sort-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+.sort-lbl{font-size:.73rem;color:var(--t3)}
+.sort-select{padding:.3rem .7rem;border-radius:.45rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t2);font-size:.75rem;outline:none;cursor:pointer}
+
+/* FEEDBACK CARDS GRID */
+.fb-grid{display:flex;flex-direction:column;gap:.6rem}
+.fb-card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:.9rem;padding:1rem 1.15rem;cursor:pointer;transition:all .15s;display:flex;align-items:flex-start;gap:.85rem}
+.fb-card:hover{border-color:rgba(99,102,241,.3);background:var(--bg-elev)}
+.fb-card.selected{border-color:var(--accent);background:var(--acc-s)}
+.user-av{width:2.1rem;height:2.1rem;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff}
+.fb-main{flex:1;min-width:0}
+.fb-top{display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.2rem;flex-wrap:wrap}
+.fb-user{font-size:.82rem;font-weight:600}
+.fb-plan{font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.1rem .4rem;border-radius:999px;background:var(--acc-s);color:var(--acc-l);border:1px solid rgba(99,102,241,.2);flex-shrink:0}
+.fb-date-top{font-size:.68rem;color:var(--t3);margin-left:auto}
+.fb-subject{font-size:.82rem;font-weight:600;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fb-preview{font-size:.75rem;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.35rem}
+.fb-foot{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.fb-badge{font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.1rem .4rem;border-radius:999px}
+.bb-elogio{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.bb-sugestao{background:rgba(167,139,250,.1);color:var(--violet);border:1px solid rgba(167,139,250,.2)}
+.bb-bug{background:rgba(244,63,94,.1);color:var(--red);border:1px solid rgba(244,63,94,.2)}
+.bb-outro{background:var(--acc-s);color:var(--acc-l);border:1px solid rgba(99,102,241,.2)}
+.fb-nps-chip{display:flex;align-items:center;gap:.25rem;font-size:.72rem;font-weight:700}
+.nps-dot{width:.55rem;height:.55rem;border-radius:50%;flex-shrink:0}
+
+/* DETAIL MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:flex;align-items:center;justify-content:center;padding:1.25rem;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(6px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg-card);border:1.5px solid var(--bdr-s);border-radius:1.1rem;width:min(560px,100%);max-height:88vh;overflow-y:auto;display:flex;flex-direction:column}
+.modal-head{padding:1.1rem 1.25rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:.75rem;flex-shrink:0;position:sticky;top:0;background:var(--bg-card);z-index:2}
+.modal-title{flex:1;font-size:.88rem;font-weight:700}
+.modal-close{width:1.75rem;height:1.75rem;border-radius:.4rem;background:var(--bg-elev);color:var(--t3);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.modal-close:hover{color:var(--t1);background:var(--acc-s)}
+.modal-body{padding:1.25rem}
+.modal-user-row{display:flex;align-items:center;gap:.75rem;margin-bottom:1.15rem;padding-bottom:1.1rem;border-bottom:1px solid var(--bdr)}
+.mu-info{flex:1}
+.mu-name{font-size:.88rem;font-weight:700}
+.mu-email{font-size:.74rem;color:var(--t3)}
+.modal-meta{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.15rem}
+.mm-item{display:flex;align-items:center;gap:.35rem;font-size:.76rem;color:var(--t2)}
+.mm-item svg{color:var(--t3);flex-shrink:0}
+.mm-item strong{color:var(--t1)}
+.modal-nps-row{display:flex;align-items:center;gap:.6rem;padding:.75rem 1rem;border-radius:.7rem;border:1.5px solid var(--bdr);margin-bottom:1.1rem}
+.modal-nps-score{font-size:2rem;font-weight:900;letter-spacing:-.03em;width:2.5rem;text-align:center;flex-shrink:0}
+.modal-nps-desc{font-size:.78rem;color:var(--t2);line-height:1.45}
+.modal-nps-desc strong{display:block;margin-bottom:.15rem;font-size:.83rem;color:var(--t1)}
+.sec-lbl{font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);margin-bottom:.5rem}
+.modal-message{font-size:.84rem;color:var(--t2);line-height:1.7;background:var(--bg-elev);border-radius:.65rem;padding:.85rem 1rem;margin-bottom:1.25rem}
+.modal-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.m-act-btn{display:flex;align-items:center;gap:.35rem;padding:.4rem .85rem;border-radius:.5rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.77rem;font-weight:600;color:var(--t2);transition:all .15s}
+.m-act-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.m-act-btn.primary{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(99,102,241,.3)}
+.m-act-btn.primary:hover{filter:brightness(1.1)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .stats-row{grid-template-columns:1fr 1fr;row-gap:.8rem}
+  .nps-score-card{grid-column:span 2}
+}
+@media(max-width:860px){
+  .sidenav{display:none}
+  .search-input{width:150px}
+}
+@media(max-width:640px){
+  .stats-row{grid-template-columns:1fr 1fr;gap:.65rem}
+  .nps-score-card{grid-column:span 2}
+  .nps-big{font-size:2.4rem}
+  .content{padding:.9rem .95rem 3rem;gap:.9rem}
+  .fb-date-top{display:none}
+  .search-wrap{display:none}
+  .fb-card{padding:.85rem .95rem;gap:.65rem}
+}
+@media(max-width:480px){
+  .topbar{padding:0 .8rem}
+  .brand-name{display:none}
+  .topbar-sep,.page-title{display:none}
+  .stats-row{grid-template-columns:1fr}
+  .nps-score-card{grid-column:span 1}
+  .breakdown-card{grid-column:span 1}
+  .modal{border-radius:.75rem .75rem 0 0;position:fixed;bottom:0;left:0;right:0;max-height:90vh;width:100%}
+  .modal-overlay{align-items:flex-end;padding:0}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <span class="brand-name">Amezia</span>
+    <span class="admin-badge">Admin</span>
+  </div>
+  <div class="topbar-sep"></div>
+  <span class="page-title">Feedback</span>
+  <div class="topbar-r">
+    <button class="top-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+      Tema
+    </button>
+    <div class="avatar">AD</div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDENAV -->
+  <aside class="sidenav">
+    <div class="nav-sect">Admin</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Visão geral</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Usuários</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>WhatsApp</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Planos</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pagamentos</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Suporte<span class="nav-badge">4</span></div>
+    <div class="nav-item active"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Feedback</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Financeiro</div>
+  </aside>
+
+  <div class="scroll-main">
+  <div class="content">
+
+    <!-- STATS ROW -->
+    <div class="stats-row">
+
+      <!-- NPS SCORE -->
+      <div class="stat-card nps-score-card">
+        <div>
+          <div class="nps-big">62</div>
+        </div>
+        <div class="nps-info">
+          <div class="nps-label">NPS Score</div>
+          <div class="nps-class">Excelente</div>
+          <div class="nps-bar-wrap">
+            <div class="nps-bar">
+              <div class="nb-det" style="width:18%"></div>
+              <div class="nb-neu" style="width:20%"></div>
+              <div class="nb-pro" style="width:62%"></div>
+            </div>
+            <div class="nps-bar-labels">
+              <span style="color:var(--red)">18% detratores</span>
+              <span>20% neutros</span>
+              <span style="color:var(--green)">62% promotores</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOTAL RESPOSTAS -->
+      <div class="stat-card">
+        <div class="stat-lbl">Total de feedbacks</div>
+        <div class="stat-val">38</div>
+        <div class="stat-delta delta-up">
+          <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          +12 este mês
+        </div>
+      </div>
+
+      <!-- MÉDIA NPS -->
+      <div class="stat-card">
+        <div class="stat-lbl">Nota média</div>
+        <div class="stat-val" style="color:var(--green)">8.4</div>
+        <div class="stat-delta delta-up">
+          <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          +0.3 vs mês anterior
+        </div>
+      </div>
+
+      <!-- BREAKDOWN POR TIPO -->
+      <div class="stat-card breakdown-card">
+        <div class="bk-title">Por tipo</div>
+        <div class="bk-row">
+          <div class="bk-icon bi-elogio"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3z"/></svg></div>
+          <span class="bk-label">Elogio</span>
+          <div class="bk-bar-wrap"><div class="bk-bar" style="width:50%;background:var(--green)"></div></div>
+          <span class="bk-count" style="color:var(--green)">19</span>
+        </div>
+        <div class="bk-row">
+          <div class="bk-icon bi-sugestao"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <span class="bk-label">Sugestão</span>
+          <div class="bk-bar-wrap"><div class="bk-bar" style="width:34%;background:var(--violet)"></div></div>
+          <span class="bk-count" style="color:var(--violet)">13</span>
+        </div>
+        <div class="bk-row">
+          <div class="bk-icon bi-bug"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 6h8M8 18h8M12 2v4M12 18v4"/></svg></div>
+          <span class="bk-label">Bug</span>
+          <div class="bk-bar-wrap"><div class="bk-bar" style="width:13%;background:var(--red)"></div></div>
+          <span class="bk-count" style="color:var(--red)">5</span>
+        </div>
+        <div class="bk-row" style="margin-bottom:0">
+          <div class="bk-icon bi-outro"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+          <span class="bk-label">Outro</span>
+          <div class="bk-bar-wrap"><div class="bk-bar" style="width:3%;background:var(--acc-l)"></div></div>
+          <span class="bk-count" style="color:var(--acc-l)">1</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-row">
+      <div class="filter-chips">
+        <div class="f-chip on" onclick="toggleChip(this,'on')">Todos</div>
+        <div class="f-chip" onclick="toggleChip(this,'on-g')">
+          <svg width="9" height="9" viewBox="0 0 8 8" fill="var(--green)"><circle cx="4" cy="4" r="4"/></svg>
+          Elogio
+        </div>
+        <div class="f-chip" onclick="toggleChip(this,'on-v')">
+          <svg width="9" height="9" viewBox="0 0 8 8" fill="var(--violet)"><circle cx="4" cy="4" r="4"/></svg>
+          Sugestão
+        </div>
+        <div class="f-chip" onclick="toggleChip(this,'on-r')">
+          <svg width="9" height="9" viewBox="0 0 8 8" fill="var(--red)"><circle cx="4" cy="4" r="4"/></svg>
+          Bug
+        </div>
+        <div class="f-chip" onclick="toggleChip(this,'on-a')">
+          <svg width="9" height="9" viewBox="0 0 8 8" fill="var(--amber)"><circle cx="4" cy="4" r="4"/></svg>
+          NPS baixo (≤6)
+        </div>
+      </div>
+      <div class="search-wrap">
+        <div class="search-ico"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <input class="search-input" type="text" placeholder="Buscar usuário ou assunto...">
+      </div>
+    </div>
+
+    <!-- SORT + COUNT -->
+    <div class="sort-row">
+      <span style="font-size:.76rem;color:var(--t2)"><strong style="color:var(--t1)">38</strong> feedbacks</span>
+      <select class="sort-select">
+        <option>Mais recentes</option>
+        <option>Maior nota</option>
+        <option>Menor nota</option>
+        <option>Por tipo</option>
+      </select>
+    </div>
+
+    <!-- FEEDBACK LIST -->
+    <div class="fb-grid">
+
+      <div class="fb-card selected" onclick="openModal(0)">
+        <div class="user-av" style="background:linear-gradient(135deg,#6366f1,#60a5fa)">JS</div>
+        <div class="fb-main">
+          <div class="fb-top">
+            <span class="fb-user">João Silva</span>
+            <span class="fb-plan">Pro</span>
+            <span class="fb-date-top">19 jun. 2026</span>
+          </div>
+          <div class="fb-subject">O bot no WhatsApp é incrivelmente prático!</div>
+          <div class="fb-preview">Estou usando há 3 semanas e já economizei muito tempo registrando despesas. A IA entende expressões naturais...</div>
+          <div class="fb-foot">
+            <span class="fb-badge bb-elogio">Elogio</span>
+            <span class="fb-nps-chip"><div class="nps-dot" style="background:var(--green)"></div><span style="color:var(--green)">10</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fb-card" onclick="openModal(1)">
+        <div class="user-av" style="background:linear-gradient(135deg,#a78bfa,#6366f1)">AM</div>
+        <div class="fb-main">
+          <div class="fb-top">
+            <span class="fb-user">Ana Melo</span>
+            <span class="fb-plan">Premium</span>
+            <span class="fb-date-top">18 jun. 2026</span>
+          </div>
+          <div class="fb-subject">Sugestão: relatório semanal automático via WhatsApp</div>
+          <div class="fb-preview">Seria ótimo receber um resumo dos gastos da semana toda segunda-feira diretamente no WhatsApp, sem precisar...</div>
+          <div class="fb-foot">
+            <span class="fb-badge bb-sugestao">Sugestão</span>
+            <span class="fb-nps-chip"><div class="nps-dot" style="background:var(--amber)"></div><span style="color:var(--amber)">8</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fb-card" onclick="openModal(2)">
+        <div class="user-av" style="background:linear-gradient(135deg,#f43f5e,#f97316)">PL</div>
+        <div class="fb-main">
+          <div class="fb-top">
+            <span class="fb-user">Pedro Lima</span>
+            <span class="fb-plan" style="background:var(--bg-elev);color:var(--t3);border:1px solid var(--bdr)">Free</span>
+            <span class="fb-date-top">17 jun. 2026</span>
+          </div>
+          <div class="fb-subject">Gráfico do dashboard some ao trocar de mês</div>
+          <div class="fb-preview">Quando altero o filtro de mês no dashboard, o gráfico de linha fica completamente em branco até...</div>
+          <div class="fb-foot">
+            <span class="fb-badge bb-bug">Bug</span>
+            <span class="fb-nps-chip"><div class="nps-dot" style="background:var(--amber)"></div><span style="color:var(--amber)">7</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fb-card" onclick="openModal(3)">
+        <div class="user-av" style="background:linear-gradient(135deg,#10b981,#22d3ee)">MO</div>
+        <div class="fb-main">
+          <div class="fb-top">
+            <span class="fb-user">Maria Oliveira</span>
+            <span class="fb-plan">Pro</span>
+            <span class="fb-date-top">16 jun. 2026</span>
+          </div>
+          <div class="fb-subject">Excelente produto, mas faltam mais categorias padrão</div>
+          <div class="fb-preview">O Amezia é incrível para controle financeiro. Uma melhoria seria ter mais categorias prontas como...</div>
+          <div class="fb-foot">
+            <span class="fb-badge bb-sugestao">Sugestão</span>
+            <span class="fb-nps-chip"><div class="nps-dot" style="background:var(--green)"></div><span style="color:var(--green)">9</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fb-card" onclick="openModal(4)">
+        <div class="user-av" style="background:linear-gradient(135deg,#f59e0b,#f43f5e)">RC</div>
+        <div class="fb-main">
+          <div class="fb-top">
+            <span class="fb-user">Rafael Costa</span>
+            <span class="fb-plan">Pro</span>
+            <span class="fb-date-top">15 jun. 2026</span>
+          </div>
+          <div class="fb-subject">App mobile seria um diferencial enorme</div>
+          <div class="fb-preview">Uso o Amezia todo dia mas sinto falta de um aplicativo nativo para Android. O bot no WhatsApp...</div>
+          <div class="fb-foot">
+            <span class="fb-badge bb-sugestao">Sugestão</span>
+            <span class="fb-nps-chip"><div class="nps-dot" style="background:var(--amber)"></div><span style="color:var(--amber)">8</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fb-card" onclick="openModal(5)">
+        <div class="user-av" style="background:linear-gradient(135deg,#ec4899,#a78bfa)">LS</div>
+        <div class="fb-main">
+          <div class="fb-top">
+            <span class="fb-user">Luana Santos</span>
+            <span class="fb-plan">Premium</span>
+            <span class="fb-date-top">14 jun. 2026</span>
+          </div>
+          <div class="fb-subject">Perfeito para quem quer controlar o orçamento!</div>
+          <div class="fb-preview">Depois que comecei a usar o Amezia faz 2 meses, consigo ver exatamente onde estou gastando mais...</div>
+          <div class="fb-foot">
+            <span class="fb-badge bb-elogio">Elogio</span>
+            <span class="fb-nps-chip"><div class="nps-dot" style="background:var(--green)"></div><span style="color:var(--green)">10</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fb-card" onclick="openModal(6)">
+        <div class="user-av" style="background:linear-gradient(135deg,#6366f1,#a78bfa)">BF</div>
+        <div class="fb-main">
+          <div class="fb-top">
+            <span class="fb-user">Bruno Faria</span>
+            <span class="fb-plan" style="background:var(--bg-elev);color:var(--t3);border:1px solid var(--bdr)">Free</span>
+            <span class="fb-date-top">12 jun. 2026</span>
+          </div>
+          <div class="fb-subject">Não consegui conectar o WhatsApp depois da atualização</div>
+          <div class="fb-preview">Após o update do dia 10, minha instância ficou desconectada e o QR Code não funciona mais...</div>
+          <div class="fb-foot">
+            <span class="fb-badge bb-bug">Bug</span>
+            <span class="fb-nps-chip"><div class="nps-dot" style="background:var(--red)"></div><span style="color:var(--red)">4</span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /content -->
+  </div><!-- /scroll-main -->
+</div><!-- /layout -->
+
+<!-- MODAL DE DETALHE -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">Detalhe do feedback</div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-user-row">
+        <div class="user-av" id="modal-av" style="width:2.5rem;height:2.5rem;font-size:.82rem;background:linear-gradient(135deg,#6366f1,#60a5fa)">JS</div>
+        <div class="mu-info">
+          <div class="mu-name" id="modal-uname">João Silva</div>
+          <div class="mu-email" id="modal-email">joao.silva@email.com · Plano Pro</div>
+        </div>
+      </div>
+
+      <div class="modal-meta">
+        <div class="mm-item">
+          <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="modal-date">19 jun. 2026</span>
+        </div>
+        <div class="mm-item">
+          <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Tipo: <strong id="modal-type">Elogio</strong>
+        </div>
+      </div>
+
+      <div class="modal-nps-row" id="modal-nps-row">
+        <div class="modal-nps-score" id="modal-nps-val" style="color:var(--green)">10</div>
+        <div class="modal-nps-desc">
+          <strong id="modal-nps-class">Promotor</strong>
+          <span id="modal-nps-desc-text">Alta probabilidade de recomendar o Amezia</span>
+        </div>
+      </div>
+
+      <div class="sec-lbl">Assunto</div>
+      <div class="modal-message" id="modal-subject" style="margin-bottom:.75rem;font-weight:600;font-size:.86rem;color:var(--t1)"></div>
+
+      <div class="sec-lbl">Mensagem completa</div>
+      <div class="modal-message" id="modal-msg"></div>
+
+      <div class="modal-actions">
+        <button class="m-act-btn primary">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Responder por e-mail
+        </button>
+        <button class="m-act-btn">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg>
+          Ver usuário
+        </button>
+        <button class="m-act-btn">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Marcar como lido
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FEEDBACKS = [
+  {
+    av:'JS', color:'linear-gradient(135deg,#6366f1,#60a5fa)',
+    name:'João Silva', email:'joao.silva@email.com · Plano Pro',
+    date:'19 jun. 2026', type:'Elogio', nps:10,
+    subject:'O bot no WhatsApp é incrivelmente prático!',
+    msg:'Estou usando o Amezia há 3 semanas e já economizei muito tempo registrando despesas. A IA entende expressões naturais como "tomei um café de 8 reais" e categoriza automaticamente. É exatamente o que eu procurava. Parabéns pela equipe!'
+  },
+  {
+    av:'AM', color:'linear-gradient(135deg,#a78bfa,#6366f1)',
+    name:'Ana Melo', email:'ana.melo@email.com · Plano Premium',
+    date:'18 jun. 2026', type:'Sugestão', nps:8,
+    subject:'Relatório semanal automático via WhatsApp',
+    msg:'Seria ótimo receber um resumo dos gastos da semana toda segunda-feira diretamente no WhatsApp, sem precisar solicitar manualmente. Algo como: "Na semana passada você gastou R$450, sendo 40% em alimentação." Isso ajudaria muito no controle.'
+  },
+  {
+    av:'PL', color:'linear-gradient(135deg,#f43f5e,#f97316)',
+    name:'Pedro Lima', email:'pedro.lima@email.com · Plano Free',
+    date:'17 jun. 2026', type:'Bug', nps:7,
+    subject:'Gráfico do dashboard some ao trocar de mês',
+    msg:'Quando altero o filtro de mês no dashboard, o gráfico de linha fica completamente em branco até eu recarregar a página. Acontece sempre que troco para um mês anterior. Testei no Chrome e Firefox, mesmo comportamento. Está na versão mais recente do navegador.'
+  },
+  {
+    av:'MO', color:'linear-gradient(135deg,#10b981,#22d3ee)',
+    name:'Maria Oliveira', email:'maria.oliveira@email.com · Plano Pro',
+    date:'16 jun. 2026', type:'Sugestão', nps:9,
+    subject:'Excelente produto, mas faltam mais categorias padrão',
+    msg:'O Amezia é incrível para controle financeiro. Uma melhoria seria ter mais categorias prontas como "Pets", "Educação", "Saúde e bem-estar", "Streaming" etc. As categorias padrão atuais são poucas e tendo que criar muitas manualmente.'
+  },
+  {
+    av:'RC', color:'linear-gradient(135deg,#f59e0b,#f43f5e)',
+    name:'Rafael Costa', email:'rafael.costa@email.com · Plano Pro',
+    date:'15 jun. 2026', type:'Sugestão', nps:8,
+    subject:'App mobile seria um diferencial enorme',
+    msg:'Uso o Amezia todo dia mas sinto falta de um aplicativo nativo para Android. O bot no WhatsApp já ajuda muito, mas um app com widget para registrar gastos rapidamente seria um diferencial. Mesmo algo simples já resolveria. A web é boa mas no celular é um pouco lenta.'
+  },
+  {
+    av:'LS', color:'linear-gradient(135deg,#ec4899,#a78bfa)',
+    name:'Luana Santos', email:'luana.santos@email.com · Plano Premium',
+    date:'14 jun. 2026', type:'Elogio', nps:10,
+    subject:'Perfeito para quem quer controlar o orçamento!',
+    msg:'Depois que comecei a usar o Amezia faz 2 meses, consigo ver exatamente onde estou gastando mais e reduzi meus gastos com delivery em 30%. O relatório narrativo da IA é o melhor recurso — ele explica os gastos de um jeito que eu entendo. Indiquei para 5 amigas!'
+  },
+  {
+    av:'BF', color:'linear-gradient(135deg,#6366f1,#a78bfa)',
+    name:'Bruno Faria', email:'bruno.faria@email.com · Plano Free',
+    date:'12 jun. 2026', type:'Bug', nps:4,
+    subject:'Não consegui conectar o WhatsApp depois da atualização',
+    msg:'Após o update do dia 10, minha instância ficou desconectada e o QR Code não funciona mais. Tentei reconectar várias vezes mas aparece "instância não encontrada" mesmo após recriar. Antes funcionava perfeitamente. Faz 3 dias que não consigo usar o bot.'
+  },
+];
+
+function npsClass(n){
+  if(n >= 9) return {cls:'Promotor', color:'var(--green)', desc:'Alta probabilidade de recomendar o Amezia'};
+  if(n >= 7) return {cls:'Neutro', color:'var(--amber)', desc:'Satisfeito, mas pode melhorar'};
+  return {cls:'Detrator', color:'var(--red)', desc:'Baixa probabilidade de recomendar o Amezia'};
+}
+
+function openModal(i){
+  const f = FEEDBACKS[i];
+  const nc = npsClass(f.nps);
+  document.getElementById('modal-av').textContent = f.av;
+  document.getElementById('modal-av').style.background = f.color;
+  document.getElementById('modal-uname').textContent = f.name;
+  document.getElementById('modal-email').textContent = f.email;
+  document.getElementById('modal-date').textContent = f.date;
+  document.getElementById('modal-type').textContent = f.type;
+  document.getElementById('modal-nps-val').textContent = f.nps;
+  document.getElementById('modal-nps-val').style.color = nc.color;
+  document.getElementById('modal-nps-class').textContent = nc.cls;
+  document.getElementById('modal-nps-desc-text').textContent = nc.desc;
+  document.getElementById('modal-subject').textContent = f.subject;
+  document.getElementById('modal-msg').textContent = f.msg;
+  document.getElementById('modal-title').textContent = '#' + (FEEDBACKS.length - i + 30) + ' · ' + f.type;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.querySelectorAll('.fb-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.fb-card')[i].classList.add('selected');
+}
+
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function toggleChip(el, activeClass){
+  document.querySelectorAll('.f-chip').forEach(c=>{
+    c.className = 'f-chip';
+  });
+  el.classList.add(activeClass);
+}
+</script>
+</body>
+</html>

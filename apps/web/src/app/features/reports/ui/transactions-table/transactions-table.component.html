@@ -1,0 +1,112 @@
+<div class="comp-data-table">
+  <div class="comp-dt-head">
+    <div>
+      <span class="comp-dt-title">{{ 'reports.table.title' | transloco }}</span>
+      @if (page(); as result) {
+        <span class="comp-dt-count">{{ 'reports.table.count' | transloco: { count: result.pagination.total } }}</span>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <table class="comp-dt-table">
+      <tbody>
+        @for (row of [1, 2, 3, 4, 5]; track row) {
+          <tr>
+            <td colspan="4"><div class="skeleton" style="height: 1.1rem; width: 100%"></div></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else if (!page() || page()!.items.length === 0) {
+    <div class="state-panel">
+      <div class="state-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+        </svg>
+      </div>
+      <div class="state-sub">{{ 'reports.table.empty' | transloco }}</div>
+    </div>
+  } @else {
+    <table class="comp-dt-table">
+      <thead>
+        <tr>
+          <th>{{ 'reports.table.date' | transloco }}</th>
+          <th>{{ 'reports.table.description' | transloco }}</th>
+          <th>{{ 'reports.table.category' | transloco }}</th>
+          <th style="text-align: right">{{ 'reports.table.amount' | transloco }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (transaction of page()!.items; track transaction.public_id) {
+          <tr>
+            <td><span class="cell-date">{{ transaction.occurred_at | brDate }}</span></td>
+            <td><span class="cell-desc">{{ transaction.description }}</span></td>
+            <td><span class="cell-cat">{{ transaction.category_name }}</span></td>
+            <td>
+              <span class="cell-val expense">{{ transaction.amount | brlAmount }}</span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="dt-card-list">
+      @for (transaction of page()!.items; track transaction.public_id) {
+        <div class="dt-card-item">
+          <span class="dt-card-dot" style="background: var(--red)"></span>
+          <div class="dt-card-body">
+            <div class="dt-card-title">{{ transaction.description }}</div>
+            <div class="dt-card-meta">
+              <span class="dt-card-badge">{{ transaction.category_name }}</span>
+              <span>{{ transaction.occurred_at | brDate }}</span>
+            </div>
+          </div>
+          <div class="dt-card-right">
+            <div class="dt-card-val expense">{{ transaction.amount | brlAmount }}</div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="comp-dt-foot">
+      <span class="comp-dt-info">
+        {{ 'reports.table.showing' | transloco: { from: showingFrom(), to: showingTo(), total: page()!.pagination.total } }}
+      </span>
+      <div class="comp-dt-pages">
+        <button
+          class="pg-btn"
+          type="button"
+          [disabled]="page()!.pagination.page <= 1"
+          (click)="pageChange.emit(page()!.pagination.page - 1)"
+        >
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+        @for (pageNumber of pageNumbers(); track pageNumber) {
+          <button
+            class="pg-btn"
+            type="button"
+            [class.on]="pageNumber === page()!.pagination.page"
+            (click)="pageChange.emit(pageNumber)"
+          >
+            {{ pageNumber }}
+          </button>
+        }
+        <button
+          class="pg-btn"
+          type="button"
+          [disabled]="page()!.pagination.page >= page()!.pagination.total_pages"
+          (click)="pageChange.emit(page()!.pagination.page + 1)"
+        >
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  }
+</div>

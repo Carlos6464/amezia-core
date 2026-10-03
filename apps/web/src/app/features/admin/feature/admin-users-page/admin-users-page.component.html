@@ -1,0 +1,57 @@
+<div class="comp-page-header">
+  <div>
+    <div class="comp-ph-badge">{{ 'admin.shell.brand' | transloco }}</div>
+    <h1 class="comp-ph-title">{{ 'admin.users.title' | transloco }}</h1>
+  </div>
+</div>
+
+<div class="comp-filter-bar">
+  <div class="comp-fb-search">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+    <input
+      type="text"
+      [placeholder]="'admin.users.searchPlaceholder' | transloco"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="onSearchChange($event)"
+    />
+  </div>
+  <span class="comp-fb-sep"></span>
+  <select class="comp-fb-select" [ngModel]="filters().role" (ngModelChange)="onRoleFilterChange($event)">
+    <option value="">{{ 'admin.users.roleFilterAll' | transloco }}</option>
+    <option value="user">{{ 'admin.users.role.user' | transloco }}</option>
+    <option value="admin">{{ 'admin.users.role.admin' | transloco }}</option>
+  </select>
+</div>
+
+@if (loading() && users().length === 0) {
+  <div class="state-panel">
+    <div class="state-sub">{{ 'admin.common.loading' | transloco }}</div>
+  </div>
+} @else if (error()) {
+  <div class="state-panel">
+    <div class="state-title">{{ 'admin.errors.loadFailed' | transloco }}</div>
+  </div>
+} @else {
+  <app-users-table
+    [users]="users()"
+    [total]="pagination().total"
+    (rowClick)="openChangeRole($event)"
+    (deleteUser)="confirmDeleteUser($event)"
+  />
+  <app-admin-pagination [pagination]="pagination()" (pageChange)="onPageChange($event)" />
+}
+
+<p-confirmDialog [style]="{ width: '26rem', maxWidth: '92vw' }" [breakpoints]="{ '640px': '92vw' }" />
+
+@if (selectedUser(); as user) {
+  <app-change-role-modal
+    [user]="user"
+    [saving]="savingRole()"
+    [savingTestAccess]="savingTestAccess()"
+    (closeModal)="closeChangeRole()"
+    (confirmRole)="confirmChangeRole($event)"
+    (toggleTestAccess)="confirmToggleTestAccess($event)"
+  />
+}

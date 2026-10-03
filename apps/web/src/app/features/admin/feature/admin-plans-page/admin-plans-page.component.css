@@ -1,0 +1,70 @@
+@import "../../ui/admin-design.css";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.plans-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.plan-summary-card {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.psc-head {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--t1);
+}
+.psc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+}
+.psc-label {
+  color: var(--t3);
+}
+.psc-value {
+  font-weight: 700;
+  color: var(--t1);
+}
+.psc-empty {
+  color: var(--t3);
+  font-style: italic;
+}
+
+.price-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.price-status-badge.active {
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--green);
+  border: 1px solid rgba(5, 150, 105, 0.22);
+}
+.price-status-badge.archived {
+  background: var(--bg-elev);
+  color: var(--t3);
+  border: 1px solid var(--bdr-s);
+}
+
+@media (max-width: 900px) {
+  .plans-summary {
+    grid-template-columns: 1fr;
+  }
+}

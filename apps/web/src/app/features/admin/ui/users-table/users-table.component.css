@@ -1,0 +1,29 @@
+@import "../admin-design.css";
+
+.actions-cell {
+  width: 2.5rem;
+  text-align: right;
+}
+
+.act-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--bdr-s);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.act-btn.del:hover {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--red);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+.act-btn svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}

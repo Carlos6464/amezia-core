@@ -1,0 +1,14 @@
+@import '../transaction-design.css';
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-09
+ * Descrição: mesmo motivo do `:host` em transaction-filter-bar — sem
+ * isso, os dois `.comp-stat` do template ficam presos dentro do host
+ * (um bloco normal) em vez de virarem itens diretos do grid
+ * `.comp-stats-strip` do componente pai, e empilham verticalmente
+ * mesmo em telas largas.
+ */
+:host {
+  display: contents;
+}

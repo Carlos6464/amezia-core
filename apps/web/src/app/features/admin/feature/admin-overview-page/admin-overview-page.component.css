@@ -1,0 +1,32 @@
+@import "../../ui/admin-design.css";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.chart-body {
+  padding: 1rem 1.1rem 1.25rem;
+  min-width: 0;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+.overview-grid > * {
+  /* Item de grid sem isso trava no min-content (o <canvas> do Chart.js,
+     nesse caso) em vez de encolher com a coluna — mesma classe de bug já
+     documentada em GUIA_TECNICO.md §7.10, aqui pro gráfico novo do
+     build-context-11. */
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+}

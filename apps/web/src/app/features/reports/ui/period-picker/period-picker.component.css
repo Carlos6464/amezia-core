@@ -1,0 +1,117 @@
+@import '../reports-design.css';
+
+:host ::ng-deep .period-picker-input.p-datepicker {
+  min-width: 7.5rem;
+  border-radius: 0.55rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  box-shadow: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+:host ::ng-deep .period-picker-input.p-datepicker:hover {
+  border-color: var(--accent);
+}
+:host ::ng-deep .period-picker-input.p-datepicker.p-focus,
+:host ::ng-deep .period-picker-input.p-datepicker:has(.p-datepicker-input:focus) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--acc-s);
+}
+:host ::ng-deep .period-picker-input .p-datepicker-input {
+  padding: 0.4rem 0.6rem;
+  border: none;
+  background: transparent;
+  color: var(--t1);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: none;
+  min-width: 5rem;
+}
+:host ::ng-deep .period-picker-input .p-datepicker-dropdown {
+  width: 2rem;
+  border: none;
+  border-left: 1px solid var(--bdr-s);
+  background: transparent;
+  color: var(--t3);
+  padding: 0;
+}
+:host ::ng-deep .period-picker-input .p-datepicker-dropdown:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+
+/* `appendTo="body"` move o painel pra fora da subárvore do componente
+   — `::ng-deep` sozinho (sem `:host`) é obrigatório aqui, ver
+   GUIA_TECNICO.md §7.8. */
+::ng-deep .period-picker-panel {
+  width: auto !important;
+  min-width: 240px !important;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.85rem;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+  overflow: hidden;
+}
+::ng-deep .period-picker-panel .p-datepicker-header {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--bdr);
+  background: var(--bg-card);
+}
+::ng-deep .period-picker-panel .p-datepicker-title,
+::ng-deep .period-picker-panel .p-datepicker-year {
+  color: var(--t1);
+  font-weight: 700;
+}
+::ng-deep .period-picker-panel .p-datepicker-prev-button,
+::ng-deep .period-picker-panel .p-datepicker-next-button {
+  color: var(--t2);
+  border-radius: 0.5rem;
+}
+::ng-deep .period-picker-panel .p-datepicker-prev-button:hover,
+::ng-deep .period-picker-panel .p-datepicker-next-button:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+::ng-deep .period-picker-panel .p-datepicker-month-view {
+  padding: 0.75rem;
+}
+::ng-deep .period-picker-panel .p-datepicker-month {
+  border-radius: 0.55rem;
+  color: var(--t2);
+  transition: background 0.15s, color 0.15s;
+}
+::ng-deep .period-picker-panel .p-datepicker-month:not(.p-disabled):hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+}
+::ng-deep .period-picker-panel .p-datepicker-month.p-datepicker-month-selected {
+  background: var(--acc-s2);
+  color: var(--acc-l);
+}
+
+/* mobile: barra única (mesmo estilo dos cards), setas/datepicker sem
+   borda própria — pedido do usuário em 2026-08-15. */
+@media (max-width: 700px) {
+  .period-picker {
+    background: var(--bg-card);
+    border: 1px solid var(--bdr);
+    border-radius: 0.85rem;
+    padding: 0.5rem 0.6rem;
+  }
+  .period-arrow {
+    border-color: transparent;
+    background: transparent;
+  }
+  .period-arrow:hover {
+    border-color: var(--bdr-s);
+    background: var(--acc-s);
+  }
+  :host ::ng-deep .period-picker-input.p-datepicker {
+    border-color: transparent;
+    background: transparent;
+  }
+  :host ::ng-deep .period-picker-input.p-datepicker:hover,
+  :host ::ng-deep .period-picker-input.p-datepicker.p-focus {
+    border-color: var(--bdr-s);
+  }
+}

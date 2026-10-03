@@ -1,0 +1,32 @@
+@if (pagination().total_pages > 1) {
+  <div class="comp-pagination">
+    <span class="pagination-info">
+      {{ 'admin.pagination.pageInfo' | transloco: { total: pagination().total } }}
+    </span>
+    <div class="pagination-nav">
+      <button
+        class="pagination-btn"
+        type="button"
+        [disabled]="pagination().page <= 1"
+        [attr.aria-label]="'admin.pagination.previous' | transloco"
+        (click)="goToPage(pagination().page - 1)"
+      >
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      </button>
+      <span class="pagination-current">{{ pagination().page }} / {{ pagination().total_pages }}</span>
+      <button
+        class="pagination-btn"
+        type="button"
+        [disabled]="pagination().page >= pagination().total_pages"
+        [attr.aria-label]="'admin.pagination.next' | transloco"
+        (click)="goToPage(pagination().page + 1)"
+      >
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m9 18 6-6-6-6" />
+        </svg>
+      </button>
+    </div>
+  </div>
+}

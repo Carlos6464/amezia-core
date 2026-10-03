@@ -1,0 +1,86 @@
+<p-dialog
+  [visible]="visible()"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [style]="{ width: '26rem', maxWidth: '92vw' }"
+  [breakpoints]="{ '640px': '92vw' }"
+  [header]="(isEditMode ? 'categories.form.editTitle' : 'categories.form.createTitle') | transloco"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="cat-form">
+    <div class="preview-row">
+      <app-category-icon
+        [color]="form.controls.color.value"
+        [icon]="form.controls.icon.value"
+        [large]="true"
+      />
+      <span class="preview-name">{{ form.controls.name.value || ('categories.form.namePlaceholder' | transloco) }}</span>
+    </div>
+
+    <div class="field">
+      <label class="f-label" for="cat-name">{{ 'categories.form.name' | transloco }}</label>
+      <input
+        id="cat-name"
+        class="f-input"
+        [class.invalid]="fieldInvalid('name')"
+        type="text"
+        formControlName="name"
+        maxlength="50"
+        [placeholder]="'categories.form.namePlaceholder' | transloco"
+      />
+      @if (fieldInvalid('name')) {
+        <span class="f-error">
+          {{ (form.controls.name.errors?.['required'] ? 'categories.form.errors.nameRequired' : 'categories.form.errors.nameTooLong') | transloco }}
+        </span>
+      }
+    </div>
+
+    <div class="field">
+      <span class="f-label">{{ 'categories.form.color' | transloco }}</span>
+      <div class="color-palette">
+        @for (swatch of palette; track swatch) {
+          <button
+            type="button"
+            class="palette-dot"
+            [class.selected]="form.controls.color.value === swatch"
+            [style.background]="swatch"
+            (click)="pickColor(swatch)"
+            [attr.aria-label]="swatch"
+          ></button>
+        }
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="f-label">{{ 'categories.form.icon' | transloco }}</span>
+      <div class="icon-grid">
+        @for (option of iconOptions; track option.key) {
+          <button
+            type="button"
+            class="icon-option"
+            [class.selected]="form.controls.icon.value === option.key"
+            (click)="pickIcon(option.key)"
+            [attr.aria-label]="option.label"
+            [title]="option.label"
+          >
+            <app-category-icon [color]="form.controls.color.value" [icon]="option.key" />
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (errorKey()) {
+      <div class="form-msg error">{{ errorKey() | transloco }}</div>
+    }
+
+    <div class="dialog-actions">
+      <button class="btn-secondary" type="button" (click)="dialogCancel.emit()">
+        {{ 'categories.form.cancel' | transloco }}
+      </button>
+      <button class="btn-primary" type="submit" [disabled]="saving()">
+        {{ (isEditMode ? 'categories.form.save' : 'categories.form.create') | transloco }}
+      </button>
+    </div>
+  </form>
+</p-dialog>

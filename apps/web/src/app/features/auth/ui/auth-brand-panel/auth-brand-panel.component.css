@@ -1,0 +1,92 @@
+.panel {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2.5rem;
+  padding: 3rem 3rem;
+  color: #fff;
+  background: linear-gradient(160deg, #6d5ef8 0%, #4c3fd1 48%, #2f2a86 100%);
+  position: relative;
+  overflow: hidden;
+}
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 15% 15%, rgba(255, 255, 255, 0.12), transparent 60%);
+  pointer-events: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  position: absolute;
+  top: 2.25rem;
+  left: 3rem;
+}
+.brand-logo {
+  height: 1.9rem;
+  width: auto;
+  /* A logo original é colorida (indigo) — forçada para branco sólido pra
+     manter contraste sobre o painel roxo, igual à referência visual. */
+  filter: brightness(0) invert(1);
+}
+.brand-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.headline-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.headline-block h1 {
+  font-size: 2.1rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.headline-block p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.55;
+  max-width: 24rem;
+}
+
+.features {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+.feature-icon {
+  flex-shrink: 0;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.feature-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+.feature-sub {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.72);
+  margin-top: 0.1rem;
+  line-height: 1.4;
+}

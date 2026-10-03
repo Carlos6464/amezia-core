@@ -1,0 +1,151 @@
+@import '../../ui/transaction-design.css';
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  max-width: 64rem;
+}
+@media (max-width: 700px) {
+  .page-content {
+    /* .main (app-shell.component.css) já dá o padding da página no mobile
+       — sem isso, essa tela ficava com padding lateral quase o dobro das
+       demais (soma do .main + este). */
+    padding: 0;
+  }
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-15
+ * Descrição: Botão "Voltar" do cabeçalho — reaproveita `.comp-ph-cta`
+ * (mesmo estilo sólido do botão "add" de outras telas, ex.: "+ Nova
+ * transação" da listagem), no lado direito do `.comp-page-header`,
+ * ao lado do título — pedido do usuário em 2026-08-15: antes era um
+ * link de texto simples no topo, à esquerda, sem destaque nenhum.
+ */
+@media (max-width: 700px) {
+  .back-link {
+    /* No mobile a seta de voltar já vive no topbar do shell
+       (app-shell.component.html/.back-btn) — esse botão duplicaria a
+       mesma ação. Some só no mobile; no desktop é o único jeito de
+       voltar (o topbar lá é hambúrguer + logo, sem seta). */
+    display: none;
+  }
+}
+
+.recurrence-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.6rem;
+  background: var(--acc-s);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  font-size: 0.8rem;
+  color: var(--t1);
+  flex-wrap: wrap;
+}
+.recurrence-banner button {
+  border: none;
+  background: transparent;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.form-layout {
+  display: grid;
+  grid-template-columns: 1fr 18rem;
+  gap: 1rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .form-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  padding: 1.25rem;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.preview-card,
+.tips-card {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  padding: 1rem;
+}
+.preview-card__eyebrow,
+.tips-card__title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 0.65rem;
+}
+.preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--bdr);
+  font-size: 0.8rem;
+}
+.preview-row:last-child {
+  border-bottom: none;
+}
+.preview-row-label {
+  color: var(--t3);
+}
+.preview-row-val {
+  font-weight: 600;
+  color: var(--t1);
+}
+.preview-cat-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.preview-card__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 0.18rem;
+}
+
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+}
+.tip-item {
+  font-size: 0.76rem;
+  color: var(--t2);
+  padding-left: 1rem;
+  position: relative;
+}
+.tip-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.4rem;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--accent);
+}

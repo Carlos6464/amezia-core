@@ -1,0 +1,25 @@
+.mobile-brand {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .mobile-brand {
+    display: flex;
+  }
+}
+
+.mobile-brand-logo {
+  height: 1.75rem;
+  width: auto;
+}
+
+.mobile-brand-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--t1);
+}

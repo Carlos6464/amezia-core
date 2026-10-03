@@ -1,0 +1,113 @@
+<div class="split">
+  <div class="brand-col">
+    <app-auth-brand-panel />
+  </div>
+
+  <div class="form-col">
+    <app-auth-mobile-brand />
+
+    <button class="theme-toggle" type="button" (click)="themeService.toggle()" title="Tema">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5" />
+        <line x1="12" y1="1" x2="12" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="23" />
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+        <line x1="1" y1="12" x2="3" y2="12" />
+        <line x1="21" y1="12" x2="23" y2="12" />
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+      </svg>
+    </button>
+
+    <div class="form-inner">
+      <div class="form-hd">
+        <h1>{{ 'auth.register.title' | transloco }}</h1>
+        <p>{{ 'auth.register.subtitle' | transloco }}</p>
+      </div>
+
+      @if (selectedPlan; as plan) {
+        <div class="plan-hint">
+          {{
+            'subscription.registerPlan.selectedPlanHint'
+              | transloco
+                : {
+                    plan: ('subscription.planNames.' + plan | transloco),
+                    billing: ('subscription.billingCycle.' + selectedBillingCycle | transloco),
+                  }
+          }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5">
+        <div class="field">
+          <label class="f-label" for="register-name">{{ 'auth.register.fullName' | transloco }}</label>
+          <input
+            id="register-name"
+            class="f-input"
+            type="text"
+            formControlName="name"
+            autocomplete="name"
+            [placeholder]="'auth.register.fullNamePlaceholder' | transloco"
+          />
+        </div>
+
+        <div class="field">
+          <label class="f-label" for="register-email">{{ 'auth.common.email' | transloco }}</label>
+          <input
+            id="register-email"
+            class="f-input"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            placeholder="seu@email.com"
+          />
+        </div>
+
+        <app-password-field
+          formControlName="password"
+          [label]="'auth.common.password' | transloco"
+          [placeholder]="'auth.register.passwordPlaceholder' | transloco"
+          autocomplete="new-password"
+        />
+        <app-password-field
+          formControlName="confirmPassword"
+          [label]="'auth.register.confirmPassword' | transloco"
+          [placeholder]="'auth.register.confirmPasswordPlaceholder' | transloco"
+          autocomplete="new-password"
+        />
+        @if (form.errors?.['passwordsMismatch'] && form.get('confirmPassword')?.touched) {
+          <div class="f-error">{{ 'auth.register.passwordsMismatch' | transloco }}</div>
+        }
+
+        <label class="check-row">
+          <input type="checkbox" formControlName="acceptTerms" />
+          {{ 'auth.register.acceptTermsPrefix' | transloco }}
+          <a href="/legal/termos" target="_blank">{{ 'auth.register.termsLink' | transloco }}</a>
+          {{ 'auth.register.acceptTermsMiddle' | transloco }}
+          <a href="/legal/privacidade" target="_blank">{{ 'auth.register.privacyLink' | transloco }}</a>
+        </label>
+
+        @if (errorMessage()) {
+          <div class="form-msg error">{{ errorMessage() | transloco }}</div>
+        }
+
+        <button class="submit-btn" type="submit" [disabled]="submitting()">
+          {{ 'auth.register.submit' | transloco }}
+        </button>
+      </form>
+
+      <div class="or-div">{{ 'auth.register.orDivider' | transloco }}</div>
+
+      <app-google-auth-button [label]="'auth.register.continueWithGoogle' | transloco" />
+
+      <div class="form-foot">
+        <p>
+          {{ 'auth.register.hasAccount' | transloco }}
+          <a routerLink="/login">{{ 'auth.register.login' | transloco }}</a>
+        </p>
+        <a routerLink="/" class="back-home">{{ 'auth.common.backToHome' | transloco }}</a>
+      </div>
+    </div>
+  </div>
+</div>

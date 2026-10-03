@@ -1,0 +1,24 @@
+<div class="usage-history-wrap">
+  <table class="usage-history-table">
+    <thead>
+      <tr>
+        <th>{{ 'aiUsage.history.month' | transloco }}</th>
+        <th>{{ 'aiUsage.history.conversations' | transloco }}</th>
+        <th>{{ 'aiUsage.history.reports' | transloco }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (point of history(); track point.month) {
+        <tr>
+          <td>{{ formatMonth(point.month) }}</td>
+          <td>{{ point.ai_conversations }}</td>
+          <td>{{ point.ai_reports }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="3" class="usage-history-empty">{{ 'aiUsage.history.empty' | transloco }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

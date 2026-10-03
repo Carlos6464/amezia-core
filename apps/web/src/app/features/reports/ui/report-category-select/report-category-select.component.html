@@ -1,0 +1,49 @@
+<button type="button" class="rcs-select" [class.open]="open()" (click)="toggle()">
+  <span class="rcs-select-left">
+    @if (selectedCategory(); as category) {
+      <app-category-icon [color]="category.color" [icon]="category.icon" />
+      <span class="rcs-select-name">{{ category.name }}</span>
+    } @else {
+      <span class="rcs-select-name">{{ 'reports.filterBar.allCategories' | transloco }}</span>
+    }
+  </span>
+  <svg class="rcs-select-chevron" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+</button>
+
+@if (open()) {
+  <div class="rcs-dropdown">
+    <button type="button" class="rcs-item" [class.active]="categoryId() === ''" (click)="select('')">
+      {{ 'reports.filterBar.allCategories' | transloco }}
+    </button>
+    @if (categoriesService.globalCategories().length > 0) {
+      <div class="rcs-group-lbl">{{ 'categories.scope.global' | transloco }}</div>
+      @for (category of categoriesService.globalCategories(); track category.public_id) {
+        <button
+          type="button"
+          class="rcs-item"
+          [class.active]="categoryId() === category.public_id"
+          (click)="select(category.public_id)"
+        >
+          <app-category-icon [color]="category.color" [icon]="category.icon" />
+          <span>{{ category.name }}</span>
+        </button>
+      }
+    }
+    @if (categoriesService.privateCategories().length > 0) {
+      <div class="rcs-group-lbl">{{ 'categories.scope.private' | transloco }}</div>
+      @for (category of categoriesService.privateCategories(); track category.public_id) {
+        <button
+          type="button"
+          class="rcs-item"
+          [class.active]="categoryId() === category.public_id"
+          (click)="select(category.public_id)"
+        >
+          <app-category-icon [color]="category.color" [icon]="category.icon" />
+          <span>{{ category.name }}</span>
+        </button>
+      }
+    }
+  </div>
+}

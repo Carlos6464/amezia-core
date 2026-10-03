@@ -1,0 +1,12 @@
+<div class="comp-stat">
+  <div class="comp-stat-ico">
+    <ng-content select="[icon]" />
+  </div>
+  <div class="comp-stat-body">
+    <div class="comp-stat-lbl">{{ label() }}</div>
+    <div class="comp-stat-val">{{ value() }}</div>
+    @if (sub()) {
+      <div class="comp-stat-sub">{{ sub() }}</div>
+    }
+  </div>
+</div>

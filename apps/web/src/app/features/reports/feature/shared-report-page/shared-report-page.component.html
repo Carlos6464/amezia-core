@@ -1,0 +1,135 @@
+<div class="shared-shell">
+  <header class="shared-header">
+    <img src="/assets/imagens/logo.png" alt="Amezia" class="shared-logo" />
+    <span class="shared-brand">Amezia</span>
+    <span class="shared-badge">{{ 'reports.shared.badge' | transloco }}</span>
+  </header>
+
+  <main class="shared-main">
+    @if (tokenMissing()) {
+      <div class="shared-empty">
+        <div class="shared-empty-title">{{ 'reports.shared.missingTitle' | transloco }}</div>
+        <div class="shared-empty-sub">{{ 'reports.shared.missingSub' | transloco }}</div>
+      </div>
+    } @else {
+      <div class="comp-page-header">
+        <div>
+          <div class="comp-ph-badge">{{ 'reports.dashboard.badge' | transloco }}</div>
+          <h1 class="comp-ph-title">{{ 'reports.page.title' | transloco }}</h1>
+        </div>
+        <button class="comp-ph-cta" type="button" [disabled]="exportLoading()" (click)="exportCsv()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          <span>{{ (exportLoading() ? 'reports.page.exporting' : 'reports.page.exportCsv') | transloco }}</span>
+        </button>
+      </div>
+
+      <div class="comp-filter-bar">
+        <app-period-range-picker
+          [dateFrom]="periodRange().dateFrom"
+          [dateTo]="periodRange().dateTo"
+          (rangeChange)="onRangeChange($event)"
+        />
+
+        <div class="comp-fb-sep"></div>
+
+        <select
+          class="comp-fb-dd"
+          [ngModel]="categoryId()"
+          (ngModelChange)="onCategoryChange($event)"
+        >
+          <option value="">{{ 'reports.filterBar.allCategories' | transloco }}</option>
+          @for (category of categories(); track category.public_id) {
+            <option [value]="category.public_id">{{ category.name }}</option>
+          }
+        </select>
+      </div>
+
+      @if (error()) {
+        <div class="state-panel">
+          <div class="state-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <div class="state-title">{{ 'reports.page.errorTitle' | transloco }}</div>
+          <button class="state-retry-btn" type="button" (click)="load()">
+            {{ 'reports.dashboard.retry' | transloco }}
+          </button>
+        </div>
+      } @else {
+        <div class="comp-stats-strip">
+          @if (loading()) {
+            @for (row of [1, 2, 3, 4]; track row) {
+              <div class="comp-stat"><div class="skeleton" style="height: 2.2rem; width: 100%"></div></div>
+            }
+          } @else {
+            <app-metric-card
+              [label]="'reports.page.metricTotal' | transloco"
+              [value]="(summary()?.total_expense ?? '0') | brlAmount"
+              [subtitle]="'reports.page.metricTotalSub' | transloco: { count: summary()?.transaction_count ?? 0 }"
+              tone="red"
+              iconColor="var(--red)"
+              iconBackground="rgba(244, 63, 94, 0.1)"
+              iconBorderColor="rgba(244, 63, 94, 0.18)"
+            >
+              <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </app-metric-card>
+            <app-metric-card
+              [label]="'reports.page.metricBiggest' | transloco"
+              [value]="(summary()?.biggest_transaction?.amount ?? '0') | brlAmount"
+              [subtitle]="summary()?.biggest_transaction?.description ?? null"
+              tone="red"
+              iconColor="var(--amber)"
+              iconBackground="rgba(245, 158, 11, 0.1)"
+              iconBorderColor="rgba(245, 158, 11, 0.18)"
+            >
+              <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" />
+                <line x1="1" y1="10" x2="23" y2="10" />
+              </svg>
+            </app-metric-card>
+            <app-metric-card
+              [label]="'reports.page.metricCount' | transloco"
+              [value]="(summary()?.transaction_count ?? 0).toString()"
+              iconColor="var(--green)"
+              iconBackground="rgba(16, 185, 129, 0.1)"
+              iconBorderColor="rgba(16, 185, 129, 0.18)"
+            >
+              <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                <polyline points="16 7 22 7 22 13" />
+              </svg>
+            </app-metric-card>
+          }
+        </div>
+
+        <div class="bottom-grid">
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <div>
+                <div class="chart-card-lbl">{{ 'reports.page.rankingBadge' | transloco }}</div>
+                <div class="chart-card-title">{{ 'reports.page.rankingTitle' | transloco }}</div>
+              </div>
+            </div>
+            @if (loading()) {
+              <div class="skeleton" style="height: 10rem; width: 100%"></div>
+            } @else {
+              <app-category-distribution-list [items]="distribution()" />
+            }
+          </div>
+
+          <app-transactions-table [page]="transactionsPage()" [loading]="loading()" (pageChange)="goToPage($event)" />
+        </div>
+      }
+    }
+  </main>
+</div>

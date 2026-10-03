@@ -1,0 +1,123 @@
+<div class="comp-page-header">
+  <div>
+    <div class="comp-ph-badge">{{ 'aiUsage.badge' | transloco }}</div>
+    <h1 class="comp-ph-title">{{ 'aiUsage.title' | transloco }}</h1>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">{{ 'aiUsage.loading' | transloco }}</div>
+} @else if (usage()) {
+  @if (subscription(); as sub) {
+    <section>
+      <div class="plan-banner">
+        <div>
+          <div class="plan-banner-name">
+            {{ 'subscription.planNames.' + sub.effective_plan | transloco }}
+          </div>
+          <div class="plan-banner-sub">{{ 'aiUsage.planBannerSub' | transloco }}</div>
+        </div>
+        @if (!hidePlanArea()) {
+          <a routerLink="/settings/plans" class="plan-banner-link">
+            {{ 'aiUsage.manageSubscription' | transloco }}
+          </a>
+        }
+      </div>
+    </section>
+  }
+
+  @if (showUpgradeAlert() && !hidePlanArea()) {
+    <section>
+      <div class="usage-alert">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          <line x1="12" y1="9" x2="12" y2="13" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+        <span>{{ 'aiUsage.alertNearLimit' | transloco }}</span>
+        <a routerLink="/settings/plans" class="usage-alert-link">{{ 'aiUsage.viewPlans' | transloco }}</a>
+      </div>
+    </section>
+  }
+
+  <section>
+    <div class="sec-hd">
+      <div class="sec-title">{{ 'aiUsage.currentCycle' | transloco }}</div>
+    </div>
+    <div class="usage-card">
+      <app-usage-progress-bar
+        [labelKey]="'aiUsage.metrics.aiConversations'"
+        [used]="usage()!.ai_conversations_used"
+        [limit]="usage()!.ai_conversations_limit"
+      />
+      <app-usage-progress-bar
+        [labelKey]="'aiUsage.metrics.aiReports'"
+        [used]="usage()!.ai_reports_used"
+        [limit]="usage()!.ai_reports_limit"
+      />
+      @if (planLimits()) {
+        <div class="usage-plan-limits-note">
+          <span>
+            {{
+              'aiUsage.metrics.whatsappBotLimit'
+                | transloco
+                  : {
+                      limit:
+                        planLimits()!.whatsapp_bot_messages_per_month === null
+                          ? ('aiUsage.unlimited' | transloco)
+                          : planLimits()!.whatsapp_bot_messages_per_month,
+                    }
+            }}
+          </span>
+          <span>
+            {{
+              'aiUsage.metrics.csvExportsLimit'
+                | transloco
+                  : {
+                      limit:
+                        planLimits()!.csv_exports_per_month === null
+                          ? ('aiUsage.unlimited' | transloco)
+                          : planLimits()!.csv_exports_per_month,
+                    }
+            }}
+          </span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-hd">
+      <div class="sec-title">{{ 'aiUsage.history.title' | transloco }}</div>
+    </div>
+    <div class="usage-card">
+      <app-usage-history-table [history]="usage()!.history" />
+    </div>
+  </section>
+
+  @if (planCards().length > 0 && !hidePlanArea()) {
+    <section>
+      <div class="sec-hd">
+        <div class="sec-title">{{ 'aiUsage.plans.title' | transloco }}</div>
+        <div class="sec-sub">{{ 'aiUsage.plans.subtitle' | transloco }}</div>
+      </div>
+      <div class="plans-grid">
+        @for (card of planCards(); track card.plan) {
+          <a routerLink="/settings/plans" class="plan-card-link">
+            <app-plan-card
+              [nameKey]="card.nameKey"
+              [badge]="card.badge"
+              [taglineKey]="card.taglineKey"
+              [priceCents]="card.priceCents"
+              [features]="card.features"
+              [ctaLabelKey]="card.isCurrent ? 'subscription.settingsPlans.cta.current' : 'aiUsage.plans.viewPlans'"
+              [ctaVariant]="card.isCurrent ? 'current' : 'upgrade'"
+              [ctaDisabled]="card.isCurrent"
+              [highlighted]="card.isCurrent"
+            />
+          </a>
+        }
+      </div>
+    </section>
+  }
+}

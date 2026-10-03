@@ -1,0 +1,19 @@
+<div class="comp-stat">
+  <div
+    class="comp-stat-ico"
+    [style.color]="iconColor()"
+    [style.background]="iconBackground()"
+    [style.border-color]="iconBorderColor()"
+  >
+    <ng-content select="[icon]" />
+  </div>
+  <div class="comp-stat-body">
+    <div class="comp-stat-lbl">{{ label() }}</div>
+    <div class="comp-stat-val" [class.red]="tone() === 'red'" [class.green]="tone() === 'green'">
+      {{ value() }}
+    </div>
+    @if (subtitle()) {
+      <div class="comp-stat-sub">{{ subtitle() }}</div>
+    }
+  </div>
+</div>

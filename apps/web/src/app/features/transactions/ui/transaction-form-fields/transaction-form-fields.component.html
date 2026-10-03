@@ -1,0 +1,186 @@
+<div [formGroup]="form()" class="form-fields">
+  <div class="field">
+    <span class="field-label">{{ 'transactions.form.category' | transloco }}</span>
+    <app-category-select formControlName="categoryId" [invalid]="fieldInvalid('categoryId')" />
+    @if (fieldInvalid('categoryId')) {
+      <div class="field-error">{{ 'transactions.form.errors.categoryRequired' | transloco }}</div>
+    }
+  </div>
+
+  <div class="form-row-2">
+    <div class="field">
+      <label class="field-label" for="tx-amount">{{ 'transactions.form.amount' | transloco }}</label>
+      <input
+        id="tx-amount"
+        class="field-input"
+        [class.invalid]="fieldInvalid('amount')"
+        type="text"
+        inputmode="decimal"
+        formControlName="amount"
+        placeholder="0,00"
+      />
+      @if (fieldInvalid('amount')) {
+        <div class="field-error">
+          {{ (form().controls.amount.errors?.['required'] ? 'transactions.form.errors.amountRequired' : 'transactions.form.errors.amountInvalid') | transloco }}
+        </div>
+      }
+    </div>
+    <div class="field">
+      <label class="field-label" for="tx-date">{{ 'transactions.form.date' | transloco }}</label>
+      <input
+        id="tx-date"
+        class="field-input"
+        [class.invalid]="fieldInvalid('date')"
+        type="date"
+        formControlName="date"
+      />
+      @if (fieldInvalid('date')) {
+        <div class="field-error">{{ 'transactions.form.errors.dateRequired' | transloco }}</div>
+      }
+    </div>
+  </div>
+
+  <div class="field">
+    <span class="field-label">{{ 'transactions.form.paymentMethod' | transloco }}</span>
+    <app-payment-method-select formControlName="paymentMethod" />
+  </div>
+
+  <div class="field">
+    <label class="field-label" for="tx-description">{{ 'transactions.form.description' | transloco }}</label>
+    <textarea
+      id="tx-description"
+      class="field-input field-textarea"
+      [class.invalid]="fieldInvalid('description')"
+      rows="2"
+      formControlName="description"
+    ></textarea>
+    @if (fieldInvalid('description')) {
+      <div class="field-error">
+        {{ (form().controls.description.errors?.['required'] ? 'transactions.form.errors.descriptionRequired' : 'transactions.form.errors.descriptionTooLong') | transloco }}
+      </div>
+    }
+  </div>
+
+  <div class="field">
+    <span class="field-label">{{ statusLabelKey() | transloco }}</span>
+    <div class="status-pills">
+      @for (option of statusOptions; track option) {
+        <button
+          type="button"
+          class="status-pill-btn"
+          [class]="option"
+          [class.active]="form().controls.status.value === option"
+          (click)="setStatus(option)"
+        >
+          {{ ('transactions.status.' + option) | transloco }}
+        </button>
+      }
+    </div>
+    @if (advancedStatusHintKey(); as hintKey) {
+      <div class="advanced-status-hint">{{ hintKey | transloco }}</div>
+    }
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-head">
+      <span class="accordion-title">{{ 'transactions.form.advanced' | transloco }}</span>
+    </div>
+
+    <div class="accordion-body">
+      <div class="advanced-toggle">
+        <button type="button" [class.active]="form().controls.advancedMode.value === 'none'" (click)="setAdvancedMode('none')">
+          {{ 'transactions.form.advancedNone' | transloco }}
+        </button>
+        <button type="button" [class.active]="form().controls.advancedMode.value === 'installment'" (click)="setAdvancedMode('installment')">
+          {{ 'transactions.form.installment' | transloco }}
+        </button>
+        <button type="button" [class.active]="form().controls.advancedMode.value === 'recurrence'" (click)="setAdvancedMode('recurrence')">
+          {{ 'transactions.form.recurrence' | transloco }}
+        </button>
+      </div>
+
+      @if (form().controls.advancedMode.value === 'installment') {
+        <div class="field">
+          <label class="field-label" for="tx-installment-total">{{ 'transactions.form.installmentTotal' | transloco }}</label>
+          <input
+            id="tx-installment-total"
+            class="field-input"
+            [class.invalid]="fieldInvalid('installmentTotal')"
+            type="number"
+            min="2"
+            max="60"
+            formControlName="installmentTotal"
+          />
+          @if (fieldInvalid('installmentTotal')) {
+            <div class="field-error">{{ 'transactions.form.errors.installmentRange' | transloco }}</div>
+          } @else {
+            <div class="field-hint">{{ 'transactions.form.installmentHint' | transloco }}</div>
+          }
+        </div>
+      }
+
+      @if (form().controls.advancedMode.value === 'recurrence') {
+        <div class="form-row-2">
+          <div class="field">
+            <label class="field-label" for="tx-frequency">{{ 'transactions.form.frequency' | transloco }}</label>
+            <select id="tx-frequency" class="field-input" formControlName="recurrenceFrequency">
+              @for (frequency of frequencyOptions; track frequency) {
+                <option [value]="frequency">{{ ('transactions.frequency.' + frequency) | transloco }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="tx-recurrence-end-date">{{ 'transactions.form.endDate' | transloco }}</label>
+            <input id="tx-recurrence-end-date" class="field-input" type="date" formControlName="recurrenceEndDate" />
+          </div>
+        </div>
+      }
+
+      <div class="field">
+        <span class="field-label">{{ 'transactions.form.receipt' | transloco }}</span>
+        @if (editingTransaction(); as tx) {
+          @if (tx.receipt_url) {
+            <div class="receipt-preview">
+              <a [href]="tx.receipt_url" target="_blank" rel="noopener">{{ 'transactions.form.viewReceipt' | transloco }}</a>
+              <button type="button" class="upload-remove" (click)="removeReceipt.emit()">
+                {{ 'transactions.form.removeReceipt' | transloco }}
+              </button>
+            </div>
+          } @else {
+            <label class="upload-area">
+              <input
+                type="file"
+                accept="image/png,image/jpeg,application/pdf"
+                [disabled]="receiptUploading()"
+                (change)="onFileSelected($event)"
+                hidden
+              />
+              <span>{{ (receiptUploading() ? 'transactions.form.uploading' : 'transactions.form.uploadReceipt') | transloco }}</span>
+            </label>
+          }
+        } @else if (form().controls.status.value === 'paid') {
+          @if (stagedReceiptFile(); as file) {
+            <div class="receipt-preview">
+              <span>{{ file.name }}</span>
+              <button type="button" class="upload-remove" (click)="removeStagedReceipt.emit()">
+                {{ 'transactions.form.removeReceipt' | transloco }}
+              </button>
+            </div>
+          } @else {
+            <label class="upload-area">
+              <input
+                type="file"
+                accept="image/png,image/jpeg,application/pdf"
+                (change)="onFileSelected($event)"
+                hidden
+              />
+              <span>{{ 'transactions.form.uploadReceipt' | transloco }}</span>
+            </label>
+          }
+        } @else {
+          <div class="field-hint">{{ 'transactions.form.receiptRequiresPaid' | transloco }}</div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

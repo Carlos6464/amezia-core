@@ -1,0 +1,58 @@
+<article class="hero-card">
+  <div class="hero-head">
+    <div>
+      <p class="hero-label">{{ 'reports.dashboard.heroBadge' | transloco }}</p>
+      <h2 class="hero-title">{{ 'reports.dashboard.heroTitle' | transloco }}</h2>
+    </div>
+    <span class="hero-date">{{ periodLabel() }}</span>
+  </div>
+
+  <div class="hero-metrics">
+    <div>
+      <p class="hm-label">{{ 'reports.dashboard.heroExpenses' | transloco }}</p>
+      <p class="hm-val hm-val--danger">{{ totalExpense() | brlAmount }}</p>
+    </div>
+    <div>
+      <p class="hm-label">{{ 'reports.dashboard.metricBudget' | transloco }}</p>
+      <p class="hm-val">{{ budgetValue() !== null ? (budgetLimit()! | brlAmount) : '—' }}</p>
+    </div>
+    <div>
+      <p class="hm-label">{{ 'reports.dashboard.heroStatus' | transloco }}</p>
+      <p
+        class="hm-val"
+        [class.hm-val--danger]="budgetValue() !== null && isOverBudget()"
+        [class.hm-val--success]="budgetValue() !== null && !isOverBudget()"
+      >
+        {{
+          usagePercent() === null
+            ? ('reports.dashboard.metricBudgetNotSet' | transloco)
+            : ('reports.dashboard.metricBudgetUsage' | transloco: { percent: usagePercent()!.toFixed(0) })
+        }}
+      </p>
+    </div>
+  </div>
+
+  <div class="hero-bar">
+    <div class="hero-bar-fill" [class.hero-bar-fill--over]="budgetValue() !== null && isOverBudget()" [style.width.%]="barWidth()"></div>
+  </div>
+
+  <p class="hero-note">
+    @if (budgetValue() === null) {
+      {{ 'reports.dashboard.heroNoteUnset' | transloco }}
+    } @else if (isOverBudget()) {
+      {{ 'reports.dashboard.heroNoteOver' | transloco: { amount: (-difference()! | brlAmount) } }}
+    } @else {
+      {{ 'reports.dashboard.heroNoteUnder' | transloco: { amount: (difference()! | brlAmount) } }}
+    }
+  </p>
+
+  @if (budgetValue() === null) {
+    <a routerLink="/transactions" class="hero-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23" />
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
+      {{ 'reports.dashboard.heroSetBudgetLink' | transloco }}
+    </a>
+  }
+</article>

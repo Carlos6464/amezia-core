@@ -1,0 +1,282 @@
+/**
+ * Autor: Carlos Adriano
+ * Data: 2026-09-10
+ * Descrição: Design system da feature `subscription` (build-context-09
+ * §3.2) — mesmo padrão de `category-design.css`/`reports-design.css`:
+ * classes genéricas (`comp-page-header`) reaproveitadas dentro da
+ * feature, importadas por `@import` em cada componente que precisa.
+ */
+
+.comp-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.1rem;
+}
+.comp-ph-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 0.2rem;
+}
+.comp-ph-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--t1);
+}
+
+.loading-state {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--t2);
+  font-size: 0.85rem;
+}
+
+section + section {
+  margin-top: 1.4rem;
+}
+
+.sec-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+.sec-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.sec-sub {
+  font-size: 0.78rem;
+  color: var(--t2);
+}
+
+/* CURRENT PLAN CARD */
+.curr-plan {
+  background: var(--bg-card);
+  border: 1.5px solid rgba(99, 102, 241, 0.3);
+  border-radius: 1rem;
+  padding: 1.3rem 1.5rem;
+  display: flex;
+  align-items: stretch;
+  gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+.curr-plan::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: var(--grad);
+}
+.curr-plan-left {
+  flex: 1;
+  min-width: 0;
+}
+.curr-plan-top {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+.curr-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+.status-active {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--green);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+.status-trial {
+  background: var(--acc-s2);
+  color: var(--acc-l);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+.status-free {
+  background: var(--bg-elev);
+  color: var(--t2);
+  border: 1px solid var(--bdr-s);
+}
+.status-past_due {
+  background: rgba(217, 119, 6, 0.12);
+  color: var(--amber);
+  border: 1px solid rgba(217, 119, 6, 0.28);
+}
+.status-canceled {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--red);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+.curr-plan-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  font-size: 0.78rem;
+  color: var(--t2);
+}
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.meta-item svg {
+  color: var(--t3);
+  flex-shrink: 0;
+}
+.curr-plan-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  justify-content: center;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.btn-manage {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--bg-elev);
+  color: var(--t1);
+  border: 1.5px solid var(--bdr-s);
+  transition: all 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-manage:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--acc-l);
+}
+.btn-manage:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn-cancel {
+  font-size: 0.73rem;
+  color: var(--t3);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  text-align: right;
+}
+.btn-cancel:hover {
+  color: var(--red);
+}
+.curr-price {
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.1rem;
+}
+.curr-price-per {
+  font-size: 0.72rem;
+  color: var(--t2);
+  font-weight: 500;
+}
+
+/* PLAN COMPARISON GRID */
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+/* CANCEL SECTION */
+.cancel-section {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 1rem;
+  padding: 1.1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.cs-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.cs-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.cs-sub {
+  font-size: 0.75rem;
+  color: var(--t2);
+}
+.cs-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1.5px solid rgba(244, 63, 94, 0.25);
+  color: var(--red);
+  background: rgba(244, 63, 94, 0.06);
+  transition: all 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+  font-family: inherit;
+}
+.cs-btn:hover:not(:disabled) {
+  background: rgba(244, 63, 94, 0.12);
+  border-color: rgba(244, 63, 94, 0.45);
+}
+.cs-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1024px) {
+  .plans-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+  .curr-plan {
+    flex-direction: column;
+  }
+  .curr-plan-right {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--bdr);
+    padding-top: 0.85rem;
+  }
+}

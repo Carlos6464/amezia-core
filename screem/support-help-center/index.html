@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia — Central de Ajuda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input{font-family:inherit}
+ul{list-style:none}
+
+:root{
+  --bg:#070b12;--bg-card:#0d1526;--bg-elev:#111c30;
+  --bdr:rgba(255,255,255,.07);--bdr-s:rgba(255,255,255,.11);
+  --t1:#f0f4ff;--t2:#8899bb;--t3:#4a5878;
+  --accent:#6366f1;--acc-l:#818cf8;--acc-s:rgba(99,102,241,.1);--acc-s2:rgba(99,102,241,.2);
+  --green:#10b981;--red:#f43f5e;--amber:#f59e0b;--violet:#a78bfa;--teal:#22d3ee;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+}
+[data-theme="light"]{
+  --bg:#f0f4f8;--bg-card:#ffffff;--bg-elev:#f8fafc;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --bdr:rgba(15,23,42,.08);--bdr-s:rgba(15,23,42,.13);
+  --acc-s:rgba(99,102,241,.08);--acc-s2:rgba(99,102,241,.16);
+  --accent:#4f46e5;--acc-l:#4f46e5;
+  --green:#059669;--red:#dc2626;--amber:#d97706;--violet:#7c3aed;--teal:#0891b2;
+  --grad:linear-gradient(135deg,#4f46e5,#2563eb);
+}
+
+html,body{min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);line-height:1.5;-webkit-font-smoothing:antialiased}
+
+.amb{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 70% 50% at 50% -5%,rgba(99,102,241,.1),transparent 65%),
+             radial-gradient(ellipse 40% 30% at 90% 85%,rgba(96,165,250,.05),transparent 60%)}
+[data-theme="light"] .amb{opacity:.4}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:rgba(7,11,18,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--bdr);padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+[data-theme="light"] nav{background:rgba(240,244,248,.92)}
+.brand{display:flex;align-items:center;gap:.5rem}
+.brand-mark{width:1.8rem;height:1.8rem;border-radius:.5rem;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:900;color:#fff}
+.brand-name{font-size:.92rem;font-weight:800;letter-spacing:-.02em}
+.nav-r{display:flex;align-items:center;gap:.5rem}
+.nav-link{font-size:.82rem;font-weight:500;color:var(--t2);padding:.35rem .7rem;border-radius:.45rem;transition:all .15s}
+.nav-link:hover{color:var(--t1);background:var(--acc-s)}
+.nav-login{font-size:.82rem;font-weight:600;color:var(--acc-l);border:1.5px solid rgba(99,102,241,.3);border-radius:.5rem;padding:.32rem .8rem;transition:all .15s}
+.nav-login:hover{background:var(--acc-s);border-color:rgba(99,102,241,.5)}
+
+/* SHELL */
+.shell{position:relative;z-index:1;width:min(1100px,calc(100% - 2.5rem));margin-inline:auto}
+
+/* HERO */
+.hero{padding:3.5rem 0 2.75rem;text-align:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--acc-l);background:var(--acc-s);border:1px solid rgba(99,102,241,.2);border-radius:999px;padding:.22rem .65rem;margin-bottom:1rem}
+.hero-h1{font-size:2.2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.65rem}
+.hero-sub{font-size:.9rem;color:var(--t2);margin-bottom:1.75rem}
+
+/* SEARCH */
+.search-wrap{position:relative;max-width:540px;margin:0 auto}
+.search-ico{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none}
+.search-input{width:100%;padding:.8rem 1rem .8rem 2.5rem;border-radius:.85rem;border:1.5px solid var(--bdr-s);background:var(--bg-card);color:var(--t1);font-size:.9rem;outline:none;transition:border-color .15s,box-shadow .15s}
+.search-input::placeholder{color:var(--t3)}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--acc-s)}
+.search-results{position:absolute;top:calc(100% + .4rem);left:0;right:0;background:var(--bg-card);border:1.5px solid var(--bdr-s);border-radius:.75rem;overflow:hidden;display:none;z-index:10;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.search-results.open{display:block}
+.sr-item{padding:.65rem 1rem;display:flex;align-items:center;gap:.55rem;font-size:.82rem;cursor:pointer;transition:background .1s;color:var(--t2)}
+.sr-item:hover{background:var(--acc-s);color:var(--t1)}
+.sr-item svg{flex-shrink:0;opacity:.5}
+.search-tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:1rem}
+.s-tag{font-size:.75rem;color:var(--t2);background:var(--bg-elev);border:1px solid var(--bdr);border-radius:999px;padding:.2rem .65rem;cursor:pointer;transition:all .15s}
+.s-tag:hover{color:var(--acc-l);border-color:rgba(99,102,241,.3);background:var(--acc-s)}
+
+/* STATS */
+.stats{display:flex;justify-content:center;gap:2rem;padding:2rem 0;border-bottom:1px solid var(--bdr);flex-wrap:wrap}
+.stat{text-align:center}
+.stat-val{font-size:1.4rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-lbl{font-size:.72rem;color:var(--t3)}
+
+/* SECTION TITLE */
+.s-title{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin:2.25rem 0 1rem}
+
+/* CATEGORIES */
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.9rem;margin-bottom:1rem}
+.cat-card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.2rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.8rem}
+.cat-card:hover{border-color:rgba(99,102,241,.35);background:var(--bg-elev);transform:translateY(-1px)}
+.cat-ico{width:2.4rem;height:2.4rem;border-radius:.6rem;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ci-p{background:var(--acc-s);color:var(--acc-l)}
+.ci-g{background:rgba(16,185,129,.1);color:var(--green)}
+.ci-a{background:rgba(251,191,36,.1);color:var(--amber)}
+.ci-b{background:rgba(34,211,238,.1);color:var(--teal)}
+.ci-r{background:rgba(244,63,94,.1);color:var(--red)}
+.ci-v{background:rgba(167,139,250,.1);color:var(--violet)}
+.cat-info{}
+.cat-name{font-size:.85rem;font-weight:700;margin-bottom:.15rem}
+.cat-count{font-size:.73rem;color:var(--t3)}
+
+/* POPULAR ARTICLES */
+.articles{display:flex;flex-direction:column;gap:.5rem;margin-bottom:2.5rem}
+.art-row{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:.75rem;padding:.8rem 1rem;display:flex;align-items:center;gap:.75rem;cursor:pointer;transition:all .15s}
+.art-row:hover{border-color:rgba(99,102,241,.3);background:var(--bg-elev)}
+.art-tag{font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.15rem .45rem;border-radius:999px;flex-shrink:0;white-space:nowrap}
+.at-primeiros{background:var(--acc-s);color:var(--acc-l)}
+.at-whatsapp{background:rgba(16,185,129,.1);color:var(--green)}
+.at-planos{background:rgba(251,191,36,.1);color:var(--amber)}
+.at-ia{background:rgba(167,139,250,.1);color:var(--violet)}
+.at-conta{background:rgba(34,211,238,.1);color:var(--teal)}
+.art-title{flex:1;font-size:.85rem;font-weight:500}
+.art-arr{color:var(--t3)}
+
+/* ARTICLE MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg-card);border:1.5px solid var(--bdr-s);border-radius:1.1rem;width:min(660px,100%);margin:auto;padding:2rem;position:relative}
+.modal-close{position:absolute;top:1rem;right:1rem;width:2rem;height:2rem;border-radius:.45rem;display:flex;align-items:center;justify-content:center;color:var(--t3);background:var(--bg-elev);transition:all .15s}
+.modal-close:hover{color:var(--t1);background:var(--acc-s)}
+.modal-tag{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.18rem .5rem;border-radius:999px;margin-bottom:.75rem}
+.modal h2{font-size:1.15rem;font-weight:800;margin-bottom:.5rem}
+.modal-meta{font-size:.73rem;color:var(--t3);margin-bottom:1.25rem}
+.modal-body{font-size:.85rem;color:var(--t2);line-height:1.75}
+.modal-body h3{font-size:.88rem;font-weight:700;color:var(--t1);margin:1.1rem 0 .4rem}
+.modal-body p{margin-bottom:.65rem}
+.modal-body ol,.modal-body ul{padding-left:1.25rem;margin-bottom:.65rem}
+.modal-body ol li,.modal-body ul li{margin-bottom:.3rem}
+.modal-body code{background:var(--bg-elev);border-radius:.3rem;padding:.1rem .35rem;font-size:.8rem;color:var(--acc-l)}
+.modal-helpful{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--bdr);display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--t2)}
+.h-btn{display:flex;align-items:center;gap:.3rem;padding:.35rem .75rem;border-radius:.5rem;border:1.5px solid var(--bdr);background:var(--bg-elev);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s}
+.h-btn:hover{border-color:var(--green);color:var(--green);background:rgba(16,185,129,.08)}
+.h-btn.no:hover{border-color:var(--red);color:var(--red);background:rgba(244,63,94,.08)}
+
+/* CONTACT BANNER */
+.contact-banner{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.5rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:3rem;flex-wrap:wrap}
+.cb-left h3{font-size:.95rem;font-weight:700;margin-bottom:.2rem}
+.cb-left p{font-size:.8rem;color:var(--t2)}
+.cb-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.2rem;border-radius:.65rem;background:var(--grad);color:#fff;font-size:.82rem;font-weight:700;flex-shrink:0;transition:all .15s}
+.cb-btn:hover{filter:brightness(1.1)}
+
+/* THEME BTN */
+.theme-btn{position:fixed;bottom:1.25rem;right:1.25rem;z-index:99;width:2.2rem;height:2.2rem;border-radius:50%;background:var(--bg-card);border:1.5px solid var(--bdr-s);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.theme-btn:hover{color:var(--t1);border-color:var(--accent)}
+
+@media(max-width:600px){
+  .shell{width:calc(100% - 1.5rem)}
+  .cats{grid-template-columns:1fr 1fr}
+  .stats{gap:1.25rem}
+  .hero{padding:2.25rem 0 2rem}
+  .hero-h1{font-size:1.55rem}
+  .hero-sub{font-size:.83rem}
+  .contact-banner{flex-direction:column;text-align:center}
+  .cb-btn{justify-content:center}
+  .art-tag{display:none}
+  nav .nav-link{display:none}
+}
+@media(max-width:480px){
+  .hero-h1{font-size:1.35rem}
+  .search-input{font-size:.82rem;padding:.7rem .9rem .7rem 2.3rem}
+  .s-title{margin:1.5rem 0 .75rem}
+  .stats{gap:.85rem;padding:1.5rem 0}
+  .stat-val{font-size:1.1rem}
+}
+@media(max-width:400px){
+  .cats{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="amb"></div>
+
+<nav>
+  <a href="/" class="brand">
+    <div class="brand-mark">A</div>
+    <span class="brand-name">Amezia</span>
+  </a>
+  <div class="nav-r">
+    <a href="../support-contact/index.html" class="nav-link">Contato</a>
+    <a href="/login" class="nav-login">Entrar</a>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="hero">
+    <div class="hero-eyebrow">
+      <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Central de Ajuda
+    </div>
+    <h1 class="hero-h1">Como podemos ajudar você?</h1>
+    <p class="hero-sub">Encontre respostas rápidas ou entre em contato com nossa equipe</p>
+
+    <div class="search-wrap">
+      <div class="search-ico">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <input class="search-input" type="text" placeholder="Pesquisar artigos... ex: 'bot whatsapp', 'exportar dados'" oninput="doSearch(this.value)" onclick="doSearch(this.value)">
+      <div class="search-results" id="search-results">
+        <div class="sr-item" onclick="openArt(0)">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+          Como registrar minha primeira despesa?
+        </div>
+        <div class="sr-item" onclick="openArt(1)">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+          Como conectar o bot no WhatsApp?
+        </div>
+        <div class="sr-item" onclick="openArt(2)">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+          Como cancelar minha assinatura?
+        </div>
+      </div>
+    </div>
+
+    <div class="search-tags">
+      <span class="s-tag" onclick="setSearch('despesa')">despesa</span>
+      <span class="s-tag" onclick="setSearch('whatsapp')">bot whatsapp</span>
+      <span class="s-tag" onclick="setSearch('plano')">planos</span>
+      <span class="s-tag" onclick="setSearch('relatório')">relatório</span>
+      <span class="s-tag" onclick="setSearch('exportar')">exportar dados</span>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val">24</div><div class="stat-lbl">artigos</div></div>
+    <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">categorias</div></div>
+    <div class="stat"><div class="stat-val">&lt;24h</div><div class="stat-lbl">tempo de resposta</div></div>
+    <div class="stat"><div class="stat-val">97%</div><div class="stat-lbl">resolvidos</div></div>
+  </div>
+
+  <div class="s-title">Categorias</div>
+  <div class="cats">
+    <div class="cat-card" onclick="openArt(0)">
+      <div class="cat-ico ci-p">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Primeiros passos</div>
+        <div class="cat-count">5 artigos</div>
+      </div>
+    </div>
+    <div class="cat-card" onclick="openArt(1)">
+      <div class="cat-ico ci-g">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Bot WhatsApp</div>
+        <div class="cat-count">6 artigos</div>
+      </div>
+    </div>
+    <div class="cat-card" onclick="openArt(2)">
+      <div class="cat-ico ci-a">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Planos e cobrança</div>
+        <div class="cat-count">5 artigos</div>
+      </div>
+    </div>
+    <div class="cat-card" onclick="openArt(3)">
+      <div class="cat-ico ci-b">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg>
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Inteligência Artificial</div>
+        <div class="cat-count">4 artigos</div>
+      </div>
+    </div>
+    <div class="cat-card" onclick="openArt(4)">
+      <div class="cat-ico ci-v">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Relatórios e dados</div>
+        <div class="cat-count">3 artigos</div>
+      </div>
+    </div>
+    <div class="cat-card" onclick="openArt(5)">
+      <div class="cat-ico ci-r">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">Conta e segurança</div>
+        <div class="cat-count">4 artigos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-title">Artigos populares</div>
+  <div class="articles">
+    <div class="art-row" onclick="openArt(0)">
+      <span class="art-tag at-primeiros">Primeiros passos</span>
+      <span class="art-title">Como registrar minha primeira despesa?</span>
+      <svg class="art-arr" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="art-row" onclick="openArt(1)">
+      <span class="art-tag at-whatsapp">WhatsApp</span>
+      <span class="art-title">Como conectar e usar o bot no WhatsApp?</span>
+      <svg class="art-arr" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="art-row" onclick="openArt(2)">
+      <span class="art-tag at-planos">Planos</span>
+      <span class="art-title">Como cancelar ou fazer upgrade/downgrade da assinatura?</span>
+      <svg class="art-arr" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="art-row" onclick="openArt(3)">
+      <span class="art-tag at-ia">IA</span>
+      <span class="art-title">O que a IA pode fazer por mim no Amezia?</span>
+      <svg class="art-arr" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="art-row" onclick="openArt(4)">
+      <span class="art-tag at-ia">IA</span>
+      <span class="art-title">Como gerar um relatório mensal dos meus gastos?</span>
+      <svg class="art-arr" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="art-row" onclick="openArt(5)">
+      <span class="art-tag at-conta">Conta</span>
+      <span class="art-title">Como exportar todos os meus dados?</span>
+      <svg class="art-arr" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="art-row" onclick="openArt(6)">
+      <span class="art-tag at-whatsapp">WhatsApp</span>
+      <span class="art-title">O bot não está respondendo. O que fazer?</span>
+      <svg class="art-arr" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div class="art-row" onclick="openArt(7)">
+      <span class="art-tag at-planos">Planos</span>
+      <span class="art-title">Quais são os limites de cada plano?</span>
+      <svg class="art-arr" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  </div>
+
+  <div class="contact-banner">
+    <div class="cb-left">
+      <h3>Não encontrou o que procurava?</h3>
+      <p>Nossa equipe está pronta para ajudar — respondemos em até 24h em dias úteis</p>
+    </div>
+    <a href="../support-contact/index.html" class="cb-btn">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Falar com o suporte
+    </a>
+  </div>
+</div>
+
+<!-- ARTICLE MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <span class="modal-tag at-primeiros" id="modal-tag">Primeiros passos</span>
+    <h2 id="modal-title">Como registrar minha primeira despesa?</h2>
+    <div class="modal-meta" id="modal-meta">Atualizado em 15 jun. 2026 · 3 min de leitura</div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-helpful">
+      <span>Esse artigo foi útil?</span>
+      <button class="h-btn" onclick="this.innerHTML='✓ Obrigado!'">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+        Sim
+      </button>
+      <button class="h-btn no" onclick="this.innerHTML='↗ Contato'">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3z"/><path d="M17 2h2.67A2.31 2.31 0 0122 4v7a2.31 2.31 0 01-2.33 2H17"/></svg>
+        Não
+      </button>
+    </div>
+  </div>
+</div>
+
+<button class="theme-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'" title="Tema">
+  <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
+<script>
+const ARTS = [
+  {
+    tag:'Primeiros passos', tagClass:'at-primeiros', date:'15 jun. 2026', read:'3 min',
+    title:'Como registrar minha primeira despesa?',
+    body:`<h3>Pelo bot no WhatsApp</h3>
+<p>A forma mais rápida é usando o bot. Envie uma mensagem como <code>"gastei R$ 35 no almoço"</code> e o Amezia registra automaticamente.</p>
+<h3>Pelo dashboard</h3>
+<ol>
+<li>Acesse o painel em <code>app.amezia.com.br</code></li>
+<li>Clique em <strong>+ Nova despesa</strong> no canto superior direito</li>
+<li>Preencha valor, categoria, data e descrição</li>
+<li>Clique em <strong>Salvar</strong></li>
+</ol>
+<h3>Dicas</h3>
+<p>Você pode categorizar gastos com tags personalizadas. Usuários Pro e Premium têm categorias privadas ilimitadas.</p>`
+  },
+  {
+    tag:'WhatsApp', tagClass:'at-whatsapp', date:'18 jun. 2026', read:'4 min',
+    title:'Como conectar e usar o bot no WhatsApp?',
+    body:`<h3>Conectando sua instância</h3>
+<ol>
+<li>Acesse <strong>Configurações → WhatsApp</strong> no painel</li>
+<li>Clique em <strong>Conectar número</strong></li>
+<li>Escaneie o QR Code com seu WhatsApp</li>
+<li>Aguarde a confirmação (30–60 segundos)</li>
+</ol>
+<h3>Usando o bot</h3>
+<p>Após conectar, envie uma mensagem para o número vinculado. O bot apresentará um menu com:</p>
+<ul>
+<li><strong>1</strong> — Registrar despesa</li>
+<li><strong>2</strong> — Conversa com IA</li>
+<li><strong>3</strong> — Relatório do mês</li>
+<li><strong>4</strong> — Ver teto de gastos</li>
+<li><strong>0</strong> — Voltar ao menu</li>
+</ul>
+<h3>Registrando por áudio</h3>
+<p>No modo despesa, você pode enviar um áudio! O Amezia transcreve e extrai o valor e a categoria automaticamente.</p>`
+  },
+  {
+    tag:'Planos', tagClass:'at-planos', date:'10 jun. 2026', read:'3 min',
+    title:'Como cancelar ou fazer upgrade/downgrade da assinatura?',
+    body:`<h3>Gerenciar assinatura</h3>
+<p>Acesse <strong>Configurações → Planos</strong> no painel. Você verá seu plano atual e as opções disponíveis.</p>
+<h3>Upgrade</h3>
+<p>Clique em <strong>Fazer upgrade</strong> no plano desejado. O novo plano é ativado imediatamente, com cobrança proporcional ao período restante.</p>
+<h3>Downgrade</h3>
+<p>Clique em <strong>Gerenciar assinatura</strong> para acessar o portal Stripe. Selecione o plano menor — o downgrade ocorre no próximo ciclo de cobrança.</p>
+<h3>Cancelamento</h3>
+<p>No portal Stripe, escolha <strong>Cancelar plano</strong>. Seu acesso permanece ativo até o fim do período pago. Seus dados são mantidos por 30 dias após o cancelamento.</p>`
+  },
+  {
+    tag:'IA', tagClass:'at-ia', date:'12 jun. 2026', read:'2 min',
+    title:'O que a IA pode fazer por mim no Amezia?',
+    body:`<h3>Análise de gastos</h3>
+<p>A IA analisa seus padrões de consumo e responde perguntas como: <code>"quanto gastei com alimentação este mês?"</code> ou <code>"qual meu maior gasto em junho?"</code>.</p>
+<h3>Relatórios narrativos</h3>
+<p>Solicite um resumo inteligente dos seus gastos enviando <code>"3"</code> no menu do bot. A IA gera um texto explicando onde vai seu dinheiro.</p>
+<h3>Conversas livres</h3>
+<p>No modo Chat (opção <code>2</code> no bot), você conversa livremente sobre finanças pessoais, pede dicas de economia ou analisa tendências.</p>
+<h3>Limites por plano</h3>
+<ul>
+<li><strong>Free</strong> — 10 interações/mês</li>
+<li><strong>Pro</strong> — 50 interações/mês</li>
+<li><strong>Premium</strong> — Ilimitado</li>
+</ul>`
+  },
+  {
+    tag:'Relatórios', tagClass:'at-ia', date:'14 jun. 2026', read:'2 min',
+    title:'Como gerar um relatório mensal dos meus gastos?',
+    body:`<h3>Via bot WhatsApp</h3>
+<p>Envie <code>3</code> no menu do bot. O Amezia gera um relatório narrativo com os gastos do mês atual, analisado pela IA.</p>
+<h3>Via dashboard</h3>
+<p>Na tela principal, acesse a aba <strong>Relatórios</strong>. Você pode filtrar por mês, categoria ou tipo de gasto e exportar em PDF ou CSV.</p>
+<h3>Relatório automático</h3>
+<p>Usuários Pro e Premium podem configurar envio automático do relatório mensal por WhatsApp no primeiro dia útil de cada mês.</p>`
+  },
+  {
+    tag:'Conta', tagClass:'at-conta', date:'08 jun. 2026', read:'2 min',
+    title:'Como exportar todos os meus dados?',
+    body:`<h3>Exportação completa</h3>
+<ol>
+<li>Acesse <strong>Configurações → Conta</strong></li>
+<li>Role até a seção <strong>Privacidade e dados</strong></li>
+<li>Clique em <strong>Exportar meus dados</strong></li>
+<li>Você receberá um e-mail com o arquivo ZIP em até 24h</li>
+</ol>
+<h3>O que está incluído?</h3>
+<ul>
+<li>Todas as despesas e categorias</li>
+<li>Histórico de conversas com a IA</li>
+<li>Configurações e preferências</li>
+</ul>
+<h3>Formato</h3>
+<p>Os dados são exportados em <strong>CSV</strong> (para planilhas) e <strong>JSON</strong> (para uso técnico). Você pode importar o CSV diretamente no Excel ou Google Sheets.</p>`
+  },
+  {
+    tag:'WhatsApp', tagClass:'at-whatsapp', date:'17 jun. 2026', read:'3 min',
+    title:'O bot não está respondendo. O que fazer?',
+    body:`<h3>1. Verifique a conexão</h3>
+<p>Acesse <strong>Configurações → WhatsApp</strong> e veja se o status mostra <strong>Conectado</strong>. Se aparecer <strong>Desconectado</strong>, clique em Reconectar e escaneie o QR Code novamente.</p>
+<h3>2. Reinicie a sessão</h3>
+<p>Às vezes a sessão expira. Desconecte e reconecte o número nas configurações.</p>
+<h3>3. Verifique o limite de IA</h3>
+<p>Se o bot responde ao menu (1, 2, 3) mas não processa mensagens com IA, pode ser que seu limite mensal foi atingido. Veja em <strong>Configurações → Uso e Limites</strong>.</p>
+<h3>Ainda com problema?</h3>
+<p>Entre em contato com o suporte informando o número do WhatsApp vinculado e uma descrição do que acontece.</p>`
+  },
+  {
+    tag:'Planos', tagClass:'at-planos', date:'05 jun. 2026', read:'2 min',
+    title:'Quais são os limites de cada plano?',
+    body:`<h3>Comparativo de limites</h3>
+<ul>
+<li><strong>Free</strong> — 10 interações IA/mês, 3 categorias privadas, sem bot WhatsApp</li>
+<li><strong>Pro (R$29/mês)</strong> — 50 interações IA/mês, categorias ilimitadas, bot WhatsApp incluso</li>
+<li><strong>Premium (R$59/mês)</strong> — IA ilimitada, tudo do Pro + suporte prioritário + relatórios automáticos</li>
+</ul>
+<h3>O que acontece quando atinjo o limite?</h3>
+<p>No plano Free e Pro, ao atingir o limite de interações com IA, as mensagens de análise retornam um aviso. Você ainda pode registrar despesas normalmente — apenas as funções de IA ficam pausadas até o próximo mês.</p>
+<h3>Período de teste</h3>
+<p>Planos pagos têm 7 dias de teste gratuito. Nenhuma cobrança é feita antes do teste terminar.</p>`
+  },
+];
+
+function openArt(i){
+  const a=ARTS[i]||ARTS[0];
+  document.getElementById('modal-tag').textContent=a.tag;
+  document.getElementById('modal-tag').className='modal-tag '+a.tagClass;
+  document.getElementById('modal-title').textContent=a.title;
+  document.getElementById('modal-meta').textContent=`Atualizado em ${a.date} · ${a.read} de leitura`;
+  document.getElementById('modal-body').innerHTML=a.body;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function doSearch(v){
+  const res=document.getElementById('search-results');
+  if(v.length<2){res.classList.remove('open');return}
+  const matches=ARTS.filter(a=>a.title.toLowerCase().includes(v.toLowerCase())||a.tag.toLowerCase().includes(v.toLowerCase()));
+  if(!matches.length){res.classList.remove('open');return}
+  res.innerHTML=matches.slice(0,4).map((a,i)=>`<div class="sr-item" onclick="openArt(${ARTS.indexOf(a)})">\
+<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>${a.title}</div>`).join('');
+  res.classList.add('open');
+}
+function setSearch(v){
+  const inp=document.querySelector('.search-input');
+  inp.value=v;doSearch(v);inp.focus();
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))document.getElementById('search-results').classList.remove('open')});
+</script>
+</body>
+</html>

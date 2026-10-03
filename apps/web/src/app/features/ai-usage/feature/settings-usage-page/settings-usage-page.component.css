@@ -1,0 +1,20 @@
+@import '../../ui/ai-usage-design.css';
+
+:host {
+  display: block;
+  padding: 1.1rem 1.4rem 3rem;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+@media (max-width: 640px) {
+  :host {
+    padding: 0.9rem 0.95rem 3rem;
+  }
+}
+
+.plan-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}

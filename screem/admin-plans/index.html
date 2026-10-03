@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia Admin — Planos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit}
+ul{list-style:none}
+:root{
+  --bg:#070b12;--bg-card:#0d1526;--bg-elev:#111c30;--bg-sidebar:#09101f;
+  --bdr:rgba(255,255,255,.07);--bdr-s:rgba(255,255,255,.11);
+  --t1:#f0f4ff;--t2:#8899bb;--t3:#4a5878;
+  --accent:#6366f1;--acc-l:#818cf8;--acc-s:rgba(99,102,241,.1);--acc-s2:rgba(99,102,241,.2);
+  --green:#10b981;--red:#f43f5e;--amber:#f59e0b;--violet:#a78bfa;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+}
+[data-theme="light"]{
+  --bg:#f0f4f8;--bg-card:#ffffff;--bg-elev:#f8fafc;--bg-sidebar:#ffffff;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --bdr:rgba(15,23,42,.08);--bdr-s:rgba(15,23,42,.13);
+  --acc-s:rgba(99,102,241,.08);--acc-s2:rgba(99,102,241,.16);
+  --accent:#4f46e5;--acc-l:#4f46e5;
+  --green:#059669;--red:#dc2626;--amber:#d97706;--violet:#7c3aed;
+  --grad:linear-gradient(135deg,#4f46e5,#2563eb);
+}
+html,body{height:100%;min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+
+.topbar{height:3.25rem;background:var(--bg-sidebar);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 1.1rem;gap:.75rem;flex-shrink:0;z-index:40;position:sticky;top:0}
+.brand{display:flex;align-items:center;gap:.4rem}
+.brand-mark{width:1.6rem;height:1.6rem;border-radius:.4rem;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;color:#fff}
+.brand-name{font-size:.88rem;font-weight:800}
+.admin-badge{font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.12rem .45rem;border-radius:999px;background:rgba(244,63,94,.12);color:var(--red);border:1px solid rgba(244,63,94,.2);margin-left:.2rem}
+.topbar-sep{width:1px;height:1.1rem;background:var(--bdr-s)}
+.page-title{font-size:.82rem;font-weight:700;color:var(--t2)}
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:.5rem}
+.top-btn{display:flex;align-items:center;gap:.3rem;padding:.28rem .7rem;border-radius:.45rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.75rem;font-weight:600;color:var(--t2);transition:all .15s}
+.top-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.avatar{width:1.75rem;height:1.75rem;border-radius:50%;background:linear-gradient(135deg,#f43f5e,#f97316);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff}
+
+.layout{display:flex;flex:1;overflow:hidden}
+.sidenav{width:200px;flex-shrink:0;background:var(--bg-sidebar);border-right:1px solid var(--bdr);padding:.6rem .55rem;overflow-y:auto}
+.nav-sect{font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);padding:.55rem .5rem .25rem}
+.nav-item{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;border-radius:.45rem;font-size:.78rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s}
+.nav-item:hover{color:var(--t1);background:var(--acc-s)}
+.nav-item.active{color:var(--acc-l);background:var(--acc-s);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.55}
+.nav-item.active svg{opacity:1}
+.nav-badge{margin-left:auto;font-size:.62rem;font-weight:700;background:var(--red);color:#fff;border-radius:999px;padding:.05rem .35rem}
+
+.scroll-main{flex:1;overflow-y:auto;min-width:0}
+.content{padding:1.25rem 1.4rem 3rem;display:flex;flex-direction:column;gap:1.25rem;max-width:1100px}
+
+/* BILLING TOGGLE */
+.billing-toggle{display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--t2)}
+.tog-track{width:2.4rem;height:1.25rem;border-radius:999px;background:var(--bg-elev);border:1.5px solid var(--bdr-s);position:relative;cursor:pointer;transition:all .2s}
+.tog-track.on{background:var(--accent)}
+.tog-thumb{position:absolute;top:.1rem;left:.1rem;width:.9rem;height:.9rem;border-radius:50%;background:#fff;transition:transform .2s}
+.tog-track.on .tog-thumb{transform:translateX(1.15rem)}
+.annual-badge{font-size:.65rem;font-weight:700;background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.25);padding:.1rem .4rem;border-radius:999px}
+
+/* PLANS GRID */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+
+.plan-card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;overflow:hidden;display:flex;flex-direction:column}
+.plan-card.pro{border-color:rgba(99,102,241,.3)}
+.plan-card.premium{border-color:rgba(167,139,250,.25)}
+.plan-card .top-stripe{height:.22rem}
+.ts-free{background:var(--t3)}
+.ts-pro{background:var(--grad)}
+.ts-premium{background:linear-gradient(135deg,#a78bfa,#6366f1)}
+
+.plan-head{padding:1.1rem 1.2rem .9rem;border-bottom:1px solid var(--bdr)}
+.plan-name{font-size:.9rem;font-weight:800;letter-spacing:-.01em;margin-bottom:.2rem}
+.plan-price{font-size:1.5rem;font-weight:900;letter-spacing:-.03em;margin-bottom:.2rem}
+.plan-price span{font-size:.75rem;font-weight:500;color:var(--t3)}
+.plan-subs{font-size:.73rem;color:var(--t3);display:flex;align-items:center;gap:.35rem}
+.sub-badge{display:inline-block;font-size:.63rem;font-weight:700;padding:.1rem .38rem;border-radius:999px;background:var(--bg-elev);border:1px solid var(--bdr-s)}
+
+/* LIMITS LIST */
+.limits-list{flex:1;padding:.85rem 1.2rem;display:flex;flex-direction:column;gap:.6rem}
+.limit-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.lim-label{font-size:.78rem;color:var(--t2)}
+.lim-val{font-size:.8rem;font-weight:700;color:var(--t1);cursor:pointer;padding:.18rem .45rem;border-radius:.35rem;border:1.5px solid transparent;transition:all .15s;text-align:right;min-width:60px}
+.lim-val:hover{background:var(--bg-elev);border-color:var(--bdr-s)}
+.lim-val.editing{background:var(--bg-elev);border-color:var(--accent);outline:none;color:var(--t1);font-family:inherit;font-weight:700;font-size:.8rem;text-align:right}
+.lim-icon{display:flex;align-items:center;justify-content:center;width:1.1rem;height:1.1rem;flex-shrink:0}
+.lim-on{color:var(--green)}
+.lim-off{color:var(--t3);opacity:.4}
+
+.plan-foot{padding:.85rem 1.2rem;border-top:1px solid var(--bdr)}
+.save-btn{display:none;width:100%;padding:.55rem;border-radius:.6rem;font-size:.8rem;font-weight:700;background:var(--grad);color:#fff;border:none;transition:all .15s;box-shadow:0 2px 10px rgba(99,102,241,.3)}
+.save-btn.visible{display:block}
+.save-btn:hover{filter:brightness(1.1)}
+
+/* TRIAL CARD */
+.config-card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.2rem 1.4rem}
+.cfg-title{font-size:.88rem;font-weight:700;margin-bottom:.25rem}
+.cfg-sub{font-size:.77rem;color:var(--t2);margin-bottom:1rem}
+.cfg-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.cfg-label{font-size:.8rem;color:var(--t2)}
+.cfg-input{padding:.5rem .75rem;border-radius:.55rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t1);font-size:.85rem;font-weight:700;outline:none;width:70px;text-align:center;transition:border-color .15s}
+.cfg-input:focus{border-color:var(--accent)}
+.cfg-unit{font-size:.8rem;color:var(--t3)}
+.cfg-btn{padding:.48rem 1rem;border-radius:.55rem;font-size:.8rem;font-weight:700;background:var(--acc-s2);color:var(--acc-l);border:1.5px solid rgba(99,102,241,.3);transition:all .15s}
+.cfg-btn:hover{background:var(--acc-s);filter:brightness(1.1)}
+
+/* CUPONS */
+.coupon-table{width:100%;border-collapse:collapse;margin-top:.75rem}
+.coupon-table th{font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);text-align:left;padding:.4rem .6rem;border-bottom:1.5px solid var(--bdr)}
+.coupon-table td{font-size:.8rem;color:var(--t2);padding:.5rem .6rem;border-bottom:1px solid var(--bdr)}
+.coupon-table td:first-child{font-weight:700;color:var(--t1);font-family:monospace;font-size:.78rem}
+.coupon-table tr:last-child td{border-bottom:none}
+.coup-badge{font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:999px;background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.coup-exp{color:var(--amber)}
+.add-coup-btn{display:flex;align-items:center;gap:.35rem;padding:.42rem .85rem;border-radius:.5rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.78rem;font-weight:600;color:var(--t2);transition:all .15s;margin-top:.85rem}
+.add-coup-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+
+@media(max-width:900px){
+  .sidenav{display:none}
+  .plans-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .plans-grid{grid-template-columns:1fr}
+  .content{padding:.9rem .95rem 3rem}
+}
+@media(max-width:480px){
+  .topbar{padding:0 .8rem}
+  .brand-name,.topbar-sep,.page-title{display:none}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <span class="brand-name">Amezia</span>
+    <span class="admin-badge">Admin</span>
+  </div>
+  <div class="topbar-sep"></div>
+  <span class="page-title">Planos</span>
+  <div class="topbar-r">
+    <button class="top-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>Tema
+    </button>
+    <div class="avatar">AD</div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidenav">
+    <div class="nav-sect">Admin</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Visão geral</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Usuários</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>WhatsApp</div>
+    <div class="nav-item active"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Planos</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pagamentos</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Suporte<span class="nav-badge">4</span></div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Feedback</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Financeiro</div>
+  </aside>
+
+  <div class="scroll-main">
+  <div class="content">
+
+    <!-- BILLING TOGGLE -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
+      <div>
+        <div style="font-size:.95rem;font-weight:800;margin-bottom:.15rem">Planos e limites</div>
+        <div style="font-size:.78rem;color:var(--t2)">Clique nos valores para editar inline</div>
+      </div>
+      <div class="billing-toggle">
+        <span>Mensal</span>
+        <div class="tog-track" id="btog" onclick="toggleBilling()"><div class="tog-thumb"></div></div>
+        <span>Anual</span>
+        <span class="annual-badge" id="annual-badge" style="display:none">-17%</span>
+      </div>
+    </div>
+
+    <!-- PLANS GRID -->
+    <div class="plans-grid">
+
+      <!-- FREE -->
+      <div class="plan-card">
+        <div class="top-stripe ts-free"></div>
+        <div class="plan-head">
+          <div class="plan-name">Free</div>
+          <div class="plan-price">R$0<span>/sempre</span></div>
+          <div class="plan-subs"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="sub-badge">158 usuários</span></div>
+        </div>
+        <div class="limits-list" id="limits-free">
+          <div class="limit-row"><span class="lim-label">Conversas IA / mês</span><span class="lim-val" onclick="makeEditable(this,'free')">10</span></div>
+          <div class="limit-row"><span class="lim-label">Bot WhatsApp</span><div class="lim-icon lim-off"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+          <div class="limit-row"><span class="lim-label">Categorias privadas</span><span class="lim-val" onclick="makeEditable(this,'free')">3</span></div>
+          <div class="limit-row"><span class="lim-label">Relatórios automáticos</span><div class="lim-icon lim-off"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+          <div class="limit-row"><span class="lim-label">Suporte prioritário</span><div class="lim-icon lim-off"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+        </div>
+        <div class="plan-foot"><button class="save-btn" id="save-free" onclick="saveBtn('free')">Salvar alterações</button></div>
+      </div>
+
+      <!-- PRO -->
+      <div class="plan-card pro">
+        <div class="top-stripe ts-pro"></div>
+        <div class="plan-head">
+          <div class="plan-name" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Pro</div>
+          <div class="plan-price" id="pro-price">R$29<span id="pro-period">/mês</span></div>
+          <div class="plan-subs"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="sub-badge">71 assinantes</span></div>
+        </div>
+        <div class="limits-list">
+          <div class="limit-row"><span class="lim-label">Conversas IA / mês</span><span class="lim-val" onclick="makeEditable(this,'pro')">50</span></div>
+          <div class="limit-row"><span class="lim-label">Bot WhatsApp</span><div class="lim-icon lim-on"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="limit-row"><span class="lim-label">Categorias privadas</span><span class="lim-val" style="color:var(--t3)" onclick="makeEditable(this,'pro')">∞</span></div>
+          <div class="limit-row"><span class="lim-label">Relatórios automáticos</span><div class="lim-icon lim-off"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+          <div class="limit-row"><span class="lim-label">Suporte prioritário</span><div class="lim-icon lim-off"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+        </div>
+        <div class="plan-foot"><button class="save-btn" id="save-pro" onclick="saveBtn('pro')">Salvar alterações</button></div>
+      </div>
+
+      <!-- PREMIUM -->
+      <div class="plan-card premium">
+        <div class="top-stripe ts-premium"></div>
+        <div class="plan-head">
+          <div class="plan-name" style="background:linear-gradient(135deg,#a78bfa,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Premium</div>
+          <div class="plan-price" id="prem-price">R$59<span id="prem-period">/mês</span></div>
+          <div class="plan-subs"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="sub-badge">18 assinantes</span></div>
+        </div>
+        <div class="limits-list">
+          <div class="limit-row"><span class="lim-label">Conversas IA / mês</span><span class="lim-val" style="color:var(--t3)" onclick="makeEditable(this,'prem')">∞</span></div>
+          <div class="limit-row"><span class="lim-label">Bot WhatsApp</span><div class="lim-icon lim-on"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="limit-row"><span class="lim-label">Categorias privadas</span><span class="lim-val" style="color:var(--t3)" onclick="makeEditable(this,'prem')">∞</span></div>
+          <div class="limit-row"><span class="lim-label">Relatórios automáticos</span><div class="lim-icon lim-on"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="limit-row"><span class="lim-label">Suporte prioritário</span><div class="lim-icon lim-on"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        </div>
+        <div class="plan-foot"><button class="save-btn" id="save-prem" onclick="saveBtn('prem')">Salvar alterações</button></div>
+      </div>
+
+    </div>
+
+    <!-- TRIAL CONFIG -->
+    <div class="config-card">
+      <div class="cfg-title">Configurações de trial</div>
+      <div class="cfg-sub">Novos usuários recebem acesso Pro durante o período de trial</div>
+      <div class="cfg-row">
+        <span class="cfg-label">Dias de trial para novos usuários:</span>
+        <input class="cfg-input" type="number" value="7" min="0" max="30">
+        <span class="cfg-unit">dias</span>
+        <button class="cfg-btn">Salvar</button>
+      </div>
+    </div>
+
+    <!-- CUPONS -->
+    <div class="config-card">
+      <div class="cfg-title">Cupons de desconto</div>
+      <div class="cfg-sub">Códigos promocionais ativos no Stripe</div>
+      <table class="coupon-table">
+        <thead><tr><th>Código</th><th>Desconto</th><th>Expiração</th><th>Usos</th></tr></thead>
+        <tbody>
+          <tr><td>LAUNCH50</td><td><span class="coup-badge">50% off</span></td><td class="coup-exp">30 jun. 2026</td><td>47 / 100</td></tr>
+          <tr><td>AMIGOS20</td><td><span class="coup-badge">20% off</span></td><td>sem limite</td><td>12 / ∞</td></tr>
+          <tr><td>BETA2026</td><td><span class="coup-badge">1 mês grátis</span></td><td class="coup-exp">15 jul. 2026</td><td>8 / 50</td></tr>
+        </tbody>
+      </table>
+      <button class="add-coup-btn">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo cupom
+      </button>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<script>
+let isAnnual=false;
+const dirtyPlans=new Set();
+
+function toggleBilling(){
+  isAnnual=!isAnnual;
+  const tog=document.getElementById('btog');
+  tog.classList.toggle('on',isAnnual);
+  document.getElementById('annual-badge').style.display=isAnnual?'':'none';
+  document.getElementById('pro-price').childNodes[0].textContent=isAnnual?'R$290':'R$29';
+  document.getElementById('pro-period').textContent=isAnnual?'/ano':'/mês';
+  document.getElementById('prem-price').childNodes[0].textContent=isAnnual?'R$590':'R$59';
+  document.getElementById('prem-period').textContent=isAnnual?'/ano':'/mês';
+}
+
+function makeEditable(el,plan){
+  const inp=document.createElement('input');
+  inp.type='text';inp.value=el.textContent;inp.className='lim-val editing';
+  inp.style.width=(el.offsetWidth+20)+'px';
+  el.replaceWith(inp);inp.focus();inp.select();
+  function commit(){
+    const span=document.createElement('span');
+    span.className='lim-val';span.textContent=inp.value;
+    span.onclick=()=>makeEditable(span,plan);
+    inp.replaceWith(span);
+    dirtyPlans.add(plan);
+    document.getElementById('save-'+plan).classList.add('visible');
+  }
+  inp.onblur=commit;
+  inp.onkeydown=e=>{if(e.key==='Enter')commit();if(e.key==='Escape'){const span=document.createElement('span');span.className='lim-val';span.textContent=inp.value;span.onclick=()=>makeEditable(span,plan);inp.replaceWith(span);}};
+}
+
+function saveBtn(plan){
+  const btn=document.getElementById('save-'+plan);
+  btn.textContent='✓ Salvo!';btn.style.background='rgba(16,185,129,.8)';
+  setTimeout(()=>{btn.textContent='Salvar alterações';btn.style.background='';btn.classList.remove('visible');dirtyPlans.delete(plan);},2000);
+}
+</script>
+</body>
+</html>

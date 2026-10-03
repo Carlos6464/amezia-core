@@ -1,0 +1,70 @@
+@import "../admin-design.css";
+
+.webhook-body {
+  padding: 1rem 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.webhook-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.webhook-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+.webhook-value-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.webhook-value {
+  flex: 1;
+  min-width: 0;
+  padding: 0.45rem 0.7rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--t1);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.copy-btn {
+  flex-shrink: 0;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t2);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.copy-btn:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border-color: var(--acc-s2);
+}
+
+.event-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.event-chip {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--bg-elev);
+  border: 1px solid var(--bdr-s);
+  color: var(--t2);
+  font-size: 0.68rem;
+  font-weight: 600;
+}

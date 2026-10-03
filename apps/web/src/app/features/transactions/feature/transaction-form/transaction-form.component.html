@@ -1,0 +1,84 @@
+<div class="page-content">
+  <div class="comp-page-header">
+    <div>
+      <div class="comp-ph-badge">{{ 'transactions.form.eyebrow' | transloco }}</div>
+      <h1 class="comp-ph-title">
+        {{ (isEditMode() ? 'transactions.form.editTitle' : 'transactions.form.createTitle') | transloco }}
+      </h1>
+    </div>
+    <a class="comp-ph-cta back-link" [routerLink]="backTarget()">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+      <span>{{ (backTarget() === '/dashboard' ? 'transactions.form.backToDashboard' : 'transactions.form.backToList') | transloco }}</span>
+    </a>
+  </div>
+
+  @if (matchingRecurrence(); as rule) {
+    <div class="recurrence-banner">
+      <span>
+        {{ 'transactions.form.recurrenceBanner' | transloco: { description: rule.description, frequency: ('transactions.frequency.' + rule.frequency) | transloco } }}
+      </span>
+      <button type="button" (click)="cancelRecurrence()">{{ 'transactions.form.cancelRecurrence' | transloco }}</button>
+    </div>
+  }
+
+  <div class="form-layout">
+    <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+      <app-transaction-form-fields
+        [form]="form"
+        [editingTransaction]="transaction()"
+        [receiptUploading]="receiptUploading()"
+        [stagedReceiptFile]="stagedReceiptFile()"
+        (receiptFileSelected)="onReceiptFileSelected($event)"
+        (removeReceipt)="removeReceipt()"
+        (removeStagedReceipt)="removeStagedReceipt()"
+      />
+
+      <div class="dialog-actions">
+        <button class="btn-secondary" type="button" [routerLink]="backTarget()">
+          {{ 'transactions.form.cancel' | transloco }}
+        </button>
+        <button class="btn-primary" type="submit" [disabled]="saving()">
+          {{ (saving() ? 'transactions.form.saving' : 'transactions.form.save') | transloco }}
+        </button>
+      </div>
+    </form>
+
+    <aside class="aside">
+      <div class="preview-card">
+        <div class="preview-card__eyebrow">{{ 'transactions.form.previewTitle' | transloco }}</div>
+        <div class="preview-row">
+          <span class="preview-row-label">{{ 'transactions.form.category' | transloco }}</span>
+          <span class="preview-row-val">
+            @if (selectedCategory(); as category) {
+              <span class="preview-cat-wrap">
+                <span class="preview-card__dot" [style.background]="category.color"></span>
+                {{ category.name }}
+              </span>
+            } @else {
+              —
+            }
+          </span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-row-label">{{ 'transactions.form.amount' | transloco }}</span>
+          <span class="preview-row-val">{{ (formValue().amount | brlAmount) || '—' }}</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-row-label">{{ 'transactions.form.date' | transloco }}</span>
+          <span class="preview-row-val">{{ formValue().date || '—' }}</span>
+        </div>
+      </div>
+
+      <div class="tips-card">
+        <div class="tips-card__title">{{ 'transactions.form.tipsTitle' | transloco }}</div>
+        <ul class="tips-list">
+          <li class="tip-item">{{ 'transactions.form.tip1' | transloco }}</li>
+          <li class="tip-item">{{ 'transactions.form.tip2' | transloco }}</li>
+          <li class="tip-item">{{ 'transactions.form.tip3' | transloco }}</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="chat-row" [class.user]="message().role === 'user'">
+  @if (message().role === 'assistant') {
+    <span class="chat-avatar">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+      </svg>
+    </span>
+  }
+  <div class="chat-bubble-col" [class.user]="message().role === 'user'">
+    <div class="chat-bubble" [class.agent]="message().role === 'assistant'" [class.user]="message().role === 'user'">
+      @if (message().role === 'assistant') {
+        <span class="chat-md" [innerHTML]="message().content | markdown"></span>
+      } @else {
+        {{ message().content }}
+      }
+    </div>
+    <span class="chat-timestamp">{{ formattedTimestamp() }}</span>
+  </div>
+</div>

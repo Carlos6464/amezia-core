@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amezia — Controle financeiro com IA no WhatsApp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+/* ═══════════════════════════════════
+   TOKENS — mesmas cores do design system
+═══════════════════════════════════ */
+:root {
+  --bg:        #070b12;
+  --bg-card:   #0c1220;
+  --bg-card2:  #111827;
+  --bg-elev:   #141f30;
+  --bdr:       rgba(255,255,255,.07);
+  --bdr-s:     rgba(255,255,255,.13);
+  --t1:        #f1f5f9;
+  --t2:        #8b9eb3;
+  --t3:        #3d4f63;
+  --accent:    #6366f1;
+  --acc-l:     #818cf8;
+  --acc-s:     rgba(99,102,241,.12);
+  --acc-s2:    rgba(99,102,241,.22);
+  --blue:      #60a5fa;
+  --violet:    #a78bfa;
+  --amber:     #fbbf24;
+  --green:     #34d399;
+  --red:       #f87171;
+  --grad:      linear-gradient(135deg,#5855e6,#4f8df0);
+  --shd-card:  0 1px 3px rgba(0,0,0,.35),0 4px 20px rgba(0,0,0,.25);
+  --shd-xl:    0 20px 60px rgba(0,0,0,.5),0 4px 16px rgba(0,0,0,.3);
+}
+[data-theme="light"] {
+  --bg:        #f8fafc;
+  --bg-card:   #ffffff;
+  --bg-card2:  #f1f5f9;
+  --bg-elev:   #ffffff;
+  --bdr:       #e2e8f0;
+  --bdr-s:     #cbd5e1;
+  --t1:        #0f172a;
+  --t2:        #475569;
+  --t3:        #94a3b8;
+  --accent:    #4f46e5;
+  --acc-l:     #4f46e5;
+  --acc-s:     rgba(79,70,229,.08);
+  --acc-s2:    rgba(79,70,229,.16);
+  --blue:      #2563eb;
+  --violet:    #7c3aed;
+  --amber:     #d97706;
+  --green:     #059669;
+  --red:       #dc2626;
+  --grad:      linear-gradient(135deg,#4f46e5,#2563eb);
+  --shd-card:  0 1px 3px rgba(15,23,42,.07),0 4px 16px rgba(15,23,42,.06);
+  --shd-xl:    0 8px 32px rgba(15,23,42,.12),0 2px 8px rgba(15,23,42,.06);
+}
+
+/* ═══════════════════════════════════
+   RESET
+═══════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--t1);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+  padding-top:4rem; /* compensate fixed navbar */
+}
+
+/* ═══════════════════════════════════
+   SECTION BACKGROUNDS — separação visual
+═══════════════════════════════════ */
+.sec-a{background:var(--bg)}
+.sec-b{background:#101b2e}
+[data-theme="light"] .sec-a{background:#f8fafc}
+[data-theme="light"] .sec-b{background:#e8edf6}
+/* Cada section ocupa a largura total, shell controla o max-width */
+.sec-a,.sec-b{width:100%}
+a{text-decoration:none;color:inherit}
+ul,ol{list-style:none}
+svg{display:block;flex-shrink:0}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ═══════════════════════════════════
+   DARK AMBIENT (só dark mode)
+═══════════════════════════════════ */
+.amb{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 65% 55% at 8% 14%,rgba(99,102,241,.11) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 40% at 92% 12%,rgba(167,139,250,.07) 0%,transparent 65%),
+    radial-gradient(ellipse 80% 60% at 50% 108%,rgba(99,102,241,.05) 0%,transparent 65%);
+  opacity:0;transition:opacity .3s;
+}
+.amb-grid{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(to right,rgba(255,255,255,.032) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,.032) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 80% 70% at center,black 10%,transparent 72%);
+  opacity:0;transition:opacity .3s;
+}
+[data-theme="dark"] .amb,[data-theme="dark"] .amb-grid{opacity:1}
+
+/* ═══════════════════════════════════
+   SHELL
+═══════════════════════════════════ */
+.shell{
+  position:relative;z-index:1;
+  width:min(1200px,calc(100% - 3rem));
+  margin-inline:auto;
+}
+
+/* ═══════════════════════════════════
+   BUTTONS
+═══════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  border-radius:999px;font-weight:700;cursor:pointer;
+  transition:all .15s ease;border:1px solid transparent;
+  white-space:nowrap;font-family:inherit;
+}
+.btn-sm {padding:.6rem 1.1rem;font-size:.85rem}
+.btn-md {padding:.75rem 1.3rem;font-size:.88rem}
+.btn-lg {padding:.88rem 1.55rem;font-size:.95rem}
+.btn-xl {padding:1rem 1.9rem;font-size:1rem}
+
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 6px 22px rgba(99,102,241,.28)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(99,102,241,.38)}
+.btn-ghost{border-color:var(--bdr-s);color:var(--t1)}
+.btn-ghost:hover{background:var(--acc-s);border-color:var(--accent);transform:translateY(-1px)}
+.btn-outline{border-color:var(--accent);color:var(--accent);background:var(--acc-s)}
+.btn-outline:hover{background:var(--acc-s2);transform:translateY(-1px)}
+
+/* ═══════════════════════════════════
+   NAVBAR — full width fixo
+═══════════════════════════════════ */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:9999;height:4rem;
+  background:rgba(7,11,18,.95);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  transition:background .25s,border-color .25s;
+}
+[data-theme="light"] .navbar{
+  background:rgba(255,255,255,.97);
+  border-bottom-color:#e2e8f0;
+  box-shadow:0 1px 0 #e2e8f0,0 2px 12px rgba(15,23,42,.06);
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  height:100%;padding:0 1.5rem;
+  max-width:min(1200px,calc(100% - 3rem));margin-inline:auto;
+}
+.brand{display:flex;align-items:center;gap:.7rem}
+.brand-mark{
+  width:2.4rem;height:2.4rem;border-radius:.75rem;
+  border:1px solid rgba(99,102,241,.25);
+  background:linear-gradient(135deg,rgba(99,102,241,.18),rgba(96,165,250,.1));
+  display:flex;align-items:center;justify-content:center;color:var(--acc-l);
+}
+[data-theme="light"] .brand-mark{background:rgba(79,70,229,.08);border-color:rgba(79,70,229,.2)}
+.brand-name{font-size:.95rem;font-weight:800;letter-spacing:-.02em;color:var(--t1)}
+.brand-sub{font-size:.64rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+.nav-links{display:flex;align-items:center;gap:1.4rem}
+.nav-links a{font-size:.86rem;font-weight:500;color:var(--t2);transition:color .15s}
+.nav-links a:hover{color:var(--t1)}
+.nav-right{display:flex;align-items:center;gap:.6rem}
+.theme-btn{
+  width:2.2rem;height:2.2rem;border-radius:.65rem;
+  border:1px solid var(--bdr-s);background:var(--acc-s);color:var(--acc-l);
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.theme-btn:hover{background:var(--acc-s2);border-color:var(--accent)}
+
+/* ═══════════════════════════════════
+   SECTION PILL (label estilo AutomoCare)
+═══════════════════════════════════ */
+.pill{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.38rem .9rem;border-radius:999px;
+  border:1px solid rgba(99,102,241,.22);background:rgba(99,102,241,.09);
+  color:var(--acc-l);font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  margin-bottom:1.1rem;
+}
+.pill-dot{width:.38rem;height:.38rem;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px rgba(129,140,248,.18)}
+.sec-title{font-size:clamp(1.85rem,3.6vw,2.9rem);font-weight:800;letter-spacing:-.045em;line-height:1.05;color:var(--t1)}
+.sec-title-acc{color:var(--acc-l)}
+.sec-sub{margin-top:.9rem;font-size:.97rem;line-height:1.82;color:var(--t2);max-width:52ch}
+.sec-head{margin-bottom:3rem}
+
+/* ═══════════════════════════════════
+   HERO
+═══════════════════════════════════ */
+.hero{padding:5rem 0 4rem}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.45rem .9rem;border-radius:999px;
+  border:1px solid rgba(99,102,241,.2);background:rgba(99,102,241,.08);
+  color:var(--acc-l);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:1.5rem;
+}
+.badge-dot{width:.38rem;height:.38rem;border-radius:50%;background:currentColor}
+.hero-h1{
+  font-size:clamp(2.6rem,5vw,4.5rem);font-weight:900;
+  letter-spacing:-.055em;line-height:1.02;color:var(--t1);margin-bottom:1.3rem;
+}
+.hero-grad{
+  background:linear-gradient(118deg,var(--acc-l),var(--blue),var(--violet));
+  background-clip:text;-webkit-background-clip:text;color:transparent;
+}
+.hero-sub{font-size:1.02rem;line-height:1.82;color:var(--t2);max-width:38ch;margin-bottom:2rem}
+.hero-ctas{display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;margin-bottom:1.8rem}
+.hero-trust{display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--t3)}
+.trust-item svg{color:var(--green)}
+
+/* ── Hero visual ── */
+.hero-visual{position:relative;height:38rem}
+.hero-glow{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:20rem;height:20rem;border-radius:50%;
+  background:radial-gradient(circle,rgba(99,102,241,.14) 0%,transparent 70%);
+  filter:blur(36px);pointer-events:none;
+}
+[data-theme="light"] .hero-glow{opacity:.35}
+
+/* App window */
+.app-win{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:min(22rem,90%);
+  border:1px solid var(--bdr-s);border-radius:1.4rem;
+  background:var(--bg-card);overflow:hidden;
+  box-shadow:var(--shd-xl),0 0 0 1px rgba(99,102,241,.08);z-index:2;
+}
+.app-bar{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.65rem 1rem;border-bottom:1px solid var(--bdr);background:var(--bg-card2);
+}
+.win-dots{display:flex;gap:.38rem}
+.win-dots span{width:.55rem;height:.55rem;border-radius:50%;background:var(--bdr-s)}
+.win-dots span:first-child{background:#ff5f57}
+.win-dots span:nth-child(2){background:#febc2e}
+.win-dots span:last-child{background:#28c840}
+.win-label{flex:1;text-align:center;font-size:.75rem;font-weight:600;color:var(--t3)}
+.chat-feed{display:grid;gap:.7rem;padding:1rem 1rem 1.2rem;align-content:end;min-height:20rem}
+.msg{display:flex;flex-direction:column;gap:.2rem;max-width:88%}
+.msg-out{align-self:flex-end;align-items:flex-end}
+.msg-in {align-self:flex-start;align-items:flex-start}
+.bubble{padding:.62rem .9rem;border-radius:1.1rem;font-size:.82rem;line-height:1.55}
+.b-out{border-radius:1.1rem 1.1rem .3rem 1.1rem;background:var(--accent);color:#fff}
+.b-in{
+  border-radius:1.1rem 1.1rem 1.1rem .3rem;
+  background:var(--bg-elev);border:1px solid var(--bdr);color:var(--t1);
+}
+[data-theme="light"] .b-in{background:#f1f5f9;border-color:#e2e8f0}
+.b-tag{
+  display:inline-block;padding:.17rem .5rem;border-radius:999px;
+  background:var(--acc-s);color:var(--acc-l);font-size:.68rem;font-weight:700;margin-bottom:.35rem;
+}
+.b-chk{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--green);font-weight:700;margin-top:.2rem}
+.mini-bar{height:.38rem;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:.55rem}
+[data-theme="light"] .mini-bar{background:rgba(0,0,0,.07)}
+.mini-fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--blue));box-shadow:0 0 8px rgba(99,102,241,.4)}
+.bar-meta{display:flex;justify-content:space-between;margin-top:.4rem;font-size:.7rem;color:var(--t2)}
+.msg-time{font-size:.65rem;color:var(--t3)}
+.chat-input-row{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.72rem 1rem;border-top:1px solid var(--bdr);background:var(--bg-card2);
+}
+.chat-input-fake{
+  flex:1;padding:.5rem .75rem;border-radius:.85rem;
+  background:var(--bg-elev);border:1px solid var(--bdr);
+  font-size:.8rem;color:var(--t3);
+}
+[data-theme="light"] .chat-input-fake{background:#f8fafc}
+.chat-send{
+  width:1.9rem;height:1.9rem;border-radius:.6rem;
+  background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+
+/* Floating cards */
+.hfloat{
+  position:absolute;padding:.85rem 1rem;
+  border:1px solid var(--bdr-s);border-radius:1.1rem;
+  background:#0c1829;z-index:3;
+  box-shadow:0 8px 32px rgba(0,0,0,.45);
+}
+[data-theme="light"] .hfloat{background:#ffffff;border-color:#e2e8f0;box-shadow:0 8px 32px rgba(15,23,42,.12)}
+.hf-tl{top:1.5rem;left:-2rem;width:13rem;animation:fa 7s ease-in-out infinite}
+.hf-br{bottom:1.5rem;right:-2rem;width:13rem;animation:fb 8.5s ease-in-out infinite;animation-delay:-3s}
+@keyframes fa{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes fb{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+.fl-label{font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);margin-bottom:.5rem}
+.fl-val{font-size:1.4rem;font-weight:800;letter-spacing:-.03em;color:var(--t1);line-height:1}
+.fl-sub{font-size:.72rem;color:var(--t2);margin-top:.3rem}
+.fl-bar{height:.4rem;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:.6rem}
+[data-theme="light"] .fl-bar{background:rgba(0,0,0,.07)}
+.fl-bar-f{height:100%;border-radius:inherit;background:var(--grad)}
+.ai-pill-sm{
+  display:inline-flex;align-items:center;gap:.35rem;
+  padding:.25rem .55rem;border-radius:999px;
+  background:var(--acc-s);border:1px solid rgba(99,102,241,.18);
+  color:var(--acc-l);font-size:.63rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.5rem;
+}
+.fl-alert-row{display:flex;align-items:flex-start;gap:.5rem}
+.fl-ico{
+  width:1.6rem;height:1.6rem;border-radius:.4rem;
+  background:rgba(52,211,153,.1);color:var(--green);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.fl-txt{font-size:.76rem;color:var(--t1);font-weight:600;line-height:1.4}
+.fl-txt-sub{font-size:.68rem;color:var(--t2);margin-top:.15rem}
+
+/* ═══════════════════════════════════
+   METRICS STRIP — seção própria sec-b
+═══════════════════════════════════ */
+.metrics-section{padding:3.5rem 0}
+.metrics-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--bdr);border-radius:1.2rem;overflow:hidden;
+}
+.met-item{
+  padding:2rem 1.5rem;border-right:1px solid var(--bdr);
+  background:rgba(255,255,255,.02);
+}
+[data-theme="light"] .met-item{background:rgba(0,0,0,.015)}
+.met-item:last-child{border-right:none}
+.met-val{
+  font-size:clamp(2rem,3.5vw,3rem);font-weight:900;letter-spacing:-.05em;
+  line-height:1;color:var(--t1);margin-bottom:.45rem;
+}
+.met-val em{font-style:normal;color:var(--acc-l)}
+.met-desc{font-size:.82rem;color:var(--t2);line-height:1.5}
+
+/* ═══════════════════════════════════
+   SECTIONS
+═══════════════════════════════════ */
+.section{padding:5.5rem 0}
+
+/* ═══════════════════════════════════
+   FEATURES — 2 big + 4 small
+═══════════════════════════════════ */
+.feat-big-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.feat-big{
+  position:relative;border:1px solid var(--bdr);border-radius:1.4rem;
+  background:var(--bg-card);overflow:hidden;padding:1.8rem;
+  min-height:24rem;display:flex;flex-direction:column;
+  transition:border-color .2s;
+}
+.feat-big:hover{border-color:rgba(99,102,241,.22)}
+.feat-big::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(99,102,241,.06),transparent 55%);
+}
+.feat-tag{
+  display:inline-flex;align-items:center;gap:.35rem;
+  padding:.28rem .65rem;border-radius:999px;
+  background:var(--acc-s);border:1px solid rgba(99,102,241,.18);
+  color:var(--acc-l);font-size:.63rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:1rem;width:fit-content;position:relative;
+}
+.feat-big-title{position:relative;font-size:1.2rem;font-weight:800;letter-spacing:-.03em;color:var(--t1);margin-bottom:.6rem}
+.feat-big-desc{position:relative;font-size:.88rem;line-height:1.75;color:var(--t2);max-width:36ch}
+.feat-visual{
+  flex:1;margin-top:1.5rem;
+  border:1px solid var(--bdr);border-radius:1rem;
+  background:var(--bg-card2);overflow:hidden;min-height:12rem;
+  display:flex;flex-direction:column;position:relative;
+}
+
+/* bot mockup */
+.bot-hdr{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.6rem .85rem;border-bottom:1px solid var(--bdr);background:var(--bg-elev);
+}
+[data-theme="light"] .bot-hdr{background:#f8fafc}
+.bot-av{
+  width:1.8rem;height:1.8rem;border-radius:50%;
+  background:var(--grad);display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0;
+}
+.bot-name{font-size:.8rem;font-weight:700;color:var(--t1)}
+.bot-status{font-size:.68rem;color:var(--green);margin-top:.05rem}
+.bot-msgs{display:grid;gap:.5rem;padding:.75rem}
+.bot-out{
+  align-self:flex-end;padding:.5rem .8rem;border-radius:1rem 1rem .25rem 1rem;
+  background:var(--accent);color:#fff;font-size:.78rem;max-width:85%;margin-left:auto;
+}
+.bot-in{
+  padding:.55rem .8rem;border-radius:1rem 1rem 1rem .25rem;
+  border:1px solid var(--bdr);background:var(--bg-card);
+  font-size:.78rem;line-height:1.5;color:var(--t1);max-width:88%;
+}
+[data-theme="light"] .bot-in{background:#fff;border-color:#e2e8f0}
+.bot-in strong{color:var(--acc-l)}
+.bot-ok{display:flex;align-items:center;gap:.4rem;font-size:.73rem;color:var(--green);font-weight:700;margin-top:.2rem}
+
+/* ai mockup */
+.ai-body{padding:.85rem;display:grid;gap:.6rem}
+.ai-q{
+  padding:.6rem .8rem;border:1px solid var(--bdr);border-radius:.9rem;
+  background:var(--bg-elev);font-size:.75rem;color:var(--t2);line-height:1.55;
+}
+[data-theme="light"] .ai-q{background:#f8fafc;border-color:#e2e8f0}
+.ai-q strong{color:var(--t1)}
+.ai-r{
+  padding:.65rem .85rem;border:1px solid rgba(99,102,241,.18);border-radius:.9rem;
+  background:var(--acc-s);font-size:.78rem;line-height:1.6;color:var(--t1);
+}
+.ai-r em{font-style:normal;color:var(--acc-l);font-weight:700}
+.ai-cats{display:grid;gap:.3rem;margin-top:.5rem}
+.ai-cat{display:flex;align-items:center;gap:.45rem;font-size:.73rem}
+.ai-dot{width:.42rem;height:.42rem;border-radius:50%;flex-shrink:0}
+.ai-cn{flex:1;color:var(--t2)}
+.ai-cv{font-weight:700;color:var(--t1)}
+.ai-tip{padding:.55rem .8rem;border-radius:.85rem;background:var(--bg-elev);border:1px solid var(--bdr);font-size:.72rem;color:var(--t2);line-height:1.5}
+[data-theme="light"] .ai-tip{background:#f8fafc;border-color:#e2e8f0}
+.ai-tip strong{color:var(--t1)}
+
+/* 4 small */
+.feat-sm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.feat-sm{
+  padding:1.4rem;border:1px solid var(--bdr);border-radius:1.2rem;
+  background:var(--bg-card);transition:border-color .2s,transform .2s;
+}
+.feat-sm:hover{border-color:rgba(99,102,241,.22);transform:translateY(-2px)}
+.fsm-ico{
+  width:2.3rem;height:2.3rem;border-radius:.75rem;
+  border:1px solid rgba(99,102,241,.18);background:rgba(99,102,241,.09);
+  color:var(--acc-l);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;
+}
+.fsm-title{font-size:.92rem;font-weight:700;letter-spacing:-.02em;color:var(--t1);margin-bottom:.45rem}
+.fsm-desc{font-size:.82rem;line-height:1.7;color:var(--t2)}
+
+/* ═══════════════════════════════════
+   HOW IT WORKS — 4 steps horizontal
+═══════════════════════════════════ */
+.steps-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;position:relative;
+}
+.steps-row::before{
+  content:'';position:absolute;
+  top:2.75rem;left:calc(12.5% + 1.75rem);right:calc(12.5% + 1.75rem);
+  height:1px;background:var(--bdr-s);z-index:0;
+}
+.step-card{
+  position:relative;z-index:1;padding:1.5rem 1.3rem;
+  border:1px solid var(--bdr);border-radius:1.2rem;background:var(--bg-card);
+}
+.step-ico-wrap{
+  width:3.5rem;height:3.5rem;border-radius:1.05rem;
+  border:1px solid rgba(99,102,241,.22);background:var(--bg-card2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--acc-l);margin-bottom:1.1rem;position:relative;
+}
+.step-num{
+  position:absolute;top:-.55rem;right:-.55rem;
+  width:1.3rem;height:1.3rem;border-radius:50%;
+  background:var(--accent);color:#fff;font-size:.65rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+.step-title{font-size:.96rem;font-weight:700;letter-spacing:-.025em;color:var(--t1);margin-bottom:.5rem}
+.step-desc{font-size:.82rem;line-height:1.75;color:var(--t2)}
+.step-checks{margin-top:.85rem;display:grid;gap:.35rem}
+.step-ck{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--t2)}
+.step-ck svg{color:var(--green);flex-shrink:0}
+
+/* ═══════════════════════════════════
+   PRICING
+═══════════════════════════════════ */
+.p-toggle-row{display:flex;align-items:center;justify-content:center;gap:.85rem;margin-bottom:2.5rem}
+.p-lbl{font-size:.88rem;color:var(--t2)}
+.p-lbl.on{color:var(--t1);font-weight:600}
+.p-switch{
+  width:3rem;height:1.55rem;border-radius:999px;background:var(--bdr-s);
+  position:relative;cursor:pointer;transition:background .2s;
+}
+.p-switch.active{background:var(--accent)}
+.p-knob{
+  position:absolute;top:.2rem;left:.2rem;
+  width:1.15rem;height:1.15rem;border-radius:50%;background:#fff;transition:left .2s;
+}
+.p-switch.active .p-knob{left:1.65rem}
+.p-disc{
+  padding:.28rem .65rem;border-radius:999px;
+  background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.2);
+  color:var(--green);font-size:.68rem;font-weight:700;letter-spacing:.06em;
+}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;align-items:start}
+.p-card{
+  padding:1.8rem;border:1px solid var(--bdr);border-radius:1.4rem;
+  background:var(--bg-card);position:relative;
+}
+.p-card.featured{
+  border-color:rgba(99,102,241,.35);
+  box-shadow:0 0 0 1px rgba(99,102,241,.15),var(--shd-xl);
+}
+.p-badge{
+  position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  padding:.28rem .9rem;border-radius:0 0 .75rem .75rem;
+  background:var(--accent);color:#fff;
+  font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
+}
+.p-plan{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);margin-bottom:.6rem}
+.p-price{
+  font-size:2.6rem;font-weight:900;letter-spacing:-.05em;
+  color:var(--t1);line-height:1;margin-bottom:.2rem;
+}
+.p-price small{font-size:1rem;font-weight:500;letter-spacing:0;color:var(--t2)}
+.p-trial{font-size:.78rem;color:var(--acc-l);margin-bottom:1.5rem}
+.p-trial.dim{color:var(--t3)}
+.p-divider{height:1px;background:var(--bdr);margin:1.4rem 0}
+.p-feats{display:grid;gap:.6rem}
+.p-feat{display:flex;align-items:flex-start;gap:.55rem;font-size:.84rem;color:var(--t2)}
+.p-feat svg{flex-shrink:0;margin-top:.05rem}
+.p-feat.off svg{color:var(--t3)}
+.p-feat.off{color:var(--t3)}
+.p-cta{margin-top:1.6rem;width:100%;border-radius:.9rem !important}
+
+/* ═══════════════════════════════════
+   CTA BAND
+═══════════════════════════════════ */
+.cta-section{padding:5.5rem 0}
+.cta-card{
+  padding:4rem 3rem;
+  border:1px solid rgba(99,102,241,.18);border-radius:1.8rem;
+  background:linear-gradient(135deg,rgba(99,102,241,.08) 0%,rgba(96,165,250,.04) 60%,rgba(167,139,250,.06) 100%);
+  text-align:center;position:relative;overflow:hidden;
+}
+[data-theme="light"] .cta-card{background:linear-gradient(135deg,rgba(79,70,229,.06),rgba(37,99,235,.03));border-color:rgba(79,70,229,.15)}
+.cta-card::before{
+  content:'';position:absolute;
+  top:-6rem;left:50%;transform:translateX(-50%);
+  width:24rem;height:24rem;border-radius:50%;
+  background:radial-gradient(circle,rgba(99,102,241,.12),transparent 70%);
+  filter:blur(40px);pointer-events:none;
+}
+.cta-h2{
+  position:relative;z-index:1;
+  font-size:clamp(1.9rem,3.8vw,3.2rem);font-weight:900;
+  letter-spacing:-.05em;line-height:1.05;color:var(--t1);margin-bottom:1rem;
+}
+.cta-sub{
+  position:relative;z-index:1;
+  font-size:1rem;line-height:1.8;color:var(--t2);
+  max-width:46ch;margin:0 auto 2rem;
+}
+.cta-btns{
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center;gap:.85rem;flex-wrap:wrap;margin-bottom:1.5rem;
+}
+.cta-trust{
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center;gap:1.2rem;flex-wrap:wrap;
+}
+.cta-trust .trust-item{font-size:.78rem}
+
+/* ═══════════════════════════════════
+   FOOTER — 4 colunas
+═══════════════════════════════════ */
+.footer{border-top:1px solid var(--bdr);padding:3rem 0 2rem;background:var(--bg-card)}
+[data-theme="light"] .footer{background:#f1f5f9}
+.footer-grid{
+  display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:2.5rem;
+  padding-bottom:2.5rem;border-bottom:1px solid var(--bdr);margin-bottom:1.8rem;
+}
+.footer-tagline{font-size:.84rem;line-height:1.7;color:var(--t2);max-width:22ch;margin-top:.85rem}
+.footer-col-title{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:.9rem}
+.footer-links{display:grid;gap:.55rem}
+.footer-links a{font-size:.84rem;color:var(--t2);transition:color .15s}
+.footer-links a:hover{color:var(--t1)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.footer-copy{font-size:.78rem;color:var(--t3)}
+.footer-legal{display:flex;gap:1.2rem}
+.footer-legal a{font-size:.78rem;color:var(--t3);transition:color .15s}
+.footer-legal a:hover{color:var(--t2)}
+
+/* ═══════════════════════════════════
+   PROTO BADGE
+═══════════════════════════════════ */
+.proto{
+  position:fixed;bottom:1.25rem;right:1.25rem;z-index:999;
+  display:flex;align-items:center;gap:.5rem;
+  padding:.5rem 1rem;border-radius:999px;
+  background:rgba(12,18,32,.92);border:1px solid rgba(99,102,241,.3);
+  backdrop-filter:blur(16px);color:var(--acc-l);
+  font-size:.72rem;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+[data-theme="light"] .proto{background:rgba(255,255,255,.95);border-color:rgba(79,70,229,.2)}
+
+/* ═══════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════ */
+/* ═══════════════════════════════════
+   SCROLL PROGRESS BAR
+═══════════════════════════════════ */
+.scroll-prog{
+  position:fixed;top:4rem;left:0;width:0%;height:3px;z-index:9998;
+  background:var(--grad);pointer-events:none;
+  transition:width .08s linear;
+}
+
+/* ═══════════════════════════════════
+   SCROLL-TO-TOP BUTTON
+═══════════════════════════════════ */
+.scroll-top{
+  position:fixed;bottom:5.5rem;right:1.5rem;z-index:9998;
+  width:2.6rem;height:2.6rem;border-radius:50%;
+  background:var(--accent);color:#fff;
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .25s,transform .25s,background .15s;
+  box-shadow:0 4px 20px rgba(99,102,241,.4);
+}
+.scroll-top.visible{opacity:1;transform:translateY(0)}
+.scroll-top:hover{background:var(--acc-l);transform:translateY(-3px)!important}
+
+/* ═══════════════════════════════════
+   HAMBURGER + MOBILE NAV
+═══════════════════════════════════ */
+.hamburger{
+  display:none;flex-direction:column;gap:4px;
+  cursor:pointer;padding:.45rem .5rem;border-radius:.55rem;
+  border:1px solid var(--bdr-s);background:var(--acc-s);
+  transition:all .15s;
+}
+.hamburger span{
+  display:block;width:18px;height:2px;
+  background:var(--t1);border-radius:1px;transition:all .25s;
+}
+.hamburger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+/* overlay por trás do menu */
+.nav-overlay{
+  display:none;position:fixed;inset:0;z-index:9990;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+}
+.nav-overlay.open{display:block}
+
+.mobile-nav{
+  position:fixed;top:4rem;left:0;right:0;z-index:9999;
+  background:#0d1526;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:1rem 1.5rem 1.75rem;
+  display:none;flex-direction:column;gap:.25rem;
+  box-shadow:0 16px 48px rgba(0,0,0,.5);
+}
+[data-theme="light"] .mobile-nav{
+  background:#ffffff;
+  border-bottom:1px solid #e2e8f0;
+  box-shadow:0 8px 40px rgba(15,23,42,.14);
+}
+.mobile-nav.open{display:flex}
+.mobile-nav a{
+  padding:.8rem 1rem;border-radius:.75rem;
+  font-size:.95rem;font-weight:500;color:var(--t1);
+  transition:all .15s;
+}
+.mobile-nav a:hover{background:var(--acc-s);color:var(--acc-l)}
+[data-theme="light"] .mobile-nav a:hover{background:#f1f5f9;color:var(--accent)}
+.mobile-nav .mob-divider{height:1px;background:var(--bdr);margin:.5rem 0}
+.mobile-nav .mob-cta{margin-top:.4rem}
+
+/* controles mobile carrossel — ocultos por padrão (desktop) */
+.mob-carr-nav{display:none}
+
+/* ═══════════════════════════════════
+   FEATURES SLIDE CAROUSEL — 2 cards / slide
+═══════════════════════════════════ */
+.feat-head-row{display:flex;align-items:center;justify-content:flex-end;gap:.5rem;margin-bottom:1.5rem}
+.feat-arrows{display:flex;align-items:center;gap:.5rem}
+.feat-arr{
+  width:2.6rem;height:2.6rem;border-radius:50%;
+  border:1px solid var(--bdr-s);background:var(--bg-elev);
+  color:var(--t1);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;flex-shrink:0;
+}
+.feat-arr:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.feat-arr:disabled{opacity:.35;cursor:not-allowed}
+.feat-viewport{overflow:hidden;border-radius:1.4rem}
+.feat-track{display:flex;transition:transform .4s cubic-bezier(.25,.46,.45,.94)}
+.feat-slide{display:grid;grid-template-columns:1fr 1fr;gap:1rem;flex:0 0 100%;width:100%}
+.feat-card{
+  border:1px solid var(--bdr);border-radius:1.4rem;
+  background:var(--bg-card);padding:1.8rem;
+  min-height:26rem;display:flex;flex-direction:column;
+  transition:border-color .2s;position:relative;overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(99,102,241,.055),transparent 55%);
+}
+.feat-card:hover{border-color:rgba(99,102,241,.22)}
+.feat-slide-dots{display:flex;justify-content:center;align-items:center;gap:.55rem;margin-top:1.4rem}
+.fsdot{
+  width:.55rem;height:.55rem;border-radius:50%;
+  background:var(--bdr-s);border:none;cursor:pointer;padding:0;
+  transition:all .2s;
+}
+.fsdot.active{background:var(--accent);width:1.5rem;border-radius:3px}
+
+/* cat list visual */
+.cat-list{padding:.75rem;display:grid;gap:.35rem}
+.cat-item{display:flex;align-items:center;gap:.6rem;padding:.45rem .7rem;border-radius:.65rem;background:var(--bg-elev);border:1px solid var(--bdr);font-size:.78rem;color:var(--t1)}
+[data-theme="light"] .cat-item{background:#f8fafc;border-color:#e2e8f0}
+.cat-dot{width:.55rem;height:.55rem;border-radius:50%;flex-shrink:0}
+.cat-priv{margin-left:auto;padding:.18rem .45rem;border-radius:999px;font-size:.6rem;font-weight:700;background:var(--acc-s);color:var(--acc-l);border:1px solid rgba(99,102,241,.18)}
+.cat-add{display:flex;align-items:center;gap:.5rem;padding:.45rem .7rem;border-radius:.65rem;border:1px dashed var(--bdr-s);font-size:.78rem;color:var(--t3);cursor:pointer;transition:all .15s}
+.cat-add:hover{border-color:var(--accent);color:var(--acc-l)}
+
+/* Dashboard mock */
+.dash-mock{padding:.5rem .25rem;flex:1}
+.dash-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem}
+.dash-period{font-size:.72rem;color:var(--t3)}
+.dash-total{font-size:1.05rem;font-weight:700;color:var(--t1)}
+.dash-bars{display:grid;gap:.6rem}
+.dash-row{display:flex;align-items:center;gap:.5rem}
+.dash-lbl{font-size:.7rem;color:var(--t2);width:5.5rem;flex-shrink:0}
+.dash-track{flex:1;height:.35rem;border-radius:999px;background:var(--bg-elev);overflow:hidden}
+.dash-fill{height:100%;border-radius:999px}
+.dash-pct{font-size:.7rem;color:var(--t3);width:2rem;text-align:right;flex-shrink:0}
+
+/* Report mock */
+.rep-mock{border:1px solid var(--bdr);border-radius:1rem;background:var(--bg-elev);padding:1rem;display:flex;flex-direction:column;gap:.75rem}
+.rep-hd{display:flex;justify-content:space-between;align-items:center}
+.rep-title-sm{font-size:.75rem;font-weight:600;color:var(--t1)}
+.rep-ai-badge{display:flex;align-items:center;gap:.25rem;padding:.2rem .5rem;border-radius:999px;background:var(--acc-s);color:var(--acc-l);font-size:.65rem;font-weight:700;border:1px solid rgba(99,102,241,.18)}
+.rep-body{font-size:.75rem;color:var(--t2);line-height:1.6}
+.rep-body em{color:var(--acc-l);font-style:normal;font-weight:600}
+.rep-footer{display:flex;justify-content:space-between;align-items:center}
+.rep-export{display:flex;align-items:center;gap:.3rem;padding:.3rem .65rem;border-radius:.5rem;border:1px solid var(--bdr-s);background:transparent;color:var(--t2);font-size:.68rem;cursor:pointer;transition:all .15s}
+.rep-export:hover{border-color:var(--accent);color:var(--acc-l)}
+
+/* Security mock */
+.sec-mock{display:flex;flex-direction:column;gap:.9rem;padding:.25rem 0}
+.sec-badges{display:flex;gap:.7rem}
+.sec-badge{flex:1;display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:.9rem .5rem;border-radius:1rem;border:1px solid var(--bdr);background:var(--bg-elev);text-align:center}
+.sec-badge-ico{color:var(--acc-l)}
+.sec-badge-name{font-size:.72rem;font-weight:700;color:var(--t1)}
+.sec-badge-sub{font-size:.63rem;color:var(--t3)}
+.sec-note{padding:.7rem .9rem;border-radius:.75rem;background:var(--acc-s);border:1px solid rgba(99,102,241,.15);font-size:.73rem;color:var(--t2);line-height:1.5}
+.sec-note strong{color:var(--acc-l)}
+
+@media(max-width:700px){
+  .shell{width:calc(100% - 2rem)}
+  .hero{padding:3.5rem 0 3rem}
+  .hero-visual{height:24rem}
+  .hf-tl,.hf-br{display:none}
+  .app-win{width:min(18rem,88%)}
+  .metrics-grid{grid-template-columns:1fr 1fr}
+  .met-item:nth-child(2){border-right:none}
+  .met-item:nth-child(3){border-top:1px solid var(--bdr)}
+  .met-item:nth-child(4){border-top:1px solid var(--bdr);border-right:none}
+  .feat-sm-grid{grid-template-columns:1fr 1fr}
+  /* steps + pricing como carrossel */
+  .steps-row{display:flex;gap:0}
+  .step-card{flex:0 0 100%;width:100%}
+  .pricing-grid{display:flex;gap:0;align-items:stretch}
+  .p-card{flex:0 0 100%;width:100%}
+  /* controles de carrossel — só aparecem no mobile */
+  .mob-carr-nav{display:flex;align-items:center;justify-content:center;gap:.75rem;margin-top:1.25rem}
+  .mob-carr-btn{
+    width:2.4rem;height:2.4rem;border-radius:50%;
+    border:1px solid var(--bdr-s);background:var(--bg-elev);
+    color:var(--t1);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .15s;flex-shrink:0;
+  }
+  .mob-carr-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+  .mob-carr-btn:disabled{opacity:.3;cursor:not-allowed}
+  .mob-carr-dots{display:flex;gap:.45rem;align-items:center}
+  .mcdot{
+    width:.5rem;height:.5rem;border-radius:50%;
+    background:var(--bdr-s);border:none;cursor:pointer;padding:0;
+    transition:all .2s;
+  }
+  .mcdot.active{background:var(--accent);width:1.25rem;border-radius:3px}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:1.5rem}
+  .footer{padding:2rem 0 1.5rem}
+  .footer-grid{padding-bottom:1.5rem;margin-bottom:1.2rem}
+  .cta-card{padding:2.5rem 1.5rem}
+  .section{padding:3rem 0}
+  /* navbar mobile: esconde links e CTAs, mostra hamburger */
+  .nav-links{display:none}
+  .nav-right .btn-ghost,.nav-right .btn-primary{display:none}
+  .hamburger{display:flex}
+  /* hero mobile: só texto, sem ilustração */
+  .hero-grid{grid-template-columns:1fr;gap:2rem}
+  .hero-visual{display:none}
+  /* carousel mobile */
+  .feat-slide{grid-template-columns:1fr}
+  .feat-card{min-height:auto}
+  .feat-visual{display:none}
+  .feat-head-row{flex-direction:column;align-items:flex-start}
+  .sec-badges{flex-direction:column}
+}
+@media(max-width:440px){
+  .shell{width:calc(100% - 1.5rem)}
+  .feat-sm-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:1.5rem}
+  .footer-bottom{flex-direction:column;align-items:flex-start;gap:.5rem}
+  .footer-legal{flex-wrap:wrap;gap:.75rem}
+  .metrics-grid{grid-template-columns:1fr}
+  .met-item{border-right:none !important;border-top:1px solid var(--bdr)}
+  .met-item:first-child{border-top:none}
+}
+
+
+/* smooth transitions */
+body,.nav-inner,.hfloat,.app-win,.feat-big,.feat-sm,.step-card,.p-card,.cta-card,.metrics{
+  transition:background .25s,border-color .25s,color .25s,box-shadow .25s;
+}
+  </style>
+</head>
+<body>
+
+<div class="scroll-prog" id="scroll-prog"></div>
+
+<div class="amb" aria-hidden="true"></div>
+<div class="amb-grid" aria-hidden="true"></div>
+
+<!-- ══════════════════════════════
+     NAVBAR
+══════════════════════════════ -->
+<header>
+    <nav class="navbar" aria-label="Navegação principal">
+      <div class="nav-inner">
+        <a href="#" class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div>
+            <div class="brand-name">Amezia</div>
+            <div class="brand-sub">Expense Intelligence</div>
+          </div>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#features">Funcionalidades</a></li>
+          <li><a href="#steps">Como funciona</a></li>
+          <li><a href="#pricing">Planos</a></li>
+        </ul>
+        <div class="nav-right">
+          <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+          <button class="theme-btn" id="theme-btn" aria-label="Alternar tema">
+            <svg id="ico-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg id="ico-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
+          <a href="#" class="btn btn-ghost btn-sm">Acessar painel</a>
+          <a href="#" class="btn btn-primary btn-sm">Começar grátis</a>
+        </div>
+      </div>
+    </nav>
+</header>
+
+<div class="nav-overlay" id="nav-overlay"></div>
+<nav class="mobile-nav" id="mobile-nav" aria-label="Menu mobile">
+  <a href="#features">Funcionalidades</a>
+  <a href="#steps">Como funciona</a>
+  <a href="#pricing">Planos</a>
+  <div class="mob-divider"></div>
+  <div class="mob-cta" style="display:flex;flex-direction:column;gap:.55rem">
+    <a href="#" class="btn btn-ghost btn-md" style="width:100%;justify-content:center;border-radius:.85rem">Acessar painel</a>
+    <a href="#" class="btn btn-primary btn-md" style="width:100%;justify-content:center;border-radius:.85rem">Começar grátis — 7 dias Pro</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════
+     HERO — sec-a (fundo base)
+══════════════════════════════ -->
+<main>
+  <div class="sec-a">
+  <div class="shell">
+    <section class="hero" aria-label="Hero">
+      <div class="hero-grid">
+
+        <!-- Copy -->
+        <div>
+          <div class="hero-badge"><span class="badge-dot"></span>7 dias do plano Pro grátis ao cadastrar</div>
+          <h1 class="hero-h1">Registre gastos<br>pelo WhatsApp<br>com <span class="hero-grad">IA que te conhece.</span></h1>
+          <p class="hero-sub">Diga <strong style="color:var(--t1)">"gastei 50 no mercado"</strong> e pronto. O Amezia registra, categoriza e analisa. Sem planilha, sem app complicado.</p>
+          <div class="hero-ctas">
+            <a href="#" class="btn btn-primary btn-lg">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              Criar conta grátis
+            </a>
+          </div>
+          <div class="hero-trust">
+            <div class="trust-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>7 dias grátis no Pro</div>
+            <div class="trust-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sem cartão de crédito</div>
+            <div class="trust-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Pronto em 2 minutos</div>
+          </div>
+        </div>
+
+        <!-- Visual -->
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-glow"></div>
+
+          <div class="hfloat hf-tl">
+            <div class="fl-label">Teto do mês</div>
+            <div class="fl-val">73% <span style="font-size:.85rem;font-weight:500;color:var(--t2)">usado</span></div>
+            <div class="fl-bar"><div class="fl-bar-f" style="width:73%"></div></div>
+            <div class="fl-sub">R$ 1.840 de R$ 2.500</div>
+          </div>
+
+          <div class="app-win">
+            <div class="app-bar">
+              <div class="win-dots"><span></span><span></span><span></span></div>
+              <div class="win-label">Amezia · Chat</div>
+              <div style="width:2rem"></div>
+            </div>
+            <div class="chat-feed">
+              <div class="msg msg-out">
+                <div class="bubble b-out">gastei 50 no mercado</div>
+                <div class="msg-time">14:32</div>
+              </div>
+              <div class="msg msg-in">
+                <div class="bubble b-in">
+                  <div class="b-tag">✓ Registrado!</div>
+                  🛒 <strong style="color:var(--t1)">Alimentação</strong> · R$ 50,00 · Hoje
+                  <div class="b-chk"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Salvo e categorizado pela IA</div>
+                </div>
+                <div class="msg-time">14:32</div>
+              </div>
+              <div class="msg msg-out">
+                <div class="bubble b-out">quanto gastei esse mês?</div>
+                <div class="msg-time">14:33</div>
+              </div>
+              <div class="msg msg-in">
+                <div class="bubble b-in">
+                  Você gastou <strong style="color:var(--acc-l)">R$ 1.840</strong> em novembro.
+                  <div class="mini-bar"><div class="mini-fill" style="width:73%"></div></div>
+                  <div class="bar-meta"><span>73% do teto</span><span style="color:var(--amber)">▲ 8% vs. outubro</span></div>
+                </div>
+                <div class="msg-time">14:33</div>
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <div class="chat-input-fake">Digite ou mande áudio...</div>
+              <div class="chat-send"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+            </div>
+          </div>
+
+          <div class="hfloat hf-br">
+            <div class="ai-pill-sm"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>Análise IA</div>
+            <div class="fl-alert-row">
+              <div class="fl-ico"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div>
+                <div class="fl-txt">Alimentação dentro do teto</div>
+                <div class="fl-txt-sub">42% do gasto — dentro do normal</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div><!-- /shell -->
+  </div><!-- /sec-a hero -->
+
+  <!-- ══════════════════════════════
+       METRICS — sec-b (fundo alternado)
+  ══════════════════════════════ -->
+  <div class="sec-b">
+    <div class="shell">
+      <div class="metrics-section">
+        <div class="metrics-grid">
+          <div class="met-item">
+            <div class="met-val">0<em> cliques</em></div>
+            <div class="met-desc">para registrar um gasto — só digitou ou falou</div>
+          </div>
+          <div class="met-item">
+            <div class="met-val">&lt;<em>2s</em></div>
+            <div class="met-desc">para a IA categorizar e salvar automaticamente</div>
+          </div>
+          <div class="met-item">
+            <div class="met-val">3<em> planos</em></div>
+            <div class="met-desc">Free, Pro e Premium com 7 dias grátis no Pro</div>
+          </div>
+          <div class="met-item">
+            <div class="met-val">100<em>%</em></div>
+            <div class="met-desc">dos dados criptografados e isolados por usuário</div>
+          </div>
+        </div>
+      </div><!-- /metrics-section -->
+    </div><!-- /shell -->
+  </div><!-- /sec-b metrics -->
+
+  <!-- ══════════════════════════════
+       FEATURES — sec-a
+  ══════════════════════════════ -->
+  <div class="sec-a" id="features">
+    <div class="shell">
+    <section class="section" aria-labelledby="feat-h">
+      <div class="sec-head">
+        <div class="pill"><span class="pill-dot"></span>Funcionalidades</div>
+        <h2 class="sec-title" id="feat-h">Tudo que você precisa para<br>entender suas <span class="sec-title-acc">finanças de verdade</span></h2>
+        <p class="sec-sub">Do registro pelo WhatsApp ao relatório com narrativa IA — um fluxo completo sem planilha, sem app genérico.</p>
+      </div>
+
+      <!-- 2-UP SLIDE CAROUSEL (AutomoCare style) -->
+      <div class="feat-head-row">
+        <div class="feat-arrows">
+          <button class="feat-arr" id="feat-prev" aria-label="Anterior">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="feat-arr" id="feat-next" aria-label="Próximo">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="feat-viewport">
+        <div class="feat-track" id="feat-track">
+
+          <!-- SLIDE 0: Bot WhatsApp + IA com Memória -->
+          <div class="feat-slide">
+
+            <div class="feat-card">
+              <div class="feat-tag">Captura imediata</div>
+              <div class="feat-big-title">Bot WhatsApp que registra e entende</div>
+              <p class="feat-big-desc">Envie texto ou áudio — o Amezia registra, categoriza e confirma em segundos, sem abrir nenhum app.</p>
+              <div class="feat-visual">
+                <div class="bot-hdr">
+                  <div class="bot-av">A</div>
+                  <div><div class="bot-name">Amezia Bot</div><div class="bot-status">● online</div></div>
+                </div>
+                <div class="bot-msgs">
+                  <div class="bot-out">🎙 [áudio 0:04]</div>
+                  <div class="bot-in">Ouvi: <strong>"Uber 23 reais agora"</strong><div class="bot-ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>🚗 Transporte · R$ 23,00 · Hoje 19h47</div></div>
+                  <div class="bot-out">manda o resumo de hoje</div>
+                  <div class="bot-in">Você gastou <strong>R$ 127,50</strong> em 4 transações hoje. Alimentação (41%) · Transporte (30%) · Outros (29%)</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feat-card">
+              <div class="feat-tag">Inteligência aplicada</div>
+              <div class="feat-big-title">IA financeira com memória real</div>
+              <p class="feat-big-desc">O agente usa RAG sobre seu histórico. Pergunte e ela responde com contexto — sem precisar explicar nada.</p>
+              <div class="feat-visual">
+                <div class="ai-body">
+                  <div class="ai-q"><strong>Você:</strong> "Estou gastando mais que o mês passado?"</div>
+                  <div class="ai-r">
+                    Sim. Em novembro você já gastou <em>R$ 1.840</em>, <em>12% acima</em> de outubro (R$ 1.640). O aumento veio de Alimentação (+18%) e Transporte (+22%).
+                    <div class="ai-cats">
+                      <div class="ai-cat"><span class="ai-dot" style="background:var(--blue)"></span><span class="ai-cn">Alimentação</span><span class="ai-cv">+18%</span></div>
+                      <div class="ai-cat"><span class="ai-dot" style="background:var(--violet)"></span><span class="ai-cn">Transporte</span><span class="ai-cv">+22%</span></div>
+                      <div class="ai-cat"><span class="ai-dot" style="background:var(--green)"></span><span class="ai-cn">Lazer</span><span class="ai-cv">−5%</span></div>
+                    </div>
+                  </div>
+                  <div class="ai-tip"><strong>💡</strong> Reduzir Alimentação em R$ 200 te coloca dentro do teto.</div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /slide 0 -->
+
+          <!-- SLIDE 1: Dashboard + Relatórios IA -->
+          <div class="feat-slide">
+
+            <div class="feat-card">
+              <div class="feat-tag">Visualização</div>
+              <div class="feat-big-title">Dashboard com dados do seu período</div>
+              <p class="feat-big-desc">Gráficos de linha mensal, donut por categoria e barras semanais com dados reais — não de demonstração.</p>
+              <div class="feat-visual">
+                <div class="dash-mock">
+                  <div class="dash-hd">
+                    <span class="dash-period">Novembro 2026</span>
+                    <span class="dash-total">R$ 1.840</span>
+                  </div>
+                  <div class="dash-bars">
+                    <div class="dash-row"><span class="dash-lbl">Alimentação</span><div class="dash-track"><div class="dash-fill" style="width:68%;background:var(--accent)"></div></div><span class="dash-pct">41%</span></div>
+                    <div class="dash-row"><span class="dash-lbl">Transporte</span><div class="dash-track"><div class="dash-fill" style="width:49%;background:var(--blue)"></div></div><span class="dash-pct">30%</span></div>
+                    <div class="dash-row"><span class="dash-lbl">Lazer</span><div class="dash-track"><div class="dash-fill" style="width:24%;background:var(--violet)"></div></div><span class="dash-pct">14%</span></div>
+                    <div class="dash-row"><span class="dash-lbl">Saúde</span><div class="dash-track"><div class="dash-fill" style="width:16%;background:var(--green)"></div></div><span class="dash-pct">10%</span></div>
+                    <div class="dash-row"><span class="dash-lbl">Outros</span><div class="dash-track"><div class="dash-fill" style="width:8%;background:var(--amber)"></div></div><span class="dash-pct">5%</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feat-card">
+              <div class="feat-tag">Análise inteligente</div>
+              <div class="feat-big-title">Relatório com narrativa gerada pela IA</div>
+              <p class="feat-big-desc">Resumo mensal com top categorias, tendências e recomendações. Export CSV disponível no plano Pro.</p>
+              <div class="feat-visual">
+                <div class="rep-mock">
+                  <div class="rep-hd">
+                    <span class="rep-title-sm">📊 Relatório · Novembro 2026</span>
+                    <span class="rep-ai-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>IA</span>
+                  </div>
+                  <div class="rep-body">Em novembro você gastou <em>R$ 1.840</em>, <em>12% acima</em> de outubro. Alimentação (+18%) e Transporte (+22%) foram os maiores aumentos. Lazer caiu 5%.</div>
+                  <div class="rep-footer">
+                    <span style="font-size:.72rem;color:var(--t3)">Gerado em 30/11/2026 · Gemini</span>
+                    <button class="rep-export"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export CSV</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /slide 1 -->
+
+          <!-- SLIDE 2: Categorias + Segurança -->
+          <div class="feat-slide">
+
+            <div class="feat-card">
+              <div class="feat-tag">Organização</div>
+              <div class="feat-big-title">Categorias globais e privadas</div>
+              <p class="feat-big-desc">7 categorias prontas desde o início. No plano Pro, crie categorias privadas ilimitadas para organizar como quiser.</p>
+              <div class="feat-visual">
+                <div class="cat-list">
+                  <div class="cat-item"><span class="cat-dot" style="background:var(--accent)"></span>Alimentação</div>
+                  <div class="cat-item"><span class="cat-dot" style="background:var(--blue)"></span>Transporte</div>
+                  <div class="cat-item"><span class="cat-dot" style="background:var(--green)"></span>Saúde</div>
+                  <div class="cat-item"><span class="cat-dot" style="background:var(--violet)"></span>Lazer</div>
+                  <div class="cat-item"><span class="cat-dot" style="background:var(--amber)"></span>Casa <span class="cat-priv">✦ Privada</span></div>
+                  <div class="cat-item"><span class="cat-dot" style="background:var(--red)"></span>Freela <span class="cat-priv">✦ Privada</span></div>
+                  <div class="cat-add"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova categoria privada</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="feat-card">
+              <div class="feat-tag">Privacidade total</div>
+              <div class="feat-big-title">Seus dados, só seus</div>
+              <p class="feat-big-desc">AES-256 em campos sensíveis antes de salvar. JWT stateless. Cada usuário acessa somente seus próprios dados.</p>
+              <div class="feat-visual">
+                <div class="sec-mock">
+                  <div class="sec-badges">
+                    <div class="sec-badge">
+                      <div class="sec-badge-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                      <div class="sec-badge-name">AES-256</div>
+                      <div class="sec-badge-sub">Criptografia</div>
+                    </div>
+                    <div class="sec-badge">
+                      <div class="sec-badge-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                      <div class="sec-badge-name">JWT HS256</div>
+                      <div class="sec-badge-sub">Stateless</div>
+                    </div>
+                    <div class="sec-badge">
+                      <div class="sec-badge-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                      <div class="sec-badge-name">Isolado</div>
+                      <div class="sec-badge-sub">por usuário</div>
+                    </div>
+                  </div>
+                  <div class="sec-note">Campos como <strong>telefone</strong>, <strong>descrição</strong> e <strong>título</strong> são cifrados antes de chegar ao banco.</div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /slide 2 -->
+
+        </div><!-- /feat-track -->
+      </div><!-- /feat-viewport -->
+
+      <div class="feat-slide-dots">
+        <button class="fsdot active" data-slide="0" aria-label="Slide 1"></button>
+        <button class="fsdot" data-slide="1" aria-label="Slide 2"></button>
+        <button class="fsdot" data-slide="2" aria-label="Slide 3"></button>
+      </div>
+
+    </section>
+  </div><!-- /shell features -->
+  </div><!-- /sec-a features -->
+
+  <!-- ══════════════════════════════
+       HOW IT WORKS — sec-b
+  ══════════════════════════════ -->
+  <div class="sec-b" id="steps">
+    <div class="shell">
+    <section class="section" aria-labelledby="steps-h">
+      <div class="sec-head">
+        <div class="pill"><span class="pill-dot"></span>Como funciona</div>
+        <h2 class="sec-title" id="steps-h">Do cadastro ao controle<br><span class="sec-title-acc">em 4 passos simples</span></h2>
+        <p class="sec-sub">Um ciclo completo e sem fricção. Cada etapa documentada, cada gasto registrado, cada decisão embasada.</p>
+      </div>
+
+      <div class="steps-row" id="steps-track">
+        <div class="step-card">
+          <div class="step-ico-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div class="step-num">1</div>
+          </div>
+          <div class="step-title">Cadastre-se</div>
+          <p class="step-desc">Crie sua conta com email ou Google. Já começa com 7 dias do Pro grátis, sem cartão.</p>
+          <div class="step-checks">
+            <div class="step-ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Email ou Google OAuth</div>
+            <div class="step-ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Pronto em 2 minutos</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-ico-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <div class="step-num">2</div>
+          </div>
+          <div class="step-title">Conecte o WhatsApp</div>
+          <p class="step-desc">Cadastre seu número nas configurações do painel. O bot começa a responder na hora.</p>
+          <div class="step-checks">
+            <div class="step-ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Só seu número, sem QR code</div>
+            <div class="step-ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Disponível no plano Pro</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-ico-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <div class="step-num">3</div>
+          </div>
+          <div class="step-title">Registre falando</div>
+          <p class="step-desc">Texto ou áudio no WhatsApp. A IA extrai valor, categoria e data automaticamente.</p>
+          <div class="step-checks">
+            <div class="step-ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Texto ou mensagem de áudio</div>
+            <div class="step-ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>IA categoriza em menos de 2s</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-ico-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            <div class="step-num">4</div>
+          </div>
+          <div class="step-title">Entenda tudo</div>
+          <p class="step-desc">Dashboard com gráficos, relatório com narrativa IA e agente conversacional com memória.</p>
+          <div class="step-checks">
+            <div class="step-ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Dashboard + gráficos do período</div>
+            <div class="step-ck"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Relatórios com narrativa IA</div>
+          </div>
+        </div>
+      </div>
+      <!-- controles só mobile (visibilidade via CSS) -->
+      <div class="mob-carr-nav" id="steps-nav">
+        <button class="mob-carr-btn" id="steps-prev" aria-label="Anterior"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <div class="mob-carr-dots" id="steps-dots">
+          <button class="mcdot active" data-i="0"></button>
+          <button class="mcdot" data-i="1"></button>
+          <button class="mcdot" data-i="2"></button>
+          <button class="mcdot" data-i="3"></button>
+        </div>
+        <button class="mob-carr-btn" id="steps-next" aria-label="Próximo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+    </section>
+    </div><!-- /shell steps -->
+  </div><!-- /sec-b steps -->
+
+  <!-- ══════════════════════════════
+       PRICING — sec-a
+  ══════════════════════════════ -->
+  <div class="sec-a" id="pricing">
+    <div class="shell">
+    <section class="section" aria-labelledby="pricing-h">
+      <div class="sec-head">
+        <div class="pill"><span class="pill-dot"></span>Planos</div>
+        <h2 class="sec-title" id="pricing-h">Escolha o plano ideal<br>para o <span class="sec-title-acc">seu ritmo financeiro</span></h2>
+        <p class="sec-sub">Todos os planos incluem 7 dias grátis no Pro. Sem cartão de crédito para começar.</p>
+      </div>
+
+      <div class="p-toggle-row">
+        <span class="p-lbl on" id="lbl-m">Mensal</span>
+        <div class="p-switch" id="p-toggle" role="switch" aria-checked="false" tabindex="0">
+          <div class="p-knob"></div>
+        </div>
+        <span class="p-lbl" id="lbl-a">Anual</span>
+        <span class="p-disc">−20%</span>
+      </div>
+
+      <div class="pricing-grid" id="pricing-track">
+        <div class="p-card">
+          <div class="p-plan">Free</div>
+          <div class="p-price">R$ 0<small>/mês</small></div>
+          <div class="p-trial dim">Para começar a explorar</div>
+          <a href="#" class="btn btn-ghost btn-md p-cta">Criar conta grátis</a>
+          <div class="p-divider"></div>
+          <div class="p-feats">
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Transações ilimitadas</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>3 categorias privadas</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>10 mensagens IA/mês</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 relatório IA/mês</div>
+            <div class="p-feat off"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Bot WhatsApp</div>
+            <div class="p-feat off"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Export CSV</div>
+          </div>
+        </div>
+
+        <div class="p-card featured">
+          <div class="p-badge">Mais popular</div>
+          <div class="p-plan" style="color:var(--acc-l)">Pro</div>
+          <div class="p-price" data-m="R$ 19,90" data-a="R$ 15,90">R$ 19,90<small>/mês</small></div>
+          <div class="p-trial">7 dias grátis ao criar conta</div>
+          <a href="#" class="btn btn-primary btn-md p-cta">Começar grátis</a>
+          <div class="p-divider"></div>
+          <div class="p-feats">
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Transações ilimitadas</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Categorias privadas ilimitadas</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>150 mensagens IA/mês</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>15 relatórios IA/mês</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Bot WhatsApp (texto + áudio)</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Export CSV</div>
+          </div>
+        </div>
+
+        <div class="p-card">
+          <div class="p-plan">Premium</div>
+          <div class="p-price" data-m="R$ 39,90" data-a="R$ 31,90">R$ 39,90<small>/mês</small></div>
+          <div class="p-trial dim">Para uso intenso de IA</div>
+          <a href="#" class="btn btn-outline btn-md p-cta">Assinar Premium</a>
+          <div class="p-divider"></div>
+          <div class="p-feats">
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Tudo do plano Pro</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Mensagens IA ilimitadas</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Relatórios IA ilimitados</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Export PDF (em breve)</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Multi-provider IA (Gemini + Grok)</div>
+            <div class="p-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Prioridade no suporte</div>
+          </div>
+        </div>
+      </div>
+      <div class="mob-carr-nav" id="pricing-nav">
+        <button class="mob-carr-btn" id="pricing-prev" aria-label="Anterior"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <div class="mob-carr-dots" id="pricing-dots">
+          <button class="mcdot" data-i="0"></button>
+          <button class="mcdot active" data-i="1"></button>
+          <button class="mcdot" data-i="2"></button>
+        </div>
+        <button class="mob-carr-btn" id="pricing-next" aria-label="Próximo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+    </section>
+    </div><!-- /shell pricing -->
+  </div><!-- /sec-a pricing -->
+
+  <!-- ══════════════════════════════
+       CTA — sec-b
+  ══════════════════════════════ -->
+  <div class="sec-b">
+  <div class="cta-section">
+    <div class="shell">
+      <div class="cta-card">
+        <div class="pill" style="margin-bottom:1.5rem"><span class="pill-dot"></span>Comece agora</div>
+        <h2 class="cta-h2">Sua vida financeira merece<br>um sistema que te entende.</h2>
+        <p class="cta-sub">Entre no Amezia e transforme cada gasto em leitura clara, cada mês em dado útil e cada decisão em algo embasado.</p>
+        <div class="cta-btns">
+          <a href="#" class="btn btn-primary btn-xl"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>Criar conta grátis</a>
+          <a href="#pricing" class="btn btn-ghost btn-xl">Ver planos</a>
+        </div>
+        <div class="cta-trust">
+          <div class="trust-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>7 dias grátis no Pro</div>
+          <div class="trust-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sem cartão de crédito</div>
+          <div class="trust-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Cancele quando quiser</div>
+        </div>
+      </div>
+    </div><!-- /shell cta -->
+  </div><!-- /cta-section -->
+  </div><!-- /sec-b cta -->
+</main>
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<footer class="footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <a href="#" class="brand">
+          <div class="brand-mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          <div><div class="brand-name">Amezia</div><div class="brand-sub">Expense Intelligence</div></div>
+        </a>
+      </div>
+      <div>
+        <div class="footer-col-title">Produto</div>
+        <ul class="footer-links">
+          <li><a href="#features">Funcionalidades</a></li>
+          <li><a href="#steps">Como funciona</a></li>
+          <li><a href="#pricing">Planos e preços</a></li>
+          <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Bot WhatsApp</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Suporte</div>
+        <ul class="footer-links">
+          <li><a href="#">Central de ajuda</a></li>
+          <li><a href="#">Contato</a></li>
+          <li><a href="#">Status do sistema</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#">Termos de uso</a></li>
+          <li><a href="#">Privacidade</a></li>
+          <li><a href="#">LGPD</a></li>
+          <li><a href="#">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Amezia · Expense Intelligence. Todos os direitos reservados.</span>
+      <div class="footer-legal">
+        <a href="#">Privacidade</a>
+        <a href="#">Termos</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="scroll-top" id="scroll-top" aria-label="Voltar ao topo">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<div class="proto" role="status">
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m9 9 6 6m0-6-6 6"/></svg>
+  Protótipo v2 · screem/landing-page
+</div>
+
+<script>
+/* theme */
+const html=document.documentElement;
+const btn=document.getElementById('theme-btn');
+const moon=document.getElementById('ico-moon');
+const sun=document.getElementById('ico-sun');
+function setTheme(t){
+  html.setAttribute('data-theme',t);
+  moon.style.display=t==='dark'?'block':'none';
+  sun.style.display=t==='light'?'block':'none';
+  try{localStorage.setItem('amz-theme',t)}catch(e){}
+}
+const saved=(()=>{try{return localStorage.getItem('amz-theme')}catch(e){return null}})();
+if(saved)setTheme(saved);
+else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme:light)').matches)setTheme('light');
+btn.addEventListener('click',()=>setTheme(html.getAttribute('data-theme')==='dark'?'light':'dark'));
+
+
+/* scroll progress bar */
+const progBar=document.getElementById('scroll-prog');
+function updateProg(){
+  const s=window.scrollY;
+  const h=document.body.scrollHeight-window.innerHeight;
+  progBar.style.width=(h>0?(s/h*100):0)+'%';
+}
+window.addEventListener('scroll',updateProg,{passive:true});
+updateProg();
+
+/* scroll to top */
+const scrollTopBtn=document.getElementById('scroll-top');
+window.addEventListener('scroll',()=>{
+  scrollTopBtn.classList.toggle('visible',window.scrollY>400);
+},{passive:true});
+scrollTopBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+/* hamburger menu */
+const hamburger=document.getElementById('hamburger');
+const mobileNav=document.getElementById('mobile-nav');
+const navOverlay=document.getElementById('nav-overlay');
+
+function closeMenu(){
+  hamburger.classList.remove('open');
+  mobileNav.classList.remove('open');
+  navOverlay.classList.remove('open');
+  hamburger.setAttribute('aria-expanded','false');
+  document.body.style.overflow='';
+}
+
+hamburger.addEventListener('click',()=>{
+  const open=hamburger.classList.toggle('open');
+  mobileNav.classList.toggle('open',open);
+  navOverlay.classList.toggle('open',open);
+  hamburger.setAttribute('aria-expanded',String(open));
+  document.body.style.overflow=open?'hidden':'';
+});
+
+navOverlay.addEventListener('click',closeMenu);
+mobileNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
+// close on outside click
+document.addEventListener('click',e=>{
+  if(!hamburger.contains(e.target)&&!mobileNav.contains(e.target)){
+    hamburger.classList.remove('open');
+    mobileNav.classList.remove('open');
+    hamburger.setAttribute('aria-expanded','false');
+  }
+});
+
+/* features slide carousel */
+(function(){
+  const track = document.getElementById('feat-track');
+  if(!track) return;
+  const slides = track.querySelectorAll('.feat-slide');
+  const dots   = document.querySelectorAll('.fsdot');
+  const total  = slides.length;
+  let cur = 0;
+
+  function goTo(idx) {
+    cur = (idx + total) % total;
+    track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+    document.getElementById('feat-prev').disabled = cur === 0;
+    document.getElementById('feat-next').disabled = cur === total - 1;
+  }
+
+  document.getElementById('feat-prev').addEventListener('click', () => goTo(cur - 1));
+  document.getElementById('feat-next').addEventListener('click', () => goTo(cur + 1));
+  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+
+  // touch swipe
+  let tx = 0;
+  track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+  track.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if(Math.abs(dx) > 40) goTo(cur + (dx < 0 ? 1 : -1));
+  }, {passive:true});
+
+  goTo(0);
+})();
+
+/* mobile carrosséis: steps + pricing */
+(function(){
+  function mobileCar(trackId, prevId, nextId, dotsId, startIdx){
+    const track   = document.getElementById(trackId);
+    const prevBtn = document.getElementById(prevId);
+    const nextBtn = document.getElementById(nextId);
+    const dotsWrap = document.getElementById(dotsId);
+    const dotEls  = dotsWrap ? Array.from(dotsWrap.querySelectorAll('.mcdot')) : [];
+    if(!track || !prevBtn || !nextBtn) return;
+
+    const items = Array.from(track.children);
+    const total = items.length;
+    let cur     = typeof startIdx === 'number' ? startIdx : 0;
+    let active  = false;
+    let vp      = null;
+
+    function slideW(){ return vp ? vp.offsetWidth : 0; }
+
+    function goTo(idx){
+      cur = Math.max(0, Math.min(total - 1, idx));
+      track.style.transform = 'translateX(-' + (cur * slideW()) + 'px)';
+      dotEls.forEach((d,i) => d.classList.toggle('active', i === cur));
+      prevBtn.disabled = cur === 0;
+      nextBtn.disabled = cur === total - 1;
+    }
+
+    function enable(){
+      if(active) return;
+      active = true;
+      vp = document.createElement('div');
+      vp.style.cssText = 'overflow:hidden;width:100%;';
+      track.parentNode.insertBefore(vp, track);
+      vp.appendChild(track);
+      track.style.transition = 'transform .35s cubic-bezier(.25,.46,.45,.94)';
+      // força cada item a ter exatamente a largura do viewport
+      items.forEach(it => { it.style.minWidth = '100%'; it.style.maxWidth = '100%'; });
+      goTo(cur);
+    }
+
+    function disable(){
+      if(!active) return;
+      active = false;
+      track.style.transform = '';
+      track.style.transition = '';
+      items.forEach(it => { it.style.minWidth = ''; it.style.maxWidth = ''; });
+      if(vp && vp.parentNode){
+        vp.parentNode.insertBefore(track, vp);
+        vp.parentNode.removeChild(vp);
+        vp = null;
+      }
+    }
+
+    prevBtn.addEventListener('click', () => goTo(cur - 1));
+    nextBtn.addEventListener('click', () => goTo(cur + 1));
+    dotEls.forEach((d,i) => d.addEventListener('click', () => goTo(i)));
+
+    // swipe
+    let tx = 0;
+    track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+    track.addEventListener('touchend',   e => {
+      const dx = e.changedTouches[0].clientX - tx;
+      if(Math.abs(dx) > 40) goTo(cur + (dx < 0 ? 1 : -1));
+    }, {passive:true});
+
+    // recalcula posição ao redimensionar
+    window.addEventListener('resize', () => { if(active) goTo(cur); });
+
+    function check(){
+      if(window.innerWidth <= 700) enable();
+      else disable();
+    }
+    window.addEventListener('resize', check);
+    check();
+  }
+
+  mobileCar('steps-track',   'steps-prev',   'steps-next',   'steps-dots',   0);
+  mobileCar('pricing-track', 'pricing-prev', 'pricing-next', 'pricing-dots', 1);
+})();
+
+/* pricing toggle */
+const sw=document.getElementById('p-toggle');
+const lblM=document.getElementById('lbl-m');
+const lblA=document.getElementById('lbl-a');
+let annual=false;
+function updatePricing(){
+  sw.classList.toggle('active',annual);
+  sw.setAttribute('aria-checked',String(annual));
+  lblM.classList.toggle('on',!annual);
+  lblA.classList.toggle('on',annual);
+  document.querySelectorAll('.p-price[data-m]').forEach(el=>{
+    const v=annual?el.dataset.a:el.dataset.m;
+    el.innerHTML=v+'<small>/mês</small>';
+  });
+}
+sw.addEventListener('click',()=>{annual=!annual;updatePricing()});
+sw.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();annual=!annual;updatePricing()}});
+</script>
+</body>
+</html>

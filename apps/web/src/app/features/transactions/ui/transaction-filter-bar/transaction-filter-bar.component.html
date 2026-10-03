@@ -1,0 +1,103 @@
+@if (!breakpoint.isMobile()) {
+  <div class="comp-fb-search">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+    <input
+      type="text"
+      [(ngModel)]="q"
+      [placeholder]="'transactions.filterBar.searchPlaceholder' | transloco"
+      (keyup.enter)="searchRequested.emit()"
+    />
+  </div>
+
+  <div class="comp-fb-sep"></div>
+}
+
+<div class="comp-fb-period" [class.standalone]="breakpoint.isMobile()">
+  <button class="comp-fb-arrow" type="button" (click)="previousMonth()" [title]="'transactions.filterBar.previousMonth' | transloco">
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  </button>
+  <p-datepicker
+    [ngModel]="selectedDate()"
+    (ngModelChange)="onDatePickerChange($event)"
+    view="month"
+    dateFormat="mm/yy"
+    styleClass="comp-fb-month-picker"
+    panelStyleClass="comp-fb-month-picker-panel"
+    appendTo="body"
+    [showIcon]="true"
+    iconDisplay="input"
+    [readonlyInput]="true"
+    [attr.aria-label]="monthLabel()"
+  />
+  <button class="comp-fb-arrow" type="button" (click)="nextMonth()" [title]="'transactions.filterBar.nextMonth' | transloco">
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  </button>
+</div>
+
+@if (!breakpoint.isMobile()) {
+  <div class="comp-fb-sep"></div>
+
+  <app-dropdown-select class="comp-fb-dd" [options]="statusOptions" [(ngModel)]="status" />
+
+  <button class="comp-fb-btn primary" type="button" (click)="searchRequested.emit()">
+    {{ 'transactions.filterBar.search' | transloco }}
+  </button>
+  <button class="comp-fb-btn" type="button" (click)="clearFilters()">
+    {{ 'transactions.filterBar.clear' | transloco }}
+  </button>
+}
+
+@if (sheetOpen()) {
+  <button
+    type="button"
+    class="sheet-backdrop"
+    [attr.aria-label]="'transactions.filterBar.close' | transloco"
+    (click)="sheetOpen.set(false)"
+  ></button>
+  <div class="sheet-panel" role="dialog" aria-modal="true">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <span class="sheet-title">{{ 'transactions.filterBar.filterButton' | transloco }}</span>
+      <button type="button" class="sheet-close" (click)="sheetOpen.set(false)" [attr.aria-label]="'transactions.filterBar.close' | transloco">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="sheet-body">
+      <div class="field">
+        <label class="field-label" for="sheet-search">{{ 'transactions.filterBar.searchLabel' | transloco }}</label>
+        <div class="comp-fb-search">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input id="sheet-search" type="text" [(ngModel)]="q" [placeholder]="'transactions.filterBar.searchPlaceholder' | transloco" />
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">{{ 'transactions.filterBar.statusLabel' | transloco }}</span>
+        <app-dropdown-select [options]="statusOptions" [(ngModel)]="status" />
+      </div>
+    </div>
+
+    <div class="sheet-actions">
+      <button class="comp-fb-btn" type="button" (click)="clearFromSheet()">
+        {{ 'transactions.filterBar.clear' | transloco }}
+      </button>
+      <button class="comp-fb-btn primary" type="button" (click)="applyFromSheet()">
+        {{ 'transactions.filterBar.search' | transloco }}
+      </button>
+    </div>
+  </div>
+}

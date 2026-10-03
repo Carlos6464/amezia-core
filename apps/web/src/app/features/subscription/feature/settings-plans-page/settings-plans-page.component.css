@@ -1,0 +1,18 @@
+@import '../../ui/subscription-design.css';
+
+:host {
+  display: block;
+  padding: 1.1rem 1.4rem 3rem;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+app-billing-cycle-toggle {
+  display: inline-flex;
+}
+
+@media (max-width: 640px) {
+  :host {
+    padding: 0.9rem 0.95rem 3rem;
+  }
+}

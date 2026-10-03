@@ -1,0 +1,22 @@
+<div class="usage-bar-row">
+  <div class="usage-bar-head">
+    <span class="usage-bar-label">{{ labelKey() | transloco }}</span>
+    <span class="usage-bar-value" [class.near]="isNearLimit()" [class.over]="isOverLimit()">
+      @if (limit() === null) {
+        {{ 'aiUsage.unlimited' | transloco }}
+      } @else {
+        {{ used() }} / {{ limit() }}
+      }
+    </span>
+  </div>
+  @if (limit() !== null) {
+    <div class="usage-bar-track">
+      <div
+        class="usage-bar-fill"
+        [class.near]="isNearLimit()"
+        [class.over]="isOverLimit()"
+        [style.width.%]="percent()"
+      ></div>
+    </div>
+  }
+</div>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia — Configurações · Perfil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit}
+ul{list-style:none}
+
+:root{
+  --bg:#070b12;--bg-card:#0d1526;--bg-elev:#111c30;--bg-sidebar:#09101f;
+  --bdr:rgba(255,255,255,.07);--bdr-s:rgba(255,255,255,.11);
+  --t1:#f0f4ff;--t2:#8899bb;--t3:#4a5878;
+  --accent:#6366f1;--acc-l:#818cf8;--acc-s:rgba(99,102,241,.1);
+  --green:#10b981;--red:#f43f5e;--amber:#f59e0b;--violet:#a78bfa;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+}
+[data-theme="light"]{
+  --bg:#f0f4f8;--bg-card:#ffffff;--bg-elev:#f8fafc;--bg-sidebar:#ffffff;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --bdr:rgba(15,23,42,.08);--bdr-s:rgba(15,23,42,.13);
+  --acc-s:rgba(99,102,241,.08);
+  --accent:#4f46e5;--acc-l:#4f46e5;
+  --green:#059669;--red:#dc2626;--amber:#d97706;--violet:#7c3aed;
+  --grad:linear-gradient(135deg,#4f46e5,#2563eb);
+}
+
+html,body{height:100%;min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+
+.topbar{height:3.25rem;background:var(--bg-sidebar);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 1.25rem;gap:.85rem;flex-shrink:0;position:sticky;top:0;z-index:40}
+.brand{display:flex;align-items:center;gap:.4rem}
+.brand-mark{width:1.6rem;height:1.6rem;border-radius:.4rem;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;color:#fff}
+.brand-name{font-size:.88rem;font-weight:800}
+.breadcrumb{display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:var(--t3);margin-left:.3rem}
+.breadcrumb svg{opacity:.4}
+.breadcrumb .bc-cur{color:var(--t2)}
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:.5rem}
+.avatar{width:1.75rem;height:1.75rem;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;cursor:pointer}
+.top-icon-btn{width:1.75rem;height:1.75rem;border-radius:.4rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t2);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.top-icon-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.mob-ham{width:2rem;height:2rem;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:none;cursor:pointer;flex-shrink:0}
+.mob-ham span{width:16px;height:2px;background:var(--t1);border-radius:1px;display:block}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:80;backdrop-filter:blur(4px)}
+.mob-overlay.open{display:block}
+
+.app{display:flex;flex:1;min-height:0}
+
+.sidebar{width:220px;flex-shrink:0;background:var(--bg-sidebar);border-right:1px solid var(--bdr);padding:.75rem .65rem;overflow-y:auto}
+.nav-section{font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);padding:.6rem .5rem .3rem}
+.nav-item{display:flex;align-items:center;gap:.5rem;padding:.45rem .6rem;border-radius:.5rem;font-size:.8rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s}
+.nav-item:hover{color:var(--t1);background:var(--acc-s)}
+.nav-item.active{color:var(--acc-l);background:var(--acc-s);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.6}
+.nav-item.active svg{opacity:1}
+
+.main{flex:1;overflow-y:auto;padding:1.75rem 1.5rem 3rem;max-width:860px}
+
+.page-hd{margin-bottom:1.5rem}
+.page-hd h1{font-size:1.2rem;font-weight:800;margin-bottom:.2rem}
+.page-hd p{font-size:.82rem;color:var(--t2)}
+
+.tabs{display:flex;gap:.2rem;border-bottom:1.5px solid var(--bdr);margin-bottom:1.75rem;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{font-size:.8rem;font-weight:600;padding:.6rem .9rem;color:var(--t2);border-bottom:2px solid transparent;margin-bottom:-1.5px;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.tab:hover{color:var(--t1)}
+.tab.active{color:var(--acc-l);border-bottom-color:var(--accent)}
+
+/* CARDS */
+.card{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;padding:1.4rem 1.5rem;margin-bottom:1rem}
+.card-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.15rem}
+.card-title{font-size:.9rem;font-weight:700}
+.card-sub{font-size:.76rem;color:var(--t2);margin-top:.15rem}
+
+/* AVATAR EDITOR */
+.avatar-edit{display:flex;align-items:center;gap:1.25rem;margin-bottom:1.25rem}
+.av-big{width:4rem;height:4rem;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.35rem;font-weight:800;color:#fff;flex-shrink:0;position:relative}
+.av-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;cursor:pointer}
+.av-big:hover .av-overlay{opacity:1}
+.av-info{flex:1}
+.av-name{font-size:.9rem;font-weight:700;margin-bottom:.15rem}
+.av-plan{display:inline-flex;align-items:center;gap:.3rem;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.15rem .5rem;border-radius:999px;background:var(--acc-s);color:var(--acc-l);border:1px solid rgba(99,102,241,.2)}
+.av-btn{display:inline-flex;align-items:center;gap:.3rem;margin-top:.5rem;font-size:.75rem;font-weight:600;color:var(--t2);border:1.5px solid var(--bdr-s);background:var(--bg-elev);padding:.28rem .65rem;border-radius:.45rem;transition:all .15s}
+.av-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+
+/* FORM */
+.field{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.85rem}
+.f-label{font-size:.75rem;font-weight:600;color:var(--t2)}
+.f-ctrl{width:100%;padding:.6rem .85rem;border-radius:.6rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t1);font-size:.84rem;outline:none;transition:border-color .15s}
+.f-ctrl::placeholder{color:var(--t3)}
+.f-ctrl:focus{border-color:var(--accent)}
+.f-ctrl:disabled{opacity:.55;cursor:not-allowed}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.f-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.1rem .4rem;border-radius:999px;background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2);margin-left:.5rem}
+.f-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%238899bb' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center}
+option{background:var(--bg-elev)}
+
+/* SAVE ROW */
+.save-row{display:flex;align-items:center;justify-content:flex-end;gap:.75rem;margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--bdr)}
+.btn-save{display:inline-flex;align-items:center;gap:.35rem;padding:.6rem 1.2rem;border-radius:.6rem;font-size:.83rem;font-weight:700;background:var(--grad);color:#fff;border:none;box-shadow:0 3px 12px rgba(99,102,241,.3);transition:all .15s}
+.btn-save:hover{filter:brightness(1.1)}
+.btn-cancel{font-size:.82rem;font-weight:600;color:var(--t2);padding:.6rem .9rem;border-radius:.6rem;border:1.5px solid var(--bdr-s);background:transparent;transition:all .15s}
+.btn-cancel:hover{color:var(--t1);background:var(--bg-elev)}
+
+/* SEGURANÇA */
+.auth-row{display:flex;align-items:center;gap:.85rem;padding:.85rem 1rem;border-radius:.7rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);margin-bottom:.85rem}
+.google-ico{width:2rem;height:2rem;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.auth-info{flex:1}
+.auth-label{font-size:.77rem;font-weight:600;margin-bottom:.1rem}
+.auth-detail{font-size:.72rem;color:var(--t3)}
+.btn-danger-outline{display:inline-flex;align-items:center;gap:.3rem;padding:.45rem .9rem;border-radius:.55rem;border:1.5px solid rgba(244,63,94,.3);color:var(--red);background:rgba(244,63,94,.05);font-size:.78rem;font-weight:600;transition:all .15s}
+.btn-danger-outline:hover{background:rgba(244,63,94,.1);border-color:rgba(244,63,94,.5)}
+.session-row{font-size:.75rem;color:var(--t3);display:flex;align-items:center;gap:.4rem;margin-top:.75rem}
+.session-dot{width:.45rem;height:.45rem;border-radius:50%;background:var(--green);flex-shrink:0}
+
+/* TOGGLE */
+.pref-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.7rem 0}
+.pref-row+.pref-row{border-top:1px solid var(--bdr)}
+.pref-info{flex:1}
+.pref-label{font-size:.83rem;font-weight:600;margin-bottom:.1rem}
+.pref-sub{font-size:.74rem;color:var(--t3)}
+.toggle{width:2.4rem;height:1.35rem;border-radius:999px;border:none;cursor:pointer;flex-shrink:0;position:relative;transition:background .2s}
+.toggle.on{background:var(--accent)}
+.toggle.off{background:var(--t3)}
+.toggle-knob{position:absolute;top:.175rem;width:.95rem;height:.95rem;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.toggle.on .toggle-knob{left:calc(100% - 1.15rem)}
+.toggle.off .toggle-knob{left:.175rem}
+
+/* DANGER ZONE */
+.danger-card{border-color:rgba(244,63,94,.18);background:rgba(244,63,94,.04)}
+.danger-title{color:var(--red)}
+.danger-text{font-size:.8rem;color:var(--t2);margin-bottom:1rem;line-height:1.6}
+
+/* DELETE CONFIRM */
+.delete-confirm{display:none;margin-top:1rem;padding:1rem;border-radius:.7rem;background:rgba(244,63,94,.06);border:1.5px solid rgba(244,63,94,.2)}
+.delete-confirm.open{display:block}
+.dc-label{font-size:.78rem;font-weight:600;color:var(--red);margin-bottom:.5rem}
+.dc-input{width:100%;padding:.55rem .75rem;border-radius:.55rem;border:1.5px solid rgba(244,63,94,.3);background:var(--bg-elev);color:var(--t1);font-size:.83rem;outline:none;transition:border-color .15s;margin-bottom:.65rem}
+.dc-input:focus{border-color:var(--red)}
+.btn-danger-full{width:100%;padding:.6rem;border-radius:.55rem;background:var(--red);color:#fff;font-size:.83rem;font-weight:700;border:none;cursor:pointer;opacity:.45;transition:opacity .15s}
+.btn-danger-full.enabled{opacity:1}
+
+@media(max-width:700px){
+  .sidebar{position:fixed;inset:0 auto 0 0;width:220px;z-index:90;transform:translateX(-100%);transition:transform .25s}
+  .sidebar.open{transform:translateX(0)}
+  .mob-ham{display:flex}
+  .main{padding:1.25rem 1rem 3rem}
+  .f-row{grid-template-columns:1fr}
+  .card{padding:1.1rem 1rem}
+}
+@media(max-width:480px){
+  .topbar{padding:0 .85rem}
+  .breadcrumb{font-size:.7rem}
+  .card-hd{flex-direction:column;gap:.4rem}
+}
+</style>
+</head>
+<body>
+
+<div class="mob-overlay" id="mob-overlay" onclick="document.getElementById('sidebar').classList.remove('open');this.classList.remove('open')"></div>
+
+<header class="topbar">
+  <button class="mob-ham" onclick="document.getElementById('sidebar').classList.add('open');document.getElementById('mob-overlay').classList.add('open')"><span></span><span></span><span></span></button>
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <span class="brand-name">Amezia</span>
+  </div>
+  <div class="breadcrumb">
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    Configurações
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    <span class="bc-cur">Perfil</span>
+  </div>
+  <div class="topbar-r">
+    <button class="top-icon-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+    </button>
+    <div class="avatar">CA</div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-section">Menu</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Despesas</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Relatórios</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>WhatsApp</div>
+    <div class="nav-section" style="margin-top:.5rem">Conta</div>
+    <div class="nav-item active"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Planos</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Suporte</div>
+    <div class="nav-item"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Feedback</div>
+  </aside>
+
+  <main class="main">
+    <div class="page-hd">
+      <h1>Perfil</h1>
+      <p>Gerencie suas informações pessoais e preferências da conta</p>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active">Perfil</div>
+      <div class="tab" onclick="window.location='../settings-plans/index.html'">Planos</div>
+      <div class="tab" onclick="window.location='../settings-usage/index.html'">Uso e Limites</div>
+      <div class="tab" onclick="window.location='../settings-support/index.html'">Suporte</div>
+      <div class="tab" onclick="window.location='../settings-feedback/index.html'">Feedback</div>
+    </div>
+
+    <!-- INFORMAÇÕES PESSOAIS -->
+    <div class="card">
+      <div class="card-hd">
+        <div>
+          <div class="card-title">Informações pessoais</div>
+          <div class="card-sub">Nome e contato associados à sua conta</div>
+        </div>
+      </div>
+
+      <div class="avatar-edit">
+        <div class="av-big">
+          CA
+          <div class="av-overlay" onclick="alert('Selecionar foto')">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+        </div>
+        <div class="av-info">
+          <div class="av-name">Carlos Andrade</div>
+          <span class="av-plan">
+            <svg width="9" height="9" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+            Plano Pro
+          </span>
+          <br>
+          <button class="av-btn" onclick="alert('Selecionar foto')">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Alterar foto
+          </button>
+        </div>
+      </div>
+
+      <div class="f-row">
+        <div class="field" style="margin-bottom:0">
+          <label class="f-label">Nome completo</label>
+          <input class="f-ctrl" type="text" value="Carlos Andrade">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label class="f-label">
+            E-mail
+            <span class="f-badge">
+              <svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Google OAuth
+            </span>
+          </label>
+          <input class="f-ctrl" type="email" value="carlos@gmail.com" disabled>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:.85rem">
+        <label class="f-label">Telefone <span style="font-size:.68rem;font-weight:400;color:var(--t3)">(WhatsApp)</span></label>
+        <input class="f-ctrl" type="tel" value="+55 (11) 99999-8888" placeholder="+55 (11) 00000-0000">
+        <div style="display:flex;align-items:flex-start;gap:.4rem;margin-top:.4rem;font-size:.72rem;color:var(--t3);line-height:1.45">
+          <svg style="flex-shrink:0;margin-top:.05rem" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Ao salvar, o bot Amezia enviará uma mensagem de boas-vindas para este número via WhatsApp.
+        </div>
+      </div>
+
+      <div class="save-row">
+        <button class="btn-cancel">Cancelar</button>
+        <button class="btn-save" onclick="showSaved(this)">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Salvar alterações
+        </button>
+      </div>
+    </div>
+
+    <!-- SEGURANÇA -->
+    <div class="card">
+      <div class="card-hd">
+        <div>
+          <div class="card-title">Segurança</div>
+          <div class="card-sub">Autenticação e sessões ativas</div>
+        </div>
+      </div>
+
+      <div class="auth-row">
+        <div class="google-ico">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        </div>
+        <div class="auth-info">
+          <div class="auth-label">Autenticado via Google</div>
+          <div class="auth-detail">carlos@gmail.com · Google OAuth 2.0</div>
+        </div>
+        <button class="btn-danger-outline" onclick="alert('Confirmação de revogação de acesso')">
+          Revogar acesso
+        </button>
+      </div>
+
+      <div class="session-row">
+        <div class="session-dot"></div>
+        Última sessão: hoje às 14:32 · Chrome no Linux · São Paulo, BR
+      </div>
+    </div>
+
+    <!-- PREFERÊNCIAS -->
+    <div class="card">
+      <div class="card-hd">
+        <div>
+          <div class="card-title">Preferências</div>
+          <div class="card-sub">Idioma, fuso horário e notificações</div>
+        </div>
+      </div>
+
+      <div class="f-row" style="margin-bottom:.9rem">
+        <div class="field" style="margin-bottom:0">
+          <label class="f-label">Idioma</label>
+          <select class="f-ctrl f-select">
+            <option selected>Português (Brasil)</option>
+            <option>English</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label class="f-label">Fuso horário</label>
+          <select class="f-ctrl f-select">
+            <option selected>América/São Paulo (UTC-3)</option>
+            <option>América/Manaus (UTC-4)</option>
+            <option>América/Belém (UTC-3)</option>
+            <option>UTC</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-info">
+          <div class="pref-label">Relatório mensal por e-mail</div>
+          <div class="pref-sub">Receba um resumo dos seus gastos no início de cada mês</div>
+        </div>
+        <button class="toggle on" id="tog-report" onclick="togglePref(this)">
+          <div class="toggle-knob"></div>
+        </button>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-info">
+          <div class="pref-label">Alertas de limite da IA</div>
+          <div class="pref-sub">Notificar quando atingir 80% do limite mensal de conversas</div>
+        </div>
+        <button class="toggle on" id="tog-ai" onclick="togglePref(this)">
+          <div class="toggle-knob"></div>
+        </button>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-info">
+          <div class="pref-label">Novidades e atualizações</div>
+          <div class="pref-sub">E-mails sobre novas funcionalidades do Amezia</div>
+        </div>
+        <button class="toggle off" id="tog-news" onclick="togglePref(this)">
+          <div class="toggle-knob"></div>
+        </button>
+      </div>
+
+      <div class="save-row">
+        <button class="btn-save" onclick="showSaved(this)">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Salvar preferências
+        </button>
+      </div>
+    </div>
+
+    <!-- ZONA DE PERIGO -->
+    <div class="card danger-card">
+      <div class="card-hd">
+        <div>
+          <div class="card-title danger-title">Zona de perigo</div>
+          <div class="card-sub">Ações irreversíveis da conta</div>
+        </div>
+      </div>
+      <div class="danger-text">
+        Excluir sua conta remove permanentemente todos os seus dados: despesas, conversas com IA, configurações e histórico. <strong style="color:var(--t1)">Esta ação é irreversível</strong> e não pode ser desfeita.
+      </div>
+      <button class="btn-danger-outline" onclick="document.getElementById('delete-confirm').classList.toggle('open')">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+        Excluir minha conta
+      </button>
+      <div class="delete-confirm" id="delete-confirm">
+        <div class="dc-label">Digite EXCLUIR para confirmar</div>
+        <input class="dc-input" type="text" id="delete-input" placeholder="EXCLUIR" oninput="checkDelete(this)">
+        <button class="btn-danger-full" id="btn-delete-final" disabled onclick="alert('Conta excluída (simulação)')">
+          Excluir conta permanentemente
+        </button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function togglePref(btn){
+  btn.classList.toggle('on');
+  btn.classList.toggle('off');
+}
+function showSaved(btn){
+  const orig = btn.innerHTML;
+  btn.innerHTML = '✓ Salvo!';
+  btn.style.background = 'rgba(16,185,129,.8)';
+  setTimeout(()=>{btn.innerHTML=orig;btn.style.background=''},2000);
+}
+function checkDelete(inp){
+  const btn = document.getElementById('btn-delete-final');
+  if(inp.value === 'EXCLUIR'){btn.classList.add('enabled');btn.disabled=false;}
+  else{btn.classList.remove('enabled');btn.disabled=true;}
+}
+</script>
+</body>
+</html>

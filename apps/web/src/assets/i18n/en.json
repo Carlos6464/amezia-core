@@ -1,0 +1,1188 @@
+{
+  "app": {
+    "updateAvailable": {
+      "title": "New version available",
+      "detail": "Updating the app..."
+    }
+  },
+  "auth": {
+    "common": {
+      "email": "Email",
+      "password": "Password",
+      "backToHome": "‹ Back to home"
+    },
+    "login": {
+      "welcomeBack": "Welcome back",
+      "subtitle": "Sign in to your account to continue",
+      "orDivider": "or",
+      "continueWithGoogle": "Sign in with Google",
+      "forgotPassword": "Forgot your password?",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create free account",
+      "invalidCredentials": "Invalid email or password",
+      "googleFailed": "Couldn't sign in with Google"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Start tracking your expenses today",
+      "orDivider": "or",
+      "continueWithGoogle": "Sign up with Google",
+      "fullName": "Name",
+      "fullNamePlaceholder": "Your full name",
+      "confirmPassword": "Confirm password",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmPasswordPlaceholder": "Repeat your password",
+      "passwordsMismatch": "Passwords don't match",
+      "acceptTermsPrefix": "I've read and agree to the",
+      "termsLink": "Terms of Use",
+      "acceptTermsMiddle": "and the",
+      "privacyLink": "Privacy Policy",
+      "submit": "Create account and sign in",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in now",
+      "emailTaken": "This email is already registered",
+      "genericError": "Couldn't create your account. Please try again."
+    },
+    "forgotPassword": {
+      "title": "Forgot my password",
+      "subtitle": "We'll send a reset link to your email.",
+      "submit": "Send reset link",
+      "confirmation": "If the email exists, we've sent a password reset link.",
+      "backToLogin": "Back to sign in"
+    },
+    "resetPassword": {
+      "title": "Reset password",
+      "newPassword": "New password",
+      "submit": "Reset password",
+      "confirmation": "Password reset successfully. You can sign in now.",
+      "backToLogin": "Back to sign in",
+      "missingToken": "Invalid reset link — request a new one",
+      "invalidOrExpired": "This link has expired or was already used — request a new one"
+    },
+    "googleCallback": {
+      "loadingTitle": "Signing in with Google…",
+      "loadingSubtitle": "Please wait while we confirm your account.",
+      "failedTitle": "Couldn't sign in",
+      "failedSubtitle": "Something went wrong signing in with Google. Please try again.",
+      "backToLogin": "Back to sign in"
+    },
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Manage your personal information and account preferences",
+      "save": "Save changes",
+      "saved": "Saved!",
+      "personalInfo": {
+        "title": "Personal information",
+        "subtitle": "Name and contact info associated with your account",
+        "fullName": "Full name",
+        "phone": "Phone",
+        "phoneHint": "(WhatsApp)",
+        "phoneNote": "When saved, the Amezia bot will send a welcome message to this number via WhatsApp.",
+        "phoneInvalid": "Enter a complete phone number, including the country code (e.g. +55 11 99999-0000)"
+      },
+      "bot": {
+        "title": "WhatsApp bot",
+        "subtitle": "Save the Amezia contact on WhatsApp to chat whenever you want",
+        "saveContact": "Save contact",
+        "unavailable": "The bot isn't available yet — try again later."
+      },
+      "budget": {
+        "title": "Monthly budget",
+        "subtitle": "Spending limit used on the Dashboard's cards and alerts",
+        "label": "Budget amount",
+        "hint": "Leave blank to remove the monthly budget.",
+        "save": "Save budget"
+      },
+      "security": {
+        "title": "Security",
+        "subtitle": "Authentication and active sessions",
+        "authenticatedViaGoogle": "Authenticated via Google",
+        "revoke": "Revoke access",
+        "revokeUnavailable": "Unlinking Google isn't available yet",
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "changePassword": "Change password",
+        "changePasswordError": "Current password is incorrect",
+        "setPasswordHint": "Your account doesn't have a local password yet — set one so you can also sign in without Google.",
+        "setPassword": "Set password",
+        "setPasswordError": "Could not set the password.",
+        "lastSession": "Last session"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "subtitle": "Your account language",
+        "language": "Language",
+        "save": "Save preferences"
+      },
+      "danger": {
+        "title": "Danger zone",
+        "subtitle": "Irreversible account actions",
+        "text": "Deleting your account permanently removes all your data: expenses, AI conversations, settings and history. This action is irreversible and cannot be undone.",
+        "cta": "Delete my account",
+        "confirmWord": "DELETE",
+        "confirmLabel": "Type DELETE to confirm",
+        "confirmCta": "Permanently delete account"
+      }
+    }
+  },
+  "authBrand": {
+    "headline": "Total control over your expenses",
+    "subtitle": "Categorize spending, track budgets, and make decisions with real-time data.",
+    "feature1Title": "Smart tracking",
+    "feature1Sub": "Categorize expenses automatically with Gemini AI",
+    "feature2Title": "Visual insights",
+    "feature2Sub": "Trend charts and spending breakdown by category",
+    "feature3Title": "Budget alerts",
+    "feature3Sub": "Get notified when you're close to your limits"
+  },
+  "shell": {
+    "menu": "Menu",
+    "dashboard": "Dashboard",
+    "categories": "Categories",
+    "transactions": "Transactions",
+    "reports": "Reports",
+    "agent": "Agent",
+    "settings": "Settings",
+    "account": "Account",
+    "profile": "Profile",
+    "feedback": "Feedback",
+    "restartTour": "Restart tour",
+    "logout": "Log out",
+    "quickAdd": "Quick add",
+    "toggleSidebar": "Collapse/expand menu",
+    "back": "Back",
+    "settingsHub": {
+      "account": "Account",
+      "other": "Other"
+    },
+    "subscription": "Plans",
+    "aiUsage": "Usage & Limits",
+    "upgradeCta": "Upgrade"
+  },
+  "categories": {
+    "header": {
+      "badge": "Categories",
+      "title": "Category map",
+      "newCategory": "New category"
+    },
+    "filterBar": {
+      "searchPlaceholder": "Search by category name...",
+      "allScopes": "All scopes",
+      "clear": "Clear",
+      "filterButton": "Filter",
+      "searchLabel": "Search",
+      "scopeLabel": "Scope",
+      "close": "Close",
+      "apply": "Apply"
+    },
+    "scope": {
+      "global": "Global",
+      "private": "Private"
+    },
+    "stats": {
+      "visible": "Visible",
+      "visibleSub": "Total categories",
+      "global": "Global",
+      "globalSub": "Available to everyone",
+      "private": "Private",
+      "privateSub": "Only yours",
+      "mostUsed": "Most used",
+      "mostUsedCount": "{{count}} transaction(s)",
+      "mostUsedEmpty": "No transactions recorded yet"
+    },
+    "table": {
+      "title": "Category list",
+      "resultCount": "{{count}} result(s)",
+      "category": "Category",
+      "scope": "Scope",
+      "color": "Color",
+      "usage": "Usage",
+      "spent": "Spent",
+      "actions": "Actions",
+      "readOnly": "Read-only",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "states": {
+      "loading": "Loading categories...",
+      "errorTitle": "Couldn't load your categories",
+      "errorSub": "Check your connection and try again.",
+      "retry": "Try again",
+      "emptyPrivateTitle": "You haven't created any private categories yet",
+      "emptyPrivateSub": "Create up to 3 categories of your own to complement the global ones.",
+      "noResultsTitle": "No category found for \"{{term}}\""
+    },
+    "form": {
+      "createTitle": "New category",
+      "editTitle": "Edit category",
+      "name": "Name",
+      "namePlaceholder": "e.g. Pets",
+      "color": "Color",
+      "icon": "Icon",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "create": "Create category",
+      "errors": {
+        "duplicateOrLimit": "Couldn't save — name already exists or the limit of 3 private categories was reached",
+        "generic": "Couldn't save the category. Please try again.",
+        "nameRequired": "Enter a name",
+        "nameTooLong": "Name too long (max. 50 characters)"
+      }
+    },
+    "confirmDelete": {
+      "header": "Delete category",
+      "message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+      "accept": "Delete",
+      "reject": "Cancel"
+    }
+  },
+  "transactions": {
+    "header": {
+      "badge": "Finance",
+      "title": "Transactions",
+      "cta": "New transaction"
+    },
+    "filterBar": {
+      "searchPlaceholder": "Search by description or category...",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month",
+      "allStatuses": "All statuses",
+      "search": "Search",
+      "clear": "Clear",
+      "filterButton": "Filter",
+      "searchLabel": "Search",
+      "statusLabel": "Status",
+      "close": "Close"
+    },
+    "status": {
+      "pending": "Pending",
+      "paid": "Paid"
+    },
+    "frequency": {
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "paymentMethod": {
+      "pix": "Pix",
+      "creditCard": "Credit card",
+      "debitCard": "Debit card",
+      "cash": "Cash",
+      "bankTransfer": "Bank transfer",
+      "boleto": "Boleto (bank slip)",
+      "check": "Check",
+      "other": "Other",
+      "notInformed": "Not informed"
+    },
+    "stats": {
+      "periodExpenses": "Period expenses",
+      "count": "{{count}} transaction(s)",
+      "monthlyBudget": "Monthly budget",
+      "of": "of",
+      "setBudget": "Set budget",
+      "clearBudgetHint": "Leave it empty to remove the budget"
+    },
+    "table": {
+      "title": "Transaction list",
+      "resultCount": "{{count}} result(s)",
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "paymentMethod": "Payment method",
+      "amount": "Amount",
+      "status": "Status",
+      "actions": "Actions",
+      "pay": "Mark as paid",
+      "edit": "Edit",
+      "delete": "Delete",
+      "recurring": "Generated by a recurrence",
+      "showing": "Showing {{from}}–{{to}} of {{total}} result(s)"
+    },
+    "states": {
+      "loading": "Loading transactions...",
+      "errorTitle": "Couldn't load your transactions",
+      "errorSub": "Check your connection and try again.",
+      "retry": "Try again",
+      "emptyTitle": "No transactions yet",
+      "emptySub": "Register your first expense or income to see it here.",
+      "noResultsTitle": "No transaction found for the current filters"
+    },
+    "confirmDelete": {
+      "header": "Delete transaction",
+      "message": "Are you sure you want to delete \"{{description}}\"? This action cannot be undone.",
+      "accept": "Delete",
+      "reject": "Cancel",
+      "recurringHeader": "Delete recurring transaction",
+      "recurringMessage": "\"{{description}}\" is a recurring transaction. Do you want to delete only this occurrence or all occurrences of this recurrence? Deleting all also stops new occurrences from being generated.",
+      "deleteOnlyThis": "Delete only this",
+      "deleteAllOccurrences": "Delete all",
+      "installmentHeader": "Delete installment transaction",
+      "installmentMessage": "\"{{description}}\" is part of an installment purchase. Do you want to delete only this installment or all installments of this purchase?",
+      "deleteAllInstallments": "Delete all installments"
+    },
+    "bulkDelete": {
+      "header": "Delete selected transactions",
+      "message": "Are you sure you want to delete {{count}} transaction(s)? This action cannot be undone.",
+      "cta": "Delete selected ({{count}})"
+    },
+    "pay": {
+      "header": "Mark as paid",
+      "message": "Confirm the payment date for \"{{description}}\". You can also attach the receipt now or later.",
+      "paidAt": "Payment date",
+      "receipt": "Receipt (optional)",
+      "confirm": "Confirm payment"
+    },
+    "form": {
+      "backToList": "Back to transactions",
+      "backToDashboard": "Back to dashboard",
+      "eyebrow": "Manual entry",
+      "createTitle": "New transaction",
+      "editTitle": "Edit transaction",
+      "category": "Category",
+      "selectCategory": "Select a category",
+      "noCategoryFound": "No category found",
+      "createCategory": "New category",
+      "amount": "Amount",
+      "description": "Description",
+      "date": "Date",
+      "paymentMethod": "Payment method",
+      "selectPaymentMethod": "Select",
+      "searchPaymentMethod": "Search payment method",
+      "noPaymentMethodFound": "No payment method found",
+      "status": "Status",
+      "statusFirstInstallment": "1st installment status",
+      "statusFirstOccurrence": "1st occurrence status",
+      "installmentStatusHint": "Only the 1st installment can be paid with a receipt — the rest are created pending and marked as they're paid.",
+      "recurrenceStatusHint": "Only the 1st occurrence can be paid with a receipt — future ones are created pending and marked as they're paid.",
+      "advanced": "Advanced",
+      "advancedNone": "None",
+      "installment": "Installments",
+      "recurrence": "Recurring",
+      "installmentTotal": "Number of installments",
+      "installmentHint": "All installments are generated now, monthly, starting on the date above.",
+      "frequency": "Frequency",
+      "endDate": "End date (optional)",
+      "receipt": "Receipt",
+      "viewReceipt": "View receipt",
+      "removeReceipt": "Remove",
+      "uploading": "Uploading...",
+      "uploadReceipt": "Upload receipt (image or PDF, up to 5MB)",
+      "receiptRequiresPaid": "Available for transactions marked as \"Paid\"",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "saving": "Saving...",
+      "previewTitle": "Live summary",
+      "tipsTitle": "Before you save",
+      "tip1": "Pick the category that best matches this expense — you can change it later.",
+      "tip2": "Installments generate all occurrences right away; recurrences generate one at a time.",
+      "tip3": "You can attach a receipt right after saving.",
+      "recurrenceBanner": "Generated automatically by the recurrence \"{{description}}\", {{frequency}}",
+      "cancelRecurrence": "Cancel recurrence",
+      "errors": {
+        "generic": "Couldn't save the transaction. Please try again.",
+        "loadFailed": "Couldn't load this transaction",
+        "toastTitle": "Error",
+        "categoryRequired": "Select a category",
+        "amountRequired": "Enter the amount",
+        "amountInvalid": "Invalid amount (e.g. 120.50)",
+        "dateRequired": "Enter the date",
+        "descriptionRequired": "Enter a description",
+        "descriptionTooLong": "Description too long (max. 255 characters)",
+        "installmentRange": "Between 2 and 60 installments"
+      }
+    },
+    "quickAdd": {
+      "title": "Add expense",
+      "subtitle": "Quick entry — instant record",
+      "save": "Save",
+      "done": "Done",
+      "successTitle": "Transaction saved!"
+    },
+    "errors": {
+      "loadFailed": "Couldn't load your transactions"
+    }
+  },
+  "agentChat": {
+    "list": {
+      "eyebrow": "AI Agent",
+      "title": "Conversations",
+      "subtitle": "Ask questions about your expenses and get personalized financial guidance.",
+      "newConversation": "New conversation",
+      "empty": "No conversations yet",
+      "emptyCopy": "Start a conversation and the agent will analyze your expenses to guide you.",
+      "emptyCta": "Start first conversation",
+      "delete": "Delete conversation"
+    },
+    "chat": {
+      "welcomeTitle": "How can I help you today?",
+      "welcomeCopy": "I analyze your expenses in real time and guide you on financial decisions.",
+      "suggestions": {
+        "spentThisMonth": "How much did I spend this month?",
+        "topCategory": "Which category do I spend the most on?",
+        "withinBudget": "Am I within my monthly budget?",
+        "compareLastMonths": "Compare my last 3 months"
+      },
+      "inputPlaceholder": "Write your question...",
+      "send": "Send message",
+      "hint": "The agent uses your financial data as context and doesn't take any actions."
+    },
+    "error": {
+      "message": "Couldn't generate a response right now. Please try again shortly.",
+      "retry": "Try again",
+      "limitReached": "You've reached your plan's AI conversation limit for this cycle. Upgrade to keep chatting.",
+      "limitReachedCta": "View plans"
+    }
+  },
+  "reports": {
+    "dashboard": {
+      "badge": "Finance",
+      "title": "Dashboard",
+      "periodPrevious": "Previous month",
+      "periodNext": "Next month",
+      "periodLastYear": "-1 year",
+      "periodCurrent": "Current",
+      "periodNextYear": "+1 year",
+      "errorTitle": "Couldn't load the dashboard.",
+      "retry": "Try again",
+      "heroBadge": "Planned vs Actual",
+      "heroTitle": "Spending cap for the period",
+      "heroExpenses": "Expenses so far",
+      "heroStatus": "Status",
+      "heroNoteUnset": "Set a monthly budget in Transactions to track whether spending is above plan.",
+      "heroNoteOver": "You've already exceeded the budget by {{amount}}.",
+      "heroNoteUnder": "{{amount}} still available within this period's budget.",
+      "heroSetBudgetLink": "Set budget in Transactions",
+      "metricExpense": "Period expenses",
+      "metricBudget": "Monthly budget",
+      "metricBudgetNotSet": "No budget set",
+      "metricBudgetUsage": "{{percent}}% of budget used",
+      "metricTopCategory": "Top category",
+      "metricBiggestExpense": "Biggest expense",
+      "metricBiggestExpenseEmpty": "No highlight for this period",
+      "trendBadge": "Monthly Trend",
+      "trendTitle": "Last 6 rolling months",
+      "legendExpense": "Expenses",
+      "legendBudget": "Monthly budget",
+      "compositionBadge": "Composition",
+      "compositionTitle": "Expenses by category",
+      "compositionHint": "Tap a category to see its entries",
+      "distributionBadge": "Distribution",
+      "distributionTitle": "By category",
+      "distributionHint": "Tap a category to see its entries",
+      "paymentMethodBadge": "Distribution",
+      "paymentMethodTitle": "By payment method",
+      "paymentMethodDistributionHint": "Tap a payment method to see its expenses",
+      "paidPendingBadge": "Paid x Pending",
+      "paidPendingTitle": "Last 6 running months",
+      "legendPaid": "Paid",
+      "legendPending": "Pending",
+      "customize": "Customize",
+      "customizeModalTitle": "Customize Dashboard",
+      "customizeModalHint": "Drag to reorder, use the switch to show or hide a card.",
+      "customizeSave": "Save",
+      "customizeCancel": "Cancel",
+      "paymentMethodModalPercent": "{{percent}}% of the period",
+      "recentBadge": "Recent expenses",
+      "recentTitle": "Entries for the selected period",
+      "seeAll": "See all expenses",
+      "recentEmpty": "No transactions in this period.",
+      "chartEmpty": "No transactions in this period.",
+      "donutTotal": "TOTAL",
+      "categoryModalPercent": "{{percent}}% of the period",
+      "categoryModalLoading": "Loading entries...",
+      "categoryModalEmpty": "No entries found in this period.",
+      "categoryModalMore": "See all in Reports",
+      "setupBannerTitle": "Complete your setup",
+      "setupBannerText": "Set a monthly budget and link your WhatsApp to get the most out of Amezia.",
+      "setupBannerCta": "Set up now",
+      "setupModalTitle": "Quick setup",
+      "setupBudgetLabel": "Monthly budget",
+      "setupPhoneLabel": "WhatsApp",
+      "setupSave": "Save"
+    },
+    "filterBar": {
+      "from": "From",
+      "to": "To",
+      "allCategories": "All categories",
+      "apply": "Apply",
+      "clear": "Clear",
+      "periodPill": "PERIOD",
+      "filterButton": "Filter",
+      "close": "Close",
+      "categoryLabel": "Category"
+    },
+    "page": {
+      "title": "Reports",
+      "exportCsv": "Export CSV",
+      "exporting": "Exporting...",
+      "errorTitle": "Couldn't load the reports.",
+      "exportLimitReached": "You've reached your plan's CSV export limit for this cycle. Upgrade to export more.",
+      "exportLimitReachedCta": "View plans",
+      "exportFailed": "Couldn't export the CSV right now. Please try again.",
+      "close": "Close",
+      "metricTotal": "Period total",
+      "metricTotalSub": "{{count}} transactions in range",
+      "metricBiggest": "Biggest expense",
+      "metricAverage": "Monthly average",
+      "metricCount": "Nº of transactions",
+      "rankingBadge": "Ranking",
+      "rankingTitle": "Categories by amount",
+      "paymentMethodBadge": "Distribution",
+      "paymentMethodTitle": "By payment method",
+      "paidPendingBadge": "Paid x Pending",
+      "paidPendingTitle": "Last 6 running months"
+    },
+    "ai": {
+      "title": "AI Analysis",
+      "subtitle": "Narrative generated for the period {{period}}",
+      "generate": "Generate analysis",
+      "empty": "Click Generate analysis to receive a narrative about the selected period.",
+      "loading": "Analyzing the period...",
+      "throttled": "Analysis rate limit reached. Please try again shortly.",
+      "failed": "Couldn't generate the analysis right now. Please try again.",
+      "limitReached": "You've reached your plan's AI report limit for this cycle. Upgrade to generate more analyses.",
+      "limitReachedCta": "View plans"
+    },
+    "table": {
+      "title": "Period transactions",
+      "count": "{{count}} result(s)",
+      "empty": "No transactions found for the selected filters.",
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "amount": "Amount",
+      "showing": "Showing {{from}}–{{to}} of {{total}} result(s)"
+    },
+    "shared": {
+      "badge": "Shared view",
+      "missingTitle": "Invalid link",
+      "missingSub": "This report link doesn't have a valid token. Ask for a new report on WhatsApp."
+    }
+  },
+  "admin": {
+    "common": {
+      "loading": "Loading...",
+      "cancel": "Cancel",
+      "save": "Save",
+      "close": "Close",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "email": "Email"
+    },
+    "errors": {
+      "loadFailed": "Could not load the data."
+    },
+    "pagination": {
+      "pageInfo": "{{total}} result(s)",
+      "previous": "Previous page",
+      "next": "Next page"
+    },
+    "shell": {
+      "brand": "Admin Panel",
+      "toggleSidebar": "Collapse menu",
+      "theme": "Theme",
+      "menu": "Menu",
+      "overview": "Overview",
+      "users": "Users",
+      "whatsapp": "WhatsApp",
+      "feedback": "Feedback",
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out",
+      "plans": "Plans",
+      "aiUsage": "AI Usage",
+      "payments": "Payments",
+      "back": "Back"
+    },
+    "settingsHub": {
+      "account": "Account",
+      "management": "Management",
+      "insights": "Insights",
+      "other": "Other"
+    },
+    "login": {
+      "brand": "Amezia Admin",
+      "headline": "Manage the Amezia platform",
+      "subtitle": "Track users, the WhatsApp instance, and feedback from your base in one place.",
+      "feature1Title": "Users",
+      "feature1Sub": "See who's signed up and manage access roles",
+      "feature2Title": "WhatsApp bot",
+      "feature2Sub": "Connect and monitor the instance serving your users",
+      "feature3Title": "Feedback",
+      "feature3Sub": "Track what your base is saying about the product",
+      "title": "Sign in to Admin Panel",
+      "subtitleForm": "Restricted access for the Amezia operations team.",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in",
+      "invalidCredentials": "Invalid email or password."
+    },
+    "overview": {
+      "title": "Overview",
+      "totalUsers": "Total users",
+      "newUsersThisMonth": "New this month",
+      "usersWithPhone": "With WhatsApp linked",
+      "totalFeedbacks": "Total feedback",
+      "chartTitle": "New users by month",
+      "chartEmpty": "Not enough data for the chart yet.",
+      "mrr": "MRR",
+      "activeSubscriptions": "Active subscriptions",
+      "activeSubscriptionsSub": "{{pro}} Pro · {{premium}} Premium",
+      "dau": "Active users (day)",
+      "mau": "Active users (month)",
+      "churnRate": "Churn",
+      "usageByChannel": "Web / Bot usage",
+      "usageByChannelSub": "AI calls this month, web vs. WhatsApp",
+      "planDistributionTitle": "Users by plan",
+      "activityTitle": "Recent activity",
+      "activityEmpty": "No activity recorded yet.",
+      "planNames": {
+        "free": "Free",
+        "trialPro": "Trial Pro",
+        "pro": "Pro",
+        "premium": "Premium"
+      }
+    },
+    "aiUsage": {
+      "title": "AI Usage & Cost",
+      "totalTokens": "Tokens this month",
+      "estimatedCost": "Estimated cost",
+      "estimatedCostSub": "Estimate only, not a real account balance",
+      "providerNames": {
+        "gemini": "Gemini",
+        "grok": "Grok"
+      },
+      "featureNames": {
+        "agent_chat": "Agent chat",
+        "report_narrative": "Report narrative",
+        "bot_expense_parsing": "Expense parsing (bot)",
+        "bot_audio_transcription": "Audio transcription (bot)"
+      },
+      "byFeature": {
+        "title": "Usage by feature",
+        "feature": "Feature",
+        "events": "Calls",
+        "tokens": "Tokens",
+        "cost": "Estimated cost",
+        "empty": "No AI calls recorded this month."
+      },
+      "topConsumers": {
+        "title": "Top consumers",
+        "user": "User",
+        "plan": "Plan",
+        "conversations": "Conversations",
+        "reports": "Reports",
+        "cost": "Estimated cost",
+        "empty": "No usage recorded this month."
+      }
+    },
+    "payments": {
+      "title": "Payments",
+      "mrr": "MRR",
+      "arr": "ARR",
+      "churnRate": "Churn",
+      "averageTicket": "Average ticket",
+      "pastDueAlert": "{{count}} subscription(s) with failed payment.",
+      "recentPayments": "Recent payments",
+      "recentPaymentsEmpty": "No payments recorded yet.",
+      "recentStripeEvents": "Recent Stripe events",
+      "recentStripeEventsEmpty": "No events recorded yet.",
+      "table": {
+        "date": "Date",
+        "amount": "Amount",
+        "eventType": "Event type"
+      }
+    },
+    "users": {
+      "title": "Users",
+      "tableTitle": "Registered users",
+      "searchPlaceholder": "Search by name or email...",
+      "roleFilterAll": "All roles",
+      "role": {
+        "user": "User",
+        "admin": "Admin"
+      },
+      "emptyTitle": "No users found",
+      "emptySub": "Adjust the search or filters to see more results.",
+      "columnName": "Name",
+      "columnEmail": "Email",
+      "columnPhone": "WhatsApp",
+      "columnRole": "Role",
+      "columnCreatedAt": "Joined",
+      "changeRoleTitle": "Change role",
+      "changeRoleDescription": "Choose the new access role for {{name}}.",
+      "testAccess": {
+        "badge": "Test",
+        "title": "Lifetime Premium test access",
+        "description": "Unlocks every Premium feature for this account, without going through Stripe — no charge is created. Turn it off once you're done testing."
+      },
+      "delete": "Delete",
+      "confirmDelete": {
+        "header": "Delete user",
+        "message": "Are you sure you want to delete the account \"{{email}}\"? This action cannot be undone — all of the user's data (transactions, conversations, feedback, etc.) will be removed.",
+        "accept": "Delete",
+        "reject": "Cancel",
+        "toastTitle": "User deletion",
+        "success": "The account for {{email}} has been deleted.",
+        "errorGeneric": "Could not delete this account. Please try again."
+      }
+    },
+    "whatsapp": {
+      "title": "WhatsApp",
+      "status": {
+        "connecting": "Connecting",
+        "connected": "Connected",
+        "disconnected": "Disconnected"
+      },
+      "qrAlt": "Pairing QR code",
+      "qrHint": "Scan with WhatsApp to pair the instance.",
+      "phoneNumber": "Connected number",
+      "connectedSince": "Connected since",
+      "lastMessage": "Last message",
+      "connect": "Connect",
+      "sync": "Sync",
+      "disconnect": "Disconnect",
+      "webhookTitle": "Webhook configuration",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook secret",
+      "webhookEvents": "Enabled events",
+      "createTitle": "No instance registered yet",
+      "instanceName": "Instance name",
+      "instanceWebhookUrl": "Webhook URL",
+      "instanceNameRequired": "Enter a name for the instance.",
+      "instanceWebhookUrlRequired": "Enter the webhook URL.",
+      "createSubmit": "Create instance",
+      "createFailed": "Could not create the instance.",
+      "createFailedDuplicate": "An instance with this name already exists.",
+      "createFailedUnavailable": "The Evolution API is not configured on the server."
+    },
+    "feedback": {
+      "title": "Feedback",
+      "searchPlaceholder": "Search message text...",
+      "channelFilterAll": "All channels",
+      "channel": {
+        "web": "Web",
+        "whatsapp": "WhatsApp"
+      },
+      "type": {
+        "praise": "Praise",
+        "suggestion": "Suggestion",
+        "bug": "Bug",
+        "other": "Other"
+      },
+      "emptyTitle": "No feedback found",
+      "emptySub": "Adjust the search or filters to see more results.",
+      "listTitle": "Feedback received",
+      "detailTitle": "Feedback detail"
+    },
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Your Admin Panel access information",
+      "save": "Save",
+      "saved": "Saved!",
+      "personalInfo": {
+        "title": "Personal information",
+        "subtitle": "Your name and contact phone number",
+        "fullName": "Full name",
+        "phone": "Phone"
+      },
+      "security": {
+        "title": "Security",
+        "subtitle": "Account access password",
+        "authenticatedViaGoogle": "Authenticated via Google",
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm password",
+        "changePassword": "Change password",
+        "changePasswordError": "Current password is incorrect",
+        "setPasswordHint": "Your account doesn't have a local password yet — set one so you can also sign in without Google.",
+        "setPassword": "Set password",
+        "setPasswordError": "Could not set the password.",
+        "passwordsMismatch": "Passwords don't match"
+      }
+    },
+    "plans": {
+      "title": "Plans",
+      "planNames": {
+        "pro": "Pro",
+        "premium": "Premium"
+      },
+      "cycle": {
+        "monthly": "Monthly",
+        "annual": "Annual"
+      },
+      "noPriceYet": "No price set yet",
+      "form": {
+        "title": "Set new price",
+        "hint": "Saving creates a new Stripe price for this plan/cycle combination and automatically archives the previous one — a Stripe price is never edited after creation.",
+        "planLabel": "Plan",
+        "cycleLabel": "Billing cycle",
+        "amountLabel": "Amount (R$)",
+        "amountInvalid": "Enter a valid amount, e.g.: 19.90",
+        "submit": "Save price",
+        "saveSuccess": "Price saved successfully.",
+        "saveFailed": "Could not save the price. Please try again.",
+        "back": "Back"
+      },
+      "history": {
+        "title": "Price history",
+        "plan": "Plan",
+        "cycle": "Cycle",
+        "value": "Value",
+        "status": "Status",
+        "createdAt": "Created at",
+        "statusActive": "Active",
+        "statusArchived": "Archived"
+      },
+      "newCta": "New price"
+    }
+  },
+  "feedback": {
+    "pageTitle": "Feedback",
+    "pageSubtitle": "Your opinion helps us improve Amezia for everyone",
+    "tabs": {
+      "send": "Send feedback",
+      "history": "History"
+    },
+    "nps": {
+      "question": "From 0 to 10, how likely are you to recommend Amezia to a friend?",
+      "sub": "0 = not at all likely · 10 = extremely likely",
+      "notLikely": "Would not recommend",
+      "veryLikely": "Would highly recommend"
+    },
+    "type": {
+      "label": "Feedback type",
+      "praise": {
+        "label": "Praise",
+        "hint": "Tell us what's working well!",
+        "placeholder": "E.g.: I really liked the bot experience"
+      },
+      "suggestion": {
+        "label": "Suggestion",
+        "hint": "What feature would you like to see?",
+        "placeholder": "E.g.: Automatic weekly report via WhatsApp"
+      },
+      "bug": {
+        "label": "Bug / Issue",
+        "hint": "Describe what happened so we can reproduce it.",
+        "placeholder": "E.g.: The chart goes blank when switching months"
+      },
+      "other": {
+        "label": "Other",
+        "hint": "Any other comment is welcome.",
+        "placeholder": "E.g.: Question about exporting data"
+      }
+    },
+    "form": {
+      "subjectLabel": "Subject",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Describe your experience, suggestion or issue in detail...",
+      "charCountSuffix": "characters",
+      "submitButton": "Send feedback",
+      "sentAsPrefix": "Sent as"
+    },
+    "success": {
+      "title": "Thanks for your feedback!",
+      "message": "Your opinion is very important for us to keep improving Amezia.",
+      "resetLink": "Send another feedback"
+    },
+    "history": {
+      "loading": "Loading history...",
+      "emptyTitle": "You haven't sent any feedback yet"
+    },
+    "errors": {
+      "submitFailed": "We couldn't send your feedback. Please try again."
+    }
+  },
+  "onboarding": {
+    "tour": {
+      "skip": "Skip",
+      "next": "Next",
+      "previous": "Previous",
+      "finish": "Finish",
+      "close": "Close tour",
+      "steps": {
+        "dashboard": {
+          "title": "Dashboard",
+          "description": "Here you get an overview of all your expenses, charts and monthly summaries."
+        },
+        "transactions": {
+          "title": "Transactions",
+          "description": "See, add, edit and remove all your expenses in one place."
+        },
+        "categories": {
+          "title": "Categories",
+          "description": "Organize your expenses into custom categories, in addition to the system's default ones."
+        },
+        "reports": {
+          "title": "Reports",
+          "description": "Track how your spending evolves and ask the AI for a plain-language analysis."
+        },
+        "agent": {
+          "title": "AI Agent",
+          "description": "Chat with the AI to ask about your expenses or log one by just typing it out."
+        },
+        "settings": {
+          "title": "Profile and Settings",
+          "description": "Update your profile, link your WhatsApp and adjust your account preferences."
+        }
+      }
+    },
+    "checklist": {
+      "title": "First steps",
+      "openLabel": "Open first steps checklist",
+      "dismiss": "Dismiss",
+      "allDone": "You've completed every first step!",
+      "items": {
+        "firstExpense": {
+          "label": "Log your first expense"
+        },
+        "category": {
+          "label": "Create a custom category"
+        },
+        "budget": {
+          "label": "Set a monthly budget"
+        },
+        "whatsapp": {
+          "label": "Link your WhatsApp"
+        },
+        "botNumber": {
+          "label": "Save the bot's number"
+        },
+        "agent": {
+          "label": "Chat with the AI Agent"
+        },
+        "tour": {
+          "label": "Finish the guided tour"
+        }
+      }
+    }
+  },
+  "aiUsage": {
+    "badge": "Settings",
+    "title": "Usage & Limits",
+    "loading": "Loading...",
+    "unlimited": "Unlimited",
+    "currentCycle": "Current cycle",
+    "planBannerSub": "Your plan's AI usage limits",
+    "manageSubscription": "Manage subscription",
+    "alertNearLimit": "You're close to your plan's usage limit.",
+    "viewPlans": "View plans",
+    "metrics": {
+      "aiConversations": "AI conversations",
+      "aiReports": "Narrative reports",
+      "whatsappBotLimit": "WhatsApp bot: {{limit}} messages/month limit",
+      "csvExportsLimit": "CSV export: {{limit}}/month limit"
+    },
+    "history": {
+      "title": "Monthly history",
+      "month": "Month",
+      "conversations": "Conversations",
+      "reports": "Reports",
+      "empty": "No usage history yet."
+    },
+    "plans": {
+      "title": "Compare plans",
+      "subtitle": "See each plan's limits and upgrade whenever you need",
+      "viewPlans": "View plan"
+    },
+    "errors": {
+      "loadFailed": "Could not load your AI usage."
+    }
+  },
+  "subscription": {
+    "loading": "Loading...",
+    "perMonth": "/mo",
+    "perMonthShort": "/mo",
+    "annualEquivalent": "equivalent to ${{amount}}/mo · billed annually",
+    "planNames": {
+      "free": "Free",
+      "pro": "Pro",
+      "premium": "Premium"
+    },
+    "badges": {
+      "free": "Free",
+      "popular": "Most popular",
+      "premium": "Complete",
+      "current": "Current plan"
+    },
+    "billingCycle": {
+      "monthly": "Monthly",
+      "annual": "Annual",
+      "discountBadge": "2 months free",
+      "comingSoon": "Annual coming soon"
+    },
+    "features": {
+      "dashboard": "Dashboard and monthly analytics",
+      "unlimitedTransactions": "Unlimited expenses",
+      "unlimitedCategories": "Unlimited private categories",
+      "aiConversations": "{{count}} AI conversations / month",
+      "aiConversationsUnlimited": "Unlimited AI conversations",
+      "aiReports": "{{count}} narrative reports / month",
+      "aiReportsUnlimited": "Unlimited narrative reports",
+      "whatsappLimited": "WhatsApp bot ({{count}} messages/month)",
+      "whatsappUnlimited": "WhatsApp bot (text + audio, no limit)",
+      "csvExportLimited": "CSV export ({{count}}/month)",
+      "csvExportUnlimited": "Unlimited CSV export",
+      "prioritySupport": "Priority support"
+    },
+    "registerPlan": {
+      "steps": {
+        "choosePlan": "Choose your plan",
+        "createAccount": "Create your account",
+        "start": "Get started"
+      },
+      "title": "Choose how you want to use Amezia",
+      "trialBadge": "7 days free",
+      "trialNote": "on paid plans — no charge during the trial",
+      "alreadyHaveAccount": "Already have an account?",
+      "login": "Log in",
+      "tagline": {
+        "free": "To start organizing your finances at no cost",
+        "pro": "For everyday financial control",
+        "premium": "Full control, no limits, with priority support"
+      },
+      "cta": {
+        "free": "Start for free",
+        "pro": "Start with Pro",
+        "premium": "Start with Premium"
+      },
+      "footNotes": {
+        "securePayment": "Secure payment via Stripe",
+        "cancelAnytime": "Cancel anytime",
+        "noHiddenFees": "No hidden fees"
+      },
+      "selectedPlanHint": "Subscribing to {{plan}} · {{billing}}"
+    },
+    "settingsPlans": {
+      "badge": "Settings",
+      "title": "Plans",
+      "currentPlanTitle": "Current plan",
+      "currentPlanSubtitle": "Manage your subscription or switch plans",
+      "status": {
+        "free": "Free",
+        "trial": "Trialing",
+        "active": "Active",
+        "past_due": "Payment pending",
+        "canceled": "Canceled"
+      },
+      "nextBilling": "Next billing",
+      "manageSubscription": "Manage subscription",
+      "cancelPlan": "Cancel plan",
+      "allPlansTitle": "All plans",
+      "allPlansSubtitle": "Upgrade or downgrade anytime",
+      "cta": {
+        "current": "Current plan",
+        "upgrade": "Upgrade",
+        "downgrade": "Downgrade",
+        "cancelToFree": "Cancel subscription"
+      },
+      "cancelSectionTitle": "Cancel subscription",
+      "cancelSectionSubtitle": "When you cancel, you keep access to your current plan until the end of the paid period. After that, you'll move to the Free plan.",
+      "cancelConfirm": {
+        "header": "Cancel subscription",
+        "message": "You'll be redirected to the Stripe portal to confirm the cancellation. Continue?",
+        "accept": "Continue",
+        "reject": "Go back"
+      },
+      "toastTitle": "Subscription",
+      "planChanged": "Your plan was updated successfully.",
+      "errors": {
+        "checkoutFailed": "Couldn't start the plan change. Please try again.",
+        "portalFailed": "Couldn't open the management portal. Please try again."
+      }
+    },
+    "checkoutSuccess": {
+      "title": "All set! Welcome 🎉",
+      "subtitle": {
+        "free": "Your account was created successfully.<br>You can upgrade to Pro or Premium anytime.",
+        "pro": "Your account was created and your subscription is active.<br><strong>7-day free trial</strong> started now.",
+        "premium": "Your account was created and your subscription is active.<br><strong>7-day free trial</strong> started now."
+      },
+      "cta": "Go to Amezia",
+      "securePayment": "Payment securely processed via Stripe",
+      "billedAfterTrial": "You'll only be billed after the trial period",
+      "benefits": {
+        "free": {
+          "dashboard": "Full dashboard — track your monthly spending",
+          "ai": "10 AI conversations / month — analyze your spending with AI",
+          "categories": "Unlimited private categories — organize your way"
+        },
+        "pro": {
+          "whatsapp": "WhatsApp bot active — log expenses by text or voice anytime",
+          "ai": "50 AI conversations / month — analyze spending and ask questions",
+          "reports": "Narrative reports — a smart summary of your spending anytime"
+        },
+        "premium": {
+          "whatsapp": "WhatsApp bot active — log expenses by text or voice anytime",
+          "unlimitedAi": "Unlimited AI — conversations and reports with no monthly limit",
+          "prioritySupport": "Priority support — preferred assistance when you need it"
+        }
+      }
+    }
+  },
+  "toasts": {
+    "successTitle": "Success",
+    "errorTitle": "Error",
+    "warnTitle": "Attention",
+    "transaction": {
+      "deleted": "Transaction deleted",
+      "deleteError": "Couldn't delete the transaction. Please try again.",
+      "groupDeleted": "Transactions deleted",
+      "groupDeleteError": "Couldn't delete the group's transactions. Please try again.",
+      "bulkDeleted": "{{count}} transactions deleted",
+      "bulkDeleteError": "Couldn't delete the selected transactions. Please try again.",
+      "paid": "Payment confirmed",
+      "created": "Transaction created",
+      "updated": "Transaction updated"
+    },
+    "category": {
+      "deleted": "Category deleted",
+      "deleteError": "Couldn't delete the category. Please try again.",
+      "created": "Category created",
+      "updated": "Category updated"
+    },
+    "budget": {
+      "saved": "Monthly budget saved"
+    },
+    "profile": {
+      "saveError": "Couldn't save your data. Please try again.",
+      "preferencesError": "Couldn't save your language. Please try again."
+    },
+    "reports": {
+      "exportSuccess": "CSV exported successfully"
+    },
+    "account": {
+      "deleted": "Your account was deleted",
+      "deleteError": "Couldn't delete the account. Please try again."
+    },
+    "admin": {
+      "roleChanged": "User role updated",
+      "roleChangeError": "Couldn't update the user's role. Please try again."
+    },
+    "whatsapp": {
+      "synced": "Status synced",
+      "syncError": "Couldn't sync the status. Please try again.",
+      "disconnected": "WhatsApp disconnected",
+      "disconnectError": "Couldn't disconnect WhatsApp. Please try again.",
+      "connectError": "Couldn't generate the QR code. Please try again.",
+      "instanceCreated": "Instance created"
+    },
+    "agentChat": {
+      "deleteError": "Couldn't delete the conversation. Please try again."
+    },
+    "receipt": {
+      "uploaded": "Receipt uploaded",
+      "uploadError": "Couldn't upload the receipt. Please try again.",
+      "uploadErrorAfterSave": "Transaction saved, but the receipt wasn't uploaded",
+      "removed": "Receipt removed",
+      "removeError": "Couldn't remove the receipt. Please try again."
+    },
+    "recurrence": {
+      "cancelled": "Recurrence cancelled",
+      "cancelError": "Couldn't cancel the recurrence. Please try again."
+    }
+  }
+}

@@ -1,0 +1,78 @@
+@import "../../ui/admin-design.css";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.price-form {
+  padding: 1.1rem 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  max-width: 40rem;
+}
+.form-hint {
+  font-size: 0.78rem;
+  color: var(--t3);
+  margin: 0;
+}
+.price-form-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.9rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.f-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--t2);
+}
+.f-input {
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.55rem;
+  border: 1.5px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t1);
+  font-size: 0.85rem;
+  outline: none;
+  font-family: inherit;
+}
+.f-input:focus {
+  border-color: var(--accent);
+}
+.f-input.invalid {
+  border-color: var(--red);
+}
+.f-error {
+  font-size: 0.72rem;
+  color: var(--red);
+}
+.price-form-submit {
+  align-self: flex-start;
+}
+
+@media (max-width: 900px) {
+  .price-form-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-09-10
+ * Descrição: `font-size` abaixo de 16px num `<input>`/`<select>` faz o
+ * navegador mobile aplicar zoom automático ao focar o campo — mesmo
+ * bug já corrigido em admin-design.css (busca de usuários/feedback) e
+ * admin-whatsapp-page (formulário de instância).
+ */
+@media (max-width: 700px) {
+  .f-input {
+    font-size: 1rem;
+  }
+}

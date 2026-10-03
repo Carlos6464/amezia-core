@@ -1,0 +1,25 @@
+<div class="toggle-wrap">
+  <span class="t-lbl" [class.on]="value() === 'monthly'">
+    {{ 'subscription.billingCycle.monthly' | transloco }}
+  </span>
+  <div
+    class="t-switch"
+    [class.on]="value() === 'annual'"
+    [class.disabled]="!annualAvailable()"
+    role="switch"
+    [attr.aria-checked]="value() === 'annual'"
+    [attr.aria-disabled]="!annualAvailable()"
+    tabindex="0"
+    (click)="toggle()"
+    (keydown.enter)="toggle()"
+    (keydown.space)="toggle()"
+  ></div>
+  <span class="t-lbl" [class.on]="value() === 'annual'">
+    {{ 'subscription.billingCycle.annual' | transloco }}
+  </span>
+  @if (annualAvailable()) {
+    <span class="t-badge">{{ 'subscription.billingCycle.discountBadge' | transloco }}</span>
+  } @else {
+    <span class="t-badge t-badge-soon">{{ 'subscription.billingCycle.comingSoon' | transloco }}</span>
+  }
+</div>

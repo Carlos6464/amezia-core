@@ -1,0 +1,71 @@
+@import '../admin-design.css';
+
+:host {
+  display: contents;
+}
+
+.activity-feed {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--bdr);
+}
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elev);
+  color: var(--t2);
+}
+.activity-icon[data-icon='user-plus'] {
+  color: var(--green, #10b981);
+  background: rgba(16, 185, 129, 0.1);
+}
+.activity-icon[data-icon='arrow-up'] {
+  color: var(--accent);
+  background: var(--acc-s);
+}
+.activity-icon[data-icon='arrow-down'] {
+  color: var(--amber, #d97706);
+  background: rgba(217, 119, 6, 0.1);
+}
+.activity-icon[data-icon='x-circle'] {
+  color: var(--red);
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.activity-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.activity-message {
+  font-size: 0.82rem;
+  color: var(--t1);
+}
+
+.activity-time {
+  font-size: 0.7rem;
+  color: var(--t3);
+  margin-top: 0.15rem;
+}
+
+.activity-empty {
+  text-align: center;
+  color: var(--t3);
+  font-size: 0.82rem;
+  padding: 1.5rem 0;
+}

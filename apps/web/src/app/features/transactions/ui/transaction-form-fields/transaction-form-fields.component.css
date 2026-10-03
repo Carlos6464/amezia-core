@@ -1,0 +1,98 @@
+@import '../transaction-design.css';
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.status-pills {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.status-pill-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t3);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.status-pill-btn.pending.active {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--amber);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+.status-pill-btn.paid.active {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--green);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.advanced-status-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 0.5rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--amber);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.accordion {
+  border: 1px solid var(--bdr);
+  border-radius: 0.65rem;
+  overflow: hidden;
+}
+.accordion-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.85rem;
+  background: var(--bg-elev);
+  border: none;
+  color: var(--t1);
+}
+.accordion-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.accordion-body {
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-top: 1px solid var(--bdr);
+}
+
+.advanced-toggle {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.advanced-toggle button {
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t2);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.advanced-toggle button.active {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+

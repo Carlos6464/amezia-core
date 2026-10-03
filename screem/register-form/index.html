@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia — Criar conta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input{font-family:inherit}
+
+/* ══ TOKENS ════════════════════════════════ */
+:root{
+  --bg:#070b12; --bg-card:#0c1220; --bg-elev:#111827;
+  --bdr:rgba(255,255,255,.07); --bdr-s:rgba(255,255,255,.13);
+  --t1:#f1f5f9; --t2:#8b9eb3; --t3:#3d4f63;
+  --accent:#6366f1; --acc-l:#818cf8; --acc-s:rgba(99,102,241,.12); --acc-s2:rgba(99,102,241,.22);
+  --green:#34d399; --amber:#fbbf24; --violet:#a78bfa; --red:#f87171;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+}
+[data-theme="light"]{
+  --bg:#f8fafc; --bg-card:#ffffff; --bg-elev:#f1f5f9;
+  --bdr:#e2e8f0; --bdr-s:#cbd5e1;
+  --t1:#0f172a; --t2:#475569; --t3:#94a3b8;
+  --accent:#4f46e5; --acc-l:#4f46e5;
+  --acc-s:rgba(79,70,229,.08); --acc-s2:rgba(79,70,229,.16);
+  --green:#059669; --amber:#d97706; --violet:#7c3aed; --red:#dc2626;
+  --grad:linear-gradient(135deg,#4f46e5,#2563eb);
+}
+
+html,body{min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+
+/* AMBIENT */
+.amb{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 65% 55% at 8% 10%,rgba(99,102,241,.09),transparent 65%),
+    radial-gradient(ellipse 50% 40% at 90% 12%,rgba(96,165,250,.06),transparent 65%);
+}
+[data-theme="light"] .amb{opacity:.35}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(7,11,18,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--bdr);padding:.8rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+[data-theme="light"] nav{background:rgba(248,250,252,.92)}
+.brand{display:flex;align-items:center;gap:.5rem}
+.brand-mark{width:1.8rem;height:1.8rem;border-radius:.5rem;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:900;color:#fff}
+.brand-name{font-size:.92rem;font-weight:800;letter-spacing:-.02em}
+.nav-login{font-size:.82rem;font-weight:600;color:var(--acc-l);border:1.5px solid rgba(99,102,241,.3);border-radius:.5rem;padding:.32rem .8rem;transition:all .15s}
+.nav-login:hover{background:var(--acc-s);border-color:rgba(99,102,241,.5)}
+
+/* MAIN LAYOUT */
+.page{flex:1;position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:center;padding:2.5rem 1.25rem 3rem}
+.page-inner{width:100%;max-width:480px;display:flex;flex-direction:column;gap:1rem}
+
+/* STEPS */
+.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:.5rem}
+.step{display:flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:600;color:var(--t3)}
+.step-num{width:1.55rem;height:1.55rem;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0}
+.step.active{color:var(--acc-l)}
+.step.active .step-num{background:var(--accent);border-color:var(--accent);color:#fff}
+.step.done{color:var(--green)}
+.step.done .step-num{background:rgba(52,211,153,.12);border-color:var(--green);color:var(--green)}
+.step-line{width:2.5rem;height:1.5px;background:var(--bdr-s);margin:0 .4rem;flex-shrink:0}
+
+/* PLAN BADGE (selected plan) */
+.plan-sel{
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  background:var(--acc-s);border:1.5px solid rgba(99,102,241,.25);border-radius:.75rem;
+  padding:.65rem 1rem;font-size:.8rem;cursor:default;
+}
+.plan-sel-left{display:flex;align-items:center;gap:.5rem}
+.plan-sel-ico{
+  width:1.6rem;height:1.6rem;border-radius:.4rem;
+  background:var(--grad);display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.plan-sel-name{font-weight:700;color:var(--t1)}
+.plan-sel-detail{color:var(--t2);font-size:.75rem}
+.plan-sel-change{font-size:.73rem;color:var(--acc-l);font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer;white-space:nowrap}
+.plan-sel-change:hover{color:var(--t1)}
+
+/* FREE PLAN BADGE */
+.plan-free-badge{
+  display:flex;align-items:center;gap:.5rem;
+  background:var(--bg-elev);border:1.5px solid var(--bdr-s);border-radius:.75rem;
+  padding:.65rem 1rem;font-size:.8rem;
+}
+.plan-free-badge svg{color:var(--t3)}
+
+/* FORM CARD */
+.form-card{
+  background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1.1rem;
+  padding:1.75rem 1.65rem;display:flex;flex-direction:column;gap:1.25rem;
+}
+
+/* GOOGLE BTN */
+.google-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:.6rem;
+  padding:.72rem 1rem;border-radius:.7rem;border:1.5px solid var(--bdr-s);
+  background:var(--bg-elev);color:var(--t1);font-size:.85rem;font-weight:600;
+  transition:all .15s;
+}
+.google-btn:hover{border-color:var(--bdr-s);background:var(--bg-card);filter:brightness(1.06)}
+
+/* DIVIDER */
+.or-div{display:flex;align-items:center;gap:.75rem;font-size:.75rem;color:var(--t3)}
+.or-div::before,.or-div::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+/* FIELD */
+.field{display:flex;flex-direction:column;gap:.35rem}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.f-label{font-size:.78rem;font-weight:600;color:var(--t2)}
+.f-input{
+  padding:.65rem .85rem;border-radius:.65rem;border:1.5px solid var(--bdr-s);
+  background:var(--bg-elev);color:var(--t1);font-size:.85rem;outline:none;
+  transition:border-color .15s;width:100%;
+}
+.f-input::placeholder{color:var(--t3)}
+.f-input:focus{border-color:var(--accent);background:var(--bg-card)}
+.f-hint{font-size:.7rem;color:var(--t3)}
+
+/* PASSWORD WRAPPER */
+.pw-wrap{position:relative}
+.pw-wrap .f-input{padding-right:2.5rem}
+.pw-eye{
+  position:absolute;right:.75rem;top:50%;transform:translateY(-50%);
+  background:transparent;border:none;color:var(--t3);cursor:pointer;padding:.1rem;
+  display:flex;align-items:center;
+}
+.pw-eye:hover{color:var(--t2)}
+
+/* CHECKBOX */
+.check-row{display:flex;align-items:flex-start;gap:.6rem;font-size:.77rem;color:var(--t2);line-height:1.5}
+.check-row input[type=checkbox]{width:1rem;height:1rem;margin-top:.1rem;accent-color:var(--accent);flex-shrink:0;cursor:pointer}
+.check-row a{color:var(--acc-l);text-decoration:underline;text-underline-offset:2px}
+.check-row a:hover{color:var(--t1)}
+
+/* SUBMIT BTN */
+.submit-btn{
+  width:100%;padding:.8rem 1rem;border-radius:.75rem;font-size:.88rem;font-weight:700;
+  transition:all .15s;display:flex;align-items:center;justify-content:center;gap:.45rem;
+  background:var(--grad);color:#fff;border:none;
+  box-shadow:0 4px 18px rgba(99,102,241,.4);
+}
+.submit-btn:hover{filter:brightness(1.1);box-shadow:0 6px 24px rgba(99,102,241,.5)}
+.submit-btn.free-cta{background:var(--bg-elev);color:var(--t1);border:1.5px solid var(--bdr-s);box-shadow:none}
+.submit-btn.free-cta:hover{border-color:var(--accent);color:var(--acc-l);background:var(--acc-s)}
+
+/* TRIAL NOTE */
+.trial-note{
+  display:flex;align-items:center;justify-content:center;gap:.4rem;
+  font-size:.73rem;color:var(--t3);text-align:center;
+}
+.trial-note svg{color:var(--green);flex-shrink:0}
+
+/* FOOTER */
+.form-foot{text-align:center;font-size:.78rem;color:var(--t2)}
+.form-foot a{color:var(--acc-l);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.form-foot a:hover{color:var(--t1)}
+
+/* THEME BTN */
+.theme-btn{
+  position:fixed;bottom:1.25rem;right:1.25rem;z-index:99;
+  width:2.2rem;height:2.2rem;border-radius:50%;
+  background:var(--bg-card);border:1.5px solid var(--bdr-s);
+  color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;
+}
+.theme-btn:hover{color:var(--t1);border-color:var(--accent)}
+
+/* RESPONSIVE */
+@media(max-width:520px){
+  .page{padding:1.75rem 1rem 2.5rem}
+  .form-card{padding:1.4rem 1.2rem}
+  .field-row{grid-template-columns:1fr}
+  .steps .step span{display:none}
+  .step-line{width:1.8rem}
+}
+</style>
+</head>
+<body>
+<div class="amb"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="brand">
+    <div class="brand-mark">A</div>
+    <span class="brand-name">Amezia</span>
+  </a>
+  <a href="/login" class="nav-login">Já tenho conta</a>
+</nav>
+
+<!-- MAIN -->
+<div class="page">
+  <div class="page-inner">
+
+    <!-- STEPS -->
+    <div class="steps">
+      <div class="step done">
+        <div class="step-num">
+          <svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <span>Plano escolhido</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step active">
+        <div class="step-num">2</div>
+        <span>Crie sua conta</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <span>Comece a usar</span>
+      </div>
+    </div>
+
+    <!-- PLAN SELECTED BADGE — pro/premium -->
+    <div class="plan-sel" id="paid-badge">
+      <div class="plan-sel-left">
+        <div class="plan-sel-ico">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+        </div>
+        <div>
+          <div class="plan-sel-name">Plano Pro · Mensal</div>
+          <div class="plan-sel-detail">R$29,90/mês · 7 dias grátis incluídos</div>
+        </div>
+      </div>
+      <a href="../register-plan/index.html" class="plan-sel-change">Trocar plano</a>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="form-card">
+
+      <!-- GOOGLE -->
+      <button class="google-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continuar com Google
+      </button>
+
+      <div class="or-div">ou preencha os dados</div>
+
+      <!-- NOME -->
+      <div class="field">
+        <label class="f-label">Nome completo</label>
+        <input class="f-input" type="text" placeholder="Seu nome" autocomplete="name">
+      </div>
+
+      <!-- EMAIL -->
+      <div class="field">
+        <label class="f-label">E-mail</label>
+        <input class="f-input" type="email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+
+      <!-- SENHA + CONFIRMAR -->
+      <div class="field-row">
+        <div class="field">
+          <label class="f-label">Senha</label>
+          <div class="pw-wrap">
+            <input class="f-input" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" id="pw1">
+            <button class="pw-eye" onclick="togglePw('pw1',this)" type="button" title="Mostrar senha">
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="f-label">Confirmar senha</label>
+          <div class="pw-wrap">
+            <input class="f-input" type="password" placeholder="Repita a senha" autocomplete="new-password" id="pw2">
+            <button class="pw-eye" onclick="togglePw('pw2',this)" type="button" title="Mostrar senha">
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TERMOS -->
+      <label class="check-row">
+        <input type="checkbox" id="terms-check" onchange="checkSubmit()">
+        Concordo com os <a href="/legal/termos" target="_blank">Termos de Uso</a> e a <a href="/legal/privacidade" target="_blank">Política de Privacidade</a>
+      </label>
+
+      <!-- SUBMIT -->
+      <button class="submit-btn" id="submit-btn" disabled style="opacity:.5">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="btn-label">Criar conta e ativar período gratuito</span>
+      </button>
+
+      <!-- TRIAL NOTE -->
+      <div class="trial-note" id="trial-note">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        7 dias grátis — sem cobrança até <strong id="trial-date">28/06/2026</strong>. Cancele antes se quiser.
+      </div>
+
+    </div><!-- /form-card -->
+
+    <!-- FOOTER -->
+    <p class="form-foot">Já tem conta? <a href="/login">Entrar</a></p>
+
+  </div>
+</div>
+
+<button class="theme-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'" title="Tema">
+  <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+
+<script>
+// Lê parâmetros da URL para adaptar o formulário
+const params = new URLSearchParams(location.search);
+const plan = params.get('plan') || 'pro';
+const billing = params.get('billing') || 'monthly';
+
+const paidBadge = document.getElementById('paid-badge');
+const trialNote = document.getElementById('trial-note');
+const btnLabel = document.getElementById('btn-label');
+
+// Dados dos planos
+const planData = {
+  free: { name:'Free', price:'Gratuito', detail:'Sem cobrança · Acesso imediato' },
+  pro:  { name:'Pro',  price: billing==='annual'?'R$24,90/mês':'R$29,90/mês', detail: `${billing==='annual'?'R$24,90':'R$29,90'}/mês · 7 dias grátis incluídos` },
+  premium: { name:'Premium', price: billing==='annual'?'R$49,90/mês':'R$59,90/mês', detail: `${billing==='annual'?'R$49,90':'R$59,90'}/mês · 7 dias grátis incluídos` },
+};
+
+const d = planData[plan] || planData.pro;
+
+if(plan === 'free'){
+  paidBadge.style.display = 'none';
+  btnLabel.textContent = 'Criar conta gratuita';
+  trialNote.style.display = 'none';
+  // show free badge
+  const fb = document.createElement('div');
+  fb.className = 'plan-free-badge';
+  fb.innerHTML = `<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg><div><span style="font-weight:700;color:var(--t1)">Plano Free selecionado</span><br><span style="font-size:.72rem;color:var(--t3)">Gratuito · Sem cartão de crédito</span></div><a href="../register-plan/index.html" style="font-size:.73rem;color:var(--acc-l);font-weight:600;text-decoration:underline;cursor:pointer;margin-left:auto">Trocar</a>`;
+  paidBadge.parentNode.insertBefore(fb, paidBadge.nextSibling);
+} else {
+  paidBadge.querySelector('.plan-sel-name').textContent = `Plano ${d.name} · ${billing==='annual'?'Anual':'Mensal'}`;
+  paidBadge.querySelector('.plan-sel-detail').textContent = d.detail;
+  btnLabel.textContent = `Criar conta e ativar período gratuito`;
+  // Calcular data trial +7 dias
+  const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate()+7);
+  document.getElementById('trial-date').textContent = trialEnd.toLocaleDateString('pt-BR');
+}
+
+function checkSubmit(){
+  const ok = document.getElementById('terms-check').checked;
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '.5';
+}
+
+function togglePw(id, btn){
+  const inp = document.getElementById(id);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.style.color = show ? 'var(--acc-l)' : 'var(--t3)';
+}
+
+document.getElementById('submit-btn').addEventListener('click', function(){
+  if(plan === 'free'){
+    window.location.href = '/app/dashboard';
+  } else {
+    window.location.href = '../checkout-success/index.html?plan='+plan;
+  }
+});
+</script>
+</body>
+</html>

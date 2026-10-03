@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amezia Admin — Usuários</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select{font-family:inherit}
+ul{list-style:none}
+
+:root{
+  --bg:#070b12;--bg-card:#0d1526;--bg-elev:#111c30;--bg-sidebar:#09101f;
+  --bdr:rgba(255,255,255,.07);--bdr-s:rgba(255,255,255,.11);
+  --t1:#f0f4ff;--t2:#8899bb;--t3:#4a5878;
+  --accent:#6366f1;--acc-l:#818cf8;--acc-s:rgba(99,102,241,.1);--acc-s2:rgba(99,102,241,.2);
+  --green:#10b981;--red:#f43f5e;--amber:#f59e0b;--violet:#a78bfa;
+  --grad:linear-gradient(135deg,#6366f1,#60a5fa);
+}
+[data-theme="light"]{
+  --bg:#f0f4f8;--bg-card:#ffffff;--bg-elev:#f8fafc;--bg-sidebar:#ffffff;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --bdr:rgba(15,23,42,.08);--bdr-s:rgba(15,23,42,.13);
+  --acc-s:rgba(99,102,241,.08);--acc-s2:rgba(99,102,241,.16);
+  --accent:#4f46e5;--acc-l:#4f46e5;
+  --green:#059669;--red:#dc2626;--amber:#d97706;--violet:#7c3aed;
+  --grad:linear-gradient(135deg,#4f46e5,#2563eb);
+}
+
+html,body{min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{height:3.25rem;background:var(--bg-sidebar);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 1.1rem;gap:.75rem;flex-shrink:0;z-index:40;position:sticky;top:0}
+.brand{display:flex;align-items:center;gap:.4rem}
+.brand-mark{width:1.6rem;height:1.6rem;border-radius:.4rem;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;color:#fff}
+.brand-name{font-size:.88rem;font-weight:800}
+.admin-badge{font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.12rem .45rem;border-radius:999px;background:rgba(244,63,94,.12);color:var(--red);border:1px solid rgba(244,63,94,.2);margin-left:.2rem}
+.topbar-sep{width:1px;height:1.1rem;background:var(--bdr-s)}
+.page-title{font-size:.82rem;font-weight:700;color:var(--t2)}
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:.5rem}
+.top-btn{display:flex;align-items:center;gap:.3rem;padding:.28rem .7rem;border-radius:.45rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.75rem;font-weight:600;color:var(--t2);transition:all .15s}
+.top-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.avatar{width:1.75rem;height:1.75rem;border-radius:50%;background:linear-gradient(135deg,#f43f5e,#f97316);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff}
+
+/* LAYOUT */
+.layout{display:flex;flex:1}
+
+/* SIDENAV */
+.sidenav{width:200px;flex-shrink:0;background:var(--bg-sidebar);border-right:1px solid var(--bdr);padding:.6rem .55rem;position:sticky;top:3.25rem;height:calc(100vh - 3.25rem);overflow-y:auto}
+.nav-sect{font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);padding:.55rem .5rem .25rem}
+.nav-item{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;border-radius:.45rem;font-size:.78rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s}
+.nav-item:hover{color:var(--t1);background:var(--acc-s)}
+.nav-item.active{color:var(--acc-l);background:var(--acc-s);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.55}
+.nav-item.active svg{opacity:1}
+.nav-badge{margin-left:auto;font-size:.62rem;font-weight:700;background:var(--red);color:#fff;border-radius:999px;padding:.05rem .35rem}
+
+/* SCROLL MAIN */
+.scroll-main{flex:1;min-width:0;overflow-y:auto}
+.content{padding:1.35rem 1.4rem 3rem;max-width:1200px;display:flex;flex-direction:column;gap:1rem}
+
+/* PAGE HDR */
+.page-hd{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.page-hd h1{font-size:1.1rem;font-weight:800}
+
+/* FILTER ROW */
+.filter-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.search-wrap{position:relative;flex:1;min-width:180px;max-width:300px}
+.search-ico{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none}
+.search-input{width:100%;padding:.42rem .7rem .42rem 1.9rem;border-radius:.55rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t1);font-size:.78rem;outline:none;transition:border-color .15s}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--t3)}
+.f-select{padding:.38rem .75rem;border-radius:.55rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t2);font-size:.78rem;outline:none;cursor:pointer;transition:border-color .15s}
+.f-select:focus{border-color:var(--accent)}
+.export-btn{display:flex;align-items:center;gap:.3rem;padding:.38rem .85rem;border-radius:.55rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.78rem;font-weight:600;color:var(--t2);margin-left:auto;transition:all .15s}
+.export-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+
+/* STATS CHIPS */
+.stats-chips{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.stat-chip{font-size:.73rem;color:var(--t2);padding:.22rem .6rem;border-radius:999px;background:var(--bg-elev);border:1px solid var(--bdr)}
+.stat-chip strong{color:var(--t1)}
+
+/* TABLE */
+.table-wrap{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:1rem;overflow:hidden}
+.tbl-scroll{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;min-width:680px}
+.tbl th{font-size:.67rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);padding:.65rem 1rem;text-align:left;border-bottom:1px solid var(--bdr);white-space:nowrap;background:var(--bg-elev)}
+.tbl td{padding:.7rem 1rem;font-size:.8rem;border-bottom:1px solid var(--bdr);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr{transition:background .1s;cursor:pointer}
+.tbl tbody tr:hover td{background:var(--bg-elev)}
+
+.u-cell{display:flex;align-items:center;gap:.65rem}
+.u-av{width:1.85rem;height:1.85rem;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff}
+.u-name{font-size:.82rem;font-weight:600}
+.u-email{font-size:.7rem;color:var(--t3)}
+
+.plan-badge{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.12rem .45rem;border-radius:999px;border:1px solid}
+.pb-free{background:var(--bg-elev);color:var(--t3);border-color:var(--bdr-s)}
+.pb-pro{background:rgba(99,102,241,.1);color:var(--acc-l);border-color:rgba(99,102,241,.2)}
+.pb-premium{background:rgba(167,139,250,.1);color:var(--violet);border-color:rgba(167,139,250,.2)}
+
+.status-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.12rem .45rem;border-radius:999px;border:1px solid}
+.sb-ativo{background:rgba(16,185,129,.08);color:var(--green);border-color:rgba(16,185,129,.2)}
+.sb-trial{background:rgba(99,102,241,.08);color:var(--acc-l);border-color:rgba(99,102,241,.2)}
+.sb-cancel{background:var(--bg-elev);color:var(--t3);border-color:var(--bdr-s)}
+
+.act-cell{display:flex;align-items:center;gap:.35rem}
+.act-ico{width:1.6rem;height:1.6rem;border-radius:.4rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);color:var(--t3);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.act-ico:hover{color:var(--acc-l);border-color:rgba(99,102,241,.3);background:var(--acc-s)}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-top:1px solid var(--bdr);flex-wrap:wrap;gap:.5rem}
+.pag-info{font-size:.76rem;color:var(--t3)}
+.pag-btns{display:flex;gap:.3rem}
+.pag-btn{padding:.3rem .7rem;border-radius:.45rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.75rem;font-weight:600;color:var(--t2);transition:all .15s}
+.pag-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.pag-btn.cur{background:var(--acc-s2);border-color:rgba(99,102,241,.35);color:var(--acc-l)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:flex;align-items:center;justify-content:center;padding:1.25rem;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(6px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg-card);border:1.5px solid var(--bdr-s);border-radius:1.1rem;width:min(520px,100%);max-height:88vh;overflow-y:auto}
+.modal-head{padding:1rem 1.2rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:.75rem;position:sticky;top:0;background:var(--bg-card);z-index:2}
+.modal-title{flex:1;font-size:.88rem;font-weight:700}
+.modal-close{width:1.75rem;height:1.75rem;border-radius:.4rem;background:var(--bg-elev);color:var(--t3);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.modal-close:hover{color:var(--t1);background:var(--acc-s)}
+.modal-body{padding:1.2rem}
+
+.mu-row{display:flex;align-items:center;gap:.85rem;margin-bottom:1.15rem;padding-bottom:1.15rem;border-bottom:1px solid var(--bdr)}
+.mu-av-lg{width:3rem;height:3rem;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:800;color:#fff}
+.mu-name{font-size:.95rem;font-weight:700}
+.mu-email-sm{font-size:.75rem;color:var(--t3);margin-top:.1rem}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1.15rem}
+.info-item{background:var(--bg-elev);border-radius:.65rem;padding:.65rem .85rem}
+.ii-lbl{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--t3);margin-bottom:.2rem}
+.ii-val{font-size:.82rem;font-weight:600}
+
+.sec-lbl{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:.5rem}
+
+.usage-bar-row{display:flex;align-items:center;gap:.65rem;margin-bottom:.55rem}
+.ub-label{font-size:.76rem;font-weight:500;width:110px;flex-shrink:0}
+.ub-wrap{flex:1;background:var(--bg-elev);border-radius:999px;height:.55rem;overflow:hidden}
+.ub-bar{height:100%;border-radius:999px}
+.ub-val{font-size:.73rem;font-weight:600;color:var(--t2);width:55px;text-align:right;flex-shrink:0}
+
+.wa-instance{display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;background:var(--bg-elev);border-radius:.55rem;margin-bottom:.4rem}
+.wa-status-dot{width:.5rem;height:.5rem;border-radius:50%;flex-shrink:0}
+.wa-name{font-size:.78rem;font-weight:600;flex:1}
+.wa-badge{font-size:.63rem;font-weight:700;padding:.1rem .4rem;border-radius:999px;letter-spacing:.03em}
+.wa-conn{background:rgba(16,185,129,.1);color:var(--green)}
+.wa-disc{background:rgba(244,63,94,.1);color:var(--red)}
+
+.modal-actions{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:1.15rem;padding-top:1.1rem;border-top:1px solid var(--bdr)}
+.m-btn{display:flex;align-items:center;gap:.3rem;padding:.4rem .85rem;border-radius:.5rem;border:1.5px solid var(--bdr-s);background:var(--bg-elev);font-size:.77rem;font-weight:600;color:var(--t2);transition:all .15s}
+.m-btn:hover{color:var(--t1);border-color:rgba(99,102,241,.3)}
+.m-btn.danger{border-color:rgba(244,63,94,.25);color:var(--red);background:rgba(244,63,94,.05)}
+.m-btn.danger:hover{background:rgba(244,63,94,.12)}
+
+/* RESPONSIVE */
+@media(max-width:900px){.sidenav{display:none}}
+@media(max-width:640px){
+  .content{padding:.9rem .95rem 3rem}
+  .export-btn{display:none}
+  .modal{border-radius:.75rem .75rem 0 0;position:fixed;bottom:0;left:0;right:0;width:100%;max-height:90vh;border-radius:.75rem .75rem 0 0}
+  .modal-overlay{align-items:flex-end;padding:0}
+  .info-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .topbar{padding:0 .8rem}
+  .brand-name{display:none}
+  .topbar-sep,.page-title{display:none}
+  .filter-row{gap:.4rem}
+  .f-select{font-size:.74rem}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">A</div>
+    <span class="brand-name">Amezia</span>
+    <span class="admin-badge">Admin</span>
+  </div>
+  <div class="topbar-sep"></div>
+  <span class="page-title">Usuários</span>
+  <div class="topbar-r">
+    <button class="top-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+      Tema
+    </button>
+    <div class="avatar">AD</div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidenav">
+    <div class="nav-sect">Admin</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Visão geral</div>
+    <div class="nav-item active"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Usuários</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>WhatsApp</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Planos</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pagamentos</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Suporte<span class="nav-badge">4</span></div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Feedback</div>
+    <div class="nav-item"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Financeiro</div>
+  </aside>
+
+  <div class="scroll-main">
+  <div class="content">
+
+    <div class="page-hd">
+      <h1>Usuários</h1>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-row">
+      <div class="search-wrap">
+        <div class="search-ico"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <input class="search-input" type="text" placeholder="Buscar por nome ou e-mail...">
+      </div>
+      <select class="f-select">
+        <option>Todos os planos</option>
+        <option>Free</option>
+        <option>Pro</option>
+        <option>Premium</option>
+      </select>
+      <select class="f-select">
+        <option>Todos os status</option>
+        <option>Ativo</option>
+        <option>Trial</option>
+        <option>Cancelado</option>
+      </select>
+      <button class="export-btn">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar CSV
+      </button>
+    </div>
+
+    <!-- STATS CHIPS -->
+    <div class="stats-chips">
+      <span class="stat-chip"><strong>247</strong> usuários</span>
+      <span class="stat-chip"><strong>89</strong> com plano pago</span>
+      <span class="stat-chip"><strong>32</strong> em trial</span>
+      <span class="stat-chip"><strong>158</strong> no plano Free</span>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap">
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Usuário</th>
+              <th>Plano</th>
+              <th>Status</th>
+              <th>Criado em</th>
+              <th>Último login</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr onclick="openUser(0)">
+              <td><div class="u-cell"><div class="u-av" style="background:linear-gradient(135deg,#6366f1,#60a5fa)">JS</div><div><div class="u-name">João Silva</div><div class="u-email">joao.silva@email.com</div></div></div></td>
+              <td><span class="plan-badge pb-pro">Pro</span></td>
+              <td><span class="status-badge sb-ativo">Ativo</span></td>
+              <td style="color:var(--t3)">15 mai. 2026</td>
+              <td style="color:var(--t3)">hoje, 14:22</td>
+              <td><div class="act-cell"><button class="act-ico" title="Ver" onclick="event.stopPropagation();openUser(0)"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="act-ico" title="Impersonar" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button></div></td>
+            </tr>
+            <tr onclick="openUser(1)">
+              <td><div class="u-cell"><div class="u-av" style="background:linear-gradient(135deg,#ec4899,#a78bfa)">LS</div><div><div class="u-name">Luana Santos</div><div class="u-email">luana.santos@email.com</div></div></div></td>
+              <td><span class="plan-badge pb-premium">Premium</span></td>
+              <td><span class="status-badge sb-ativo">Ativo</span></td>
+              <td style="color:var(--t3)">2 abr. 2026</td>
+              <td style="color:var(--t3)">hoje, 11:05</td>
+              <td><div class="act-cell"><button class="act-ico" onclick="event.stopPropagation();openUser(1)"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button></div></td>
+            </tr>
+            <tr onclick="openUser(2)">
+              <td><div class="u-cell"><div class="u-av" style="background:linear-gradient(135deg,#f43f5e,#f97316)">PL</div><div><div class="u-name">Pedro Lima</div><div class="u-email">pedro.lima@email.com</div></div></div></td>
+              <td><span class="plan-badge pb-pro">Pro</span></td>
+              <td><span class="status-badge sb-trial">Trial</span></td>
+              <td style="color:var(--t3)">18 jun. 2026</td>
+              <td style="color:var(--t3)">ontem, 19:30</td>
+              <td><div class="act-cell"><button class="act-ico" onclick="event.stopPropagation();openUser(2)"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button></div></td>
+            </tr>
+            <tr onclick="openUser(3)">
+              <td><div class="u-cell"><div class="u-av" style="background:linear-gradient(135deg,#10b981,#22d3ee)">MO</div><div><div class="u-name">Maria Oliveira</div><div class="u-email">maria.oliveira@email.com</div></div></div></td>
+              <td><span class="plan-badge pb-pro">Pro</span></td>
+              <td><span class="status-badge sb-ativo">Ativo</span></td>
+              <td style="color:var(--t3)">10 mar. 2026</td>
+              <td style="color:var(--t3)">há 2 dias</td>
+              <td><div class="act-cell"><button class="act-ico" onclick="event.stopPropagation();openUser(3)"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button></div></td>
+            </tr>
+            <tr onclick="openUser(0)">
+              <td><div class="u-cell"><div class="u-av" style="background:linear-gradient(135deg,#a78bfa,#6366f1)">RC</div><div><div class="u-name">Rafael Costa</div><div class="u-email">rafael.costa@email.com</div></div></div></td>
+              <td><span class="plan-badge pb-free">Free</span></td>
+              <td><span class="status-badge sb-ativo">Ativo</span></td>
+              <td style="color:var(--t3)">5 jan. 2026</td>
+              <td style="color:var(--t3)">há 3 dias</td>
+              <td><div class="act-cell"><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button></div></td>
+            </tr>
+            <tr onclick="openUser(0)">
+              <td><div class="u-cell"><div class="u-av" style="background:linear-gradient(135deg,#f59e0b,#f43f5e)">AM</div><div><div class="u-name">Ana Melo</div><div class="u-email">ana.melo@email.com</div></div></div></td>
+              <td><span class="plan-badge pb-free">Free</span></td>
+              <td><span class="status-badge sb-cancel">Cancelado</span></td>
+              <td style="color:var(--t3)">8 fev. 2026</td>
+              <td style="color:var(--t3)">há 7 dias</td>
+              <td><div class="act-cell"><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button></div></td>
+            </tr>
+            <tr onclick="openUser(0)">
+              <td><div class="u-cell"><div class="u-av" style="background:linear-gradient(135deg,#22d3ee,#3b82f6)">BF</div><div><div class="u-name">Bruno Faria</div><div class="u-email">bruno.faria@email.com</div></div></div></td>
+              <td><span class="plan-badge pb-free">Free</span></td>
+              <td><span class="status-badge sb-trial">Trial</span></td>
+              <td style="color:var(--t3)">19 jun. 2026</td>
+              <td style="color:var(--t3)">hoje, 09:11</td>
+              <td><div class="act-cell"><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button></div></td>
+            </tr>
+            <tr onclick="openUser(0)">
+              <td><div class="u-cell"><div class="u-av" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">CN</div><div><div class="u-name">Carla Nunes</div><div class="u-email">carla.nunes@email.com</div></div></div></td>
+              <td><span class="plan-badge pb-premium">Premium</span></td>
+              <td><span class="status-badge sb-ativo">Ativo</span></td>
+              <td style="color:var(--t3)">1 jan. 2026</td>
+              <td style="color:var(--t3)">ontem, 22:45</td>
+              <td><div class="act-cell"><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="act-ico" onclick="event.stopPropagation()"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <span class="pag-info">1–8 de 247 usuários</span>
+        <div class="pag-btns">
+          <button class="pag-btn">← Anterior</button>
+          <button class="pag-btn cur">1</button>
+          <button class="pag-btn">2</button>
+          <button class="pag-btn">3</button>
+          <span style="color:var(--t3);padding:.3rem .4rem;font-size:.75rem">…</span>
+          <button class="pag-btn">31</button>
+          <button class="pag-btn">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<!-- USER DETAIL MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">Detalhe do usuário</div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modal-body">
+    </div>
+  </div>
+</div>
+
+<script>
+const USERS = [
+  {
+    av:'JS', color:'linear-gradient(135deg,#6366f1,#60a5fa)',
+    name:'João Silva', email:'joao.silva@email.com',
+    plan:'Pro', status:'Ativo', created:'15 mai. 2026', lastLogin:'hoje, 14:22',
+    planBadge:'pb-pro', statusBadge:'sb-ativo',
+    aiUsed:34, aiTotal:50,
+    instances:[{name:'Amezia-João', status:'connected'}]
+  },
+  {
+    av:'LS', color:'linear-gradient(135deg,#ec4899,#a78bfa)',
+    name:'Luana Santos', email:'luana.santos@email.com',
+    plan:'Premium', status:'Ativo', created:'2 abr. 2026', lastLogin:'hoje, 11:05',
+    planBadge:'pb-premium', statusBadge:'sb-ativo',
+    aiUsed:12, aiTotal:null,
+    instances:[{name:'Amezia-Luana', status:'connected'},{name:'Amezia-Luana2', status:'disconnected'}]
+  },
+  {
+    av:'PL', color:'linear-gradient(135deg,#f43f5e,#f97316)',
+    name:'Pedro Lima', email:'pedro.lima@email.com',
+    plan:'Pro (Trial)', status:'Trial', created:'18 jun. 2026', lastLogin:'ontem, 19:30',
+    planBadge:'pb-pro', statusBadge:'sb-trial',
+    aiUsed:5, aiTotal:50,
+    instances:[{name:'Amezia-Pedro', status:'disconnected'}]
+  },
+  {
+    av:'MO', color:'linear-gradient(135deg,#10b981,#22d3ee)',
+    name:'Maria Oliveira', email:'maria.oliveira@email.com',
+    plan:'Pro', status:'Ativo', created:'10 mar. 2026', lastLogin:'há 2 dias',
+    planBadge:'pb-pro', statusBadge:'sb-ativo',
+    aiUsed:41, aiTotal:50,
+    instances:[{name:'Amezia-Maria', status:'connected'}]
+  },
+];
+
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function openUser(i) {
+  const u = USERS[i] || USERS[0];
+  const aiPct = u.aiTotal ? Math.round(u.aiUsed/u.aiTotal*100) : 8;
+  const aiColor = aiPct >= 80 ? 'var(--red)' : aiPct >= 60 ? 'var(--amber)' : 'var(--acc-l)';
+  const waHtml = u.instances.map(w=>`
+    <div class="wa-instance">
+      <div class="wa-status-dot" style="background:${w.status==='connected'?'var(--green)':'var(--red)'}"></div>
+      <span class="wa-name">${w.name}</span>
+      <span class="wa-badge ${w.status==='connected'?'wa-conn':'wa-disc'}">${w.status==='connected'?'Conectado':'Desconectado'}</span>
+    </div>`).join('');
+  document.getElementById('modal-title').textContent = u.name;
+  document.getElementById('modal-body').innerHTML = `
+    <div class="mu-row">
+      <div class="mu-av-lg" style="background:${u.color}">${u.av}</div>
+      <div>
+        <div class="mu-name">${u.name}</div>
+        <div class="mu-email-sm">${u.email}</div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-item"><div class="ii-lbl">Plano</div><div class="ii-val"><span class="plan-badge ${u.planBadge}">${u.plan}</span></div></div>
+      <div class="info-item"><div class="ii-lbl">Status</div><div class="ii-val"><span class="status-badge ${u.statusBadge}">${u.status}</span></div></div>
+      <div class="info-item"><div class="ii-lbl">Criado em</div><div class="ii-val" style="color:var(--t2)">${u.created}</div></div>
+      <div class="info-item"><div class="ii-lbl">Último login</div><div class="ii-val" style="color:var(--t2)">${u.lastLogin}</div></div>
+    </div>
+    <div class="sec-lbl" style="margin-bottom:.6rem">Uso de IA — período atual</div>
+    <div class="usage-bar-row">
+      <span class="ub-label">Conversas IA</span>
+      <div class="ub-wrap"><div class="ub-bar" style="width:${aiPct}%;background:${aiColor}"></div></div>
+      <span class="ub-val" style="color:${aiColor}">${u.aiUsed}${u.aiTotal?'/'+u.aiTotal:' (∞)'}</span>
+    </div>
+    <div class="sec-lbl" style="margin-top:.85rem;margin-bottom:.5rem">Instâncias WhatsApp</div>
+    ${waHtml}
+    <div class="modal-actions">
+      <button class="m-btn"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Enviar e-mail</button>
+      <button class="m-btn"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Trocar plano</button>
+      <button class="m-btn danger"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Suspender conta</button>
+    </div>`;
+  openModal();
+}
+</script>
+</body>
+</html>

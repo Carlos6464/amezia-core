@@ -1,0 +1,48 @@
+<div class="cat-select-wrap">
+  <button type="button" class="cat-select" [class.open]="open()" [disabled]="disabled" (click)="toggle()">
+    <span class="cat-select-left">
+      @if (selectedMethod(); as method) {
+        <span class="cat-select-name">{{ method.labelKey | transloco }}</span>
+      } @else {
+        <span class="cat-select-empty">{{ 'transactions.form.selectPaymentMethod' | transloco }}</span>
+      }
+    </span>
+    <svg class="cat-select-chevron" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  </button>
+
+  @if (open()) {
+    <div
+      class="cat-dropdown"
+      [style.top.px]="dropdownPosition().top"
+      [style.left.px]="dropdownPosition().left"
+      [style.width.px]="dropdownPosition().width"
+    >
+      <div class="cat-dropdown-search">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input
+          type="text"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+          [placeholder]="'transactions.form.searchPaymentMethod' | transloco"
+        />
+      </div>
+
+      <div class="cat-dropdown-list">
+        @if (filteredMethods().length > 0) {
+          @for (method of filteredMethods(); track method.value) {
+            <button type="button" class="cat-dropdown-item" (click)="select(method)">
+              <span>{{ method.labelKey | transloco }}</span>
+            </button>
+          }
+        } @else {
+          <div class="cat-dropdown-empty">{{ 'transactions.form.noPaymentMethodFound' | transloco }}</div>
+        }
+      </div>
+    </div>
+  }
+</div>

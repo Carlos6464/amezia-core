@@ -1,0 +1,5 @@
+@import "../feedback-design.css";
+
+:host {
+  display: block;
+}

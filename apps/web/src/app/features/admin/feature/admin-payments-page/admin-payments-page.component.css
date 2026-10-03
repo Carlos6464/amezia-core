@@ -1,0 +1,42 @@
+@import '../../ui/admin-design.css';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+.overview-grid > * {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.payments-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 0.75rem;
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  color: var(--red);
+  font-size: 0.82rem;
+}
+
+code {
+  font-size: 0.75rem;
+  background: var(--bg-elev);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.35rem;
+}

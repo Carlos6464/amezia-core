@@ -1,0 +1,517 @@
+/*
+ * Autor: Carlos Adriano
+ * Data: 2026-08-08
+ * Descrição: Classes de componente do módulo Categorias, fiéis ao
+ * protótipo screem/categories/index.html (comp-page-header, comp-filter-bar,
+ * comp-stats-strip, comp-data-table + card-list mobile). Os tokens de cor
+ * (--bg, --t1, --accent, --green, --amber, --red...) já existem em
+ * src/styles.css — aqui só usamos `--violet` (já global) no lugar do
+ * `--blue` do protótipo estático, para não introduzir um token novo só
+ * para este módulo. Importado via @import por cada componente que precisa
+ * dessas classes (mesmo padrão de auth-split-page.css).
+ */
+
+/* page-header */
+.comp-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+.comp-ph-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 0.2rem;
+}
+.comp-ph-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--t1);
+}
+.comp-ph-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.6rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.comp-ph-cta:hover:not(:disabled) {
+  background: var(--acc-l);
+}
+.comp-ph-cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* botão de filtro no cabeçalho (mobile) — abre o bottom sheet */
+.comp-ph-filter-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t1);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.comp-ph-filter-btn svg {
+  color: var(--t2);
+  flex-shrink: 0;
+}
+.comp-ph-filter-badge {
+  min-width: 1.1rem;
+  height: 1.1rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* filter-bar */
+.comp-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+}
+.comp-fb-search {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.38rem 0.7rem;
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.55rem;
+  background: var(--bg-elev);
+  transition: border-color 0.15s;
+}
+.comp-fb-search:focus-within {
+  border-color: rgba(99, 102, 241, 0.4);
+}
+.comp-fb-search svg {
+  color: var(--t3);
+  flex-shrink: 0;
+}
+.comp-fb-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.81rem;
+  color: var(--t1);
+  outline: none;
+}
+.comp-fb-search input::placeholder {
+  color: var(--t3);
+}
+.comp-fb-sep {
+  width: 1px;
+  height: 1.5rem;
+  background: var(--bdr-s);
+  margin: 0 0.1rem;
+}
+.comp-fb-select {
+  padding: 0.38rem 0.7rem;
+  border: 1px solid var(--bdr-s);
+  border-radius: 0.55rem;
+  background: var(--bg-elev);
+  color: var(--t1);
+  font: inherit;
+  font-size: 0.81rem;
+  outline: none;
+  cursor: pointer;
+  min-width: 120px;
+}
+.comp-fb-btn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--bdr-s);
+  background: var(--bg-elev);
+  color: var(--t2);
+  transition: all 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.comp-fb-btn:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+/* stats-strip */
+.comp-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+}
+.comp-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.comp-stat-ico {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--bdr-s);
+}
+.comp-stat-body {
+  min-width: 0;
+}
+.comp-stat-lbl {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 0.15rem;
+}
+.comp-stat-val {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--t1);
+}
+.comp-stat-sub {
+  font-size: 0.67rem;
+  color: var(--t3);
+  margin-top: 0.1rem;
+}
+
+/* data-table */
+.comp-data-table {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 0.85rem;
+  overflow: hidden;
+}
+.comp-dt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid var(--bdr);
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.comp-dt-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--t1);
+}
+.comp-dt-count {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--t3);
+  margin-left: 0.4rem;
+}
+.comp-dt-table {
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
+}
+.comp-dt-table thead th {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--t3);
+  padding: 0.6rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--bdr);
+  white-space: nowrap;
+}
+.comp-dt-table thead th:last-child {
+  text-align: center;
+}
+.comp-dt-table tbody tr {
+  border-bottom: 1px solid var(--bdr);
+  transition: background 0.12s;
+}
+.comp-dt-table tbody tr:last-child {
+  border-bottom: none;
+}
+.comp-dt-table tbody tr:hover {
+  background: var(--bg-elev);
+}
+.comp-dt-table td {
+  padding: 0.65rem 1rem;
+  font-size: 0.81rem;
+  color: var(--t1);
+  vertical-align: middle;
+}
+
+.cell-cat-name {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.cat-label {
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.scope-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.scope-badge.global {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+}
+.scope-badge.private {
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--violet);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.color-swatch {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--t2);
+}
+.swatch-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 0.22rem;
+  flex-shrink: 0;
+}
+
+.cell-move {
+  font-weight: 700;
+  color: var(--t3);
+}
+
+.cell-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+.act-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--bdr-s);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--t3);
+  transition: all 0.15s;
+  cursor: pointer;
+}
+.act-btn.edit:hover {
+  background: var(--acc-s);
+  color: var(--acc-l);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+.act-btn.del:hover {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--red);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+.act-btn.lock {
+  cursor: default;
+}
+.act-btn svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+/* mobile card list (≤700px) */
+.dt-card-list {
+  display: none;
+  flex-direction: column;
+}
+.dt-card-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--bdr);
+}
+.dt-card-item:last-child {
+  border-bottom: none;
+}
+.dt-card-body {
+  flex: 1;
+  min-width: 0;
+}
+.dt-card-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--t1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.dt-card-meta {
+  font-size: 0.68rem;
+  color: var(--t3);
+  margin-top: 0.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.dt-card-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+.dt-card-val {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--t3);
+}
+.dt-card-acts {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.35rem;
+  justify-content: flex-end;
+}
+
+/* empty / error / no-results states */
+.state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--t2);
+}
+.state-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elev);
+  border: 1px solid var(--bdr-s);
+  color: var(--t3);
+}
+.state-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--t1);
+}
+.state-sub {
+  font-size: 0.78rem;
+  color: var(--t3);
+  max-width: 26rem;
+}
+
+/* FAB (mobile) */
+.fab {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.25rem;
+  z-index: 200;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.45);
+  transition: all 0.2s;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.fab:hover:not(:disabled) {
+  background: var(--acc-l);
+  transform: scale(1.06);
+}
+.fab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1200px) {
+  .comp-stats-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .fab {
+    display: flex;
+  }
+  .comp-ph-cta {
+    display: none;
+  }
+  .comp-stats-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+  .comp-filter-bar {
+    gap: 0.4rem;
+  }
+  .comp-fb-sep {
+    display: none;
+  }
+  .comp-dt-table {
+    display: none;
+  }
+  .dt-card-list {
+    display: flex;
+  }
+}

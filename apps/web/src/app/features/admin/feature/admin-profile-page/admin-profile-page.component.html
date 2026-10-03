@@ -1,0 +1,155 @@
+<div class="page-hd">
+  <h1>{{ 'admin.profile.title' | transloco }}</h1>
+  <p>{{ 'admin.profile.subtitle' | transloco }}</p>
+</div>
+
+<!-- INFORMAÇÕES PESSOAIS -->
+<div class="card">
+  <div class="card-hd">
+    <div>
+      <div class="card-title">{{ 'admin.profile.personalInfo.title' | transloco }}</div>
+      <div class="card-sub">{{ 'admin.profile.personalInfo.subtitle' | transloco }}</div>
+    </div>
+  </div>
+
+  <div class="avatar-edit">
+    <div class="av-big">{{ initials() }}</div>
+    <div class="av-info">
+      <div class="av-name">{{ user()?.name }}</div>
+      <span class="role-badge admin">{{ 'admin.users.role.admin' | transloco }}</span>
+    </div>
+  </div>
+
+  <form [formGroup]="personalInfoForm" (ngSubmit)="savePersonalInfo()">
+    <div class="f-row">
+      <div class="field">
+        <label class="f-label" for="admin-profile-name">{{ 'admin.profile.personalInfo.fullName' | transloco }}</label>
+        <input id="admin-profile-name" class="f-ctrl" type="text" formControlName="name" />
+      </div>
+      <div class="field">
+        <label class="f-label" for="admin-profile-email">
+          {{ 'admin.common.email' | transloco }}
+          @if (isGoogleAccount()) {
+            <span class="f-badge">
+              <svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Google OAuth
+            </span>
+          }
+        </label>
+        <input id="admin-profile-email" class="f-ctrl" type="email" [value]="user()?.email" disabled />
+      </div>
+    </div>
+
+    <div class="field" style="margin-top: 0.85rem">
+      <label class="f-label" for="admin-profile-phone">{{ 'admin.profile.personalInfo.phone' | transloco }}</label>
+      <input
+        id="admin-profile-phone"
+        class="f-ctrl"
+        type="tel"
+        formControlName="phone"
+        placeholder="+55 (11) 00000-0000"
+      />
+    </div>
+
+    <div class="save-row">
+      @if (personalInfoSaved()) {
+        <span class="saved-msg">{{ 'admin.profile.saved' | transloco }}</span>
+      }
+      <button class="btn-save" type="submit" [disabled]="savingPersonalInfo()">
+        {{ 'admin.profile.save' | transloco }}
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- SEGURANÇA -->
+<div class="card">
+  <div class="card-hd">
+    <div>
+      <div class="card-title">{{ 'admin.profile.security.title' | transloco }}</div>
+      <div class="card-sub">{{ 'admin.profile.security.subtitle' | transloco }}</div>
+    </div>
+  </div>
+
+  @if (isGoogleAccount()) {
+    <div class="auth-row">
+      <div class="google-ico">
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+        </svg>
+      </div>
+      <div class="auth-info">
+        <div class="auth-label">{{ 'admin.profile.security.authenticatedViaGoogle' | transloco }}</div>
+        <div class="auth-detail">{{ user()?.email }} · Google OAuth 2.0</div>
+      </div>
+    </div>
+  }
+
+  @if (hasPassword()) {
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="password-form">
+      <div class="field">
+        <label class="f-label" for="admin-current-password">{{ 'admin.profile.security.currentPassword' | transloco }}</label>
+        <input id="admin-current-password" class="f-ctrl" type="password" formControlName="currentPassword" autocomplete="current-password" />
+      </div>
+      <div class="f-row">
+        <div class="field">
+          <label class="f-label" for="admin-new-password">{{ 'admin.profile.security.newPassword' | transloco }}</label>
+          <input id="admin-new-password" class="f-ctrl" type="password" formControlName="newPassword" autocomplete="new-password" />
+        </div>
+        <div class="field">
+          <label class="f-label" for="admin-confirm-password">{{ 'admin.profile.security.confirmPassword' | transloco }}</label>
+          <input id="admin-confirm-password" class="f-ctrl" type="password" formControlName="confirmPassword" autocomplete="new-password" />
+        </div>
+      </div>
+      @if (passwordForm.errors?.['passwordsMismatch'] && passwordForm.get('confirmPassword')?.touched) {
+        <div class="f-error">{{ 'admin.profile.security.passwordsMismatch' | transloco }}</div>
+      }
+      @if (passwordError()) {
+        <div class="f-error">{{ passwordError() | transloco }}</div>
+      }
+
+      <div class="save-row">
+        @if (passwordSaved()) {
+          <span class="saved-msg">{{ 'admin.profile.saved' | transloco }}</span>
+        }
+        <button class="btn-save" type="submit" [disabled]="savingPassword()">
+          {{ 'admin.profile.security.changePassword' | transloco }}
+        </button>
+      </div>
+    </form>
+  } @else {
+    <form [formGroup]="setPasswordForm" (ngSubmit)="setPassword()" class="password-form">
+      <p class="card-sub" style="margin-bottom: 0.85rem">{{ 'admin.profile.security.setPasswordHint' | transloco }}</p>
+      <div class="f-row">
+        <div class="field">
+          <label class="f-label" for="admin-set-new-password">{{ 'admin.profile.security.newPassword' | transloco }}</label>
+          <input id="admin-set-new-password" class="f-ctrl" type="password" formControlName="newPassword" autocomplete="new-password" />
+        </div>
+        <div class="field">
+          <label class="f-label" for="admin-set-confirm-password">{{ 'admin.profile.security.confirmPassword' | transloco }}</label>
+          <input id="admin-set-confirm-password" class="f-ctrl" type="password" formControlName="confirmPassword" autocomplete="new-password" />
+        </div>
+      </div>
+      @if (setPasswordForm.errors?.['passwordsMismatch'] && setPasswordForm.get('confirmPassword')?.touched) {
+        <div class="f-error">{{ 'admin.profile.security.passwordsMismatch' | transloco }}</div>
+      }
+      @if (setPasswordError()) {
+        <div class="f-error">{{ setPasswordError() | transloco }}</div>
+      }
+
+      <div class="save-row">
+        @if (setPasswordSaved()) {
+          <span class="saved-msg">{{ 'admin.profile.saved' | transloco }}</span>
+        }
+        <button class="btn-save" type="submit" [disabled]="savingSetPassword()">
+          {{ 'admin.profile.security.setPassword' | transloco }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

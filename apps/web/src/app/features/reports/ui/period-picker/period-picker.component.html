@@ -1,0 +1,48 @@
+<div class="period-picker">
+  <div class="period-row">
+    <button
+      class="period-arrow"
+      type="button"
+      (click)="previousMonth()"
+      [attr.aria-label]="'reports.dashboard.periodPrevious' | transloco"
+    >
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <p-datepicker
+      [ngModel]="selectedDate()"
+      (ngModelChange)="onDatePickerChange($event)"
+      view="month"
+      dateFormat="mm/yy"
+      styleClass="period-picker-input"
+      panelStyleClass="period-picker-panel"
+      appendTo="body"
+      [showIcon]="true"
+      iconDisplay="input"
+      [readonlyInput]="true"
+      [attr.aria-label]="monthLabel()"
+    />
+    <button
+      class="period-arrow"
+      type="button"
+      (click)="nextMonth()"
+      [attr.aria-label]="'reports.dashboard.periodNext' | transloco"
+    >
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </button>
+  </div>
+  <div class="period-shortcuts">
+    <button class="pshort" type="button" (click)="goToShortcut(-1)">
+      {{ 'reports.dashboard.periodLastYear' | transloco }}
+    </button>
+    <button class="pshort" type="button" [class.on]="isCurrent()" (click)="goToShortcut(0)">
+      {{ 'reports.dashboard.periodCurrent' | transloco }}
+    </button>
+    <button class="pshort" type="button" (click)="goToShortcut(1)">
+      {{ 'reports.dashboard.periodNextYear' | transloco }}
+    </button>
+  </div>
+</div>

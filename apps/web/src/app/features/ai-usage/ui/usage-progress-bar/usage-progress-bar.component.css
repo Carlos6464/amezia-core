@@ -1,0 +1,54 @@
+:host {
+  display: contents;
+}
+
+.usage-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.usage-bar-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.usage-bar-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--t1);
+}
+
+.usage-bar-value {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--t2);
+}
+.usage-bar-value.near {
+  color: var(--amber, #d97706);
+}
+.usage-bar-value.over {
+  color: var(--red);
+}
+
+.usage-bar-track {
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--bg-elev);
+  overflow: hidden;
+}
+
+.usage-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.22s ease;
+}
+.usage-bar-fill.near {
+  background: var(--amber, #d97706);
+}
+.usage-bar-fill.over {
+  background: var(--red);
+}

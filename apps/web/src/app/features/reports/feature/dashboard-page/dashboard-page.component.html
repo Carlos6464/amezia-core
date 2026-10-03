@@ -1,0 +1,459 @@
+<div class="page-content">
+  <div class="comp-page-header">
+    <div>
+      <div class="comp-ph-badge">{{ 'reports.dashboard.badge' | transloco }}</div>
+      <h1 class="comp-ph-title">{{ 'reports.dashboard.title' | transloco }}</h1>
+    </div>
+    <app-period-picker
+      [year]="state.period().year"
+      [month]="state.period().month"
+      (periodChange)="onPeriodChange($event)"
+    />
+  </div>
+
+  @if (state.dashboardError()) {
+    <div class="state-panel">
+      <div class="state-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+      </div>
+      <div class="state-title">{{ 'reports.dashboard.errorTitle' | transloco }}</div>
+      <button class="state-retry-btn" type="button" (click)="retry()">
+        {{ 'reports.dashboard.retry' | transloco }}
+      </button>
+    </div>
+  } @else {
+    @if (!loadingAny() && showSetupBanner()) {
+      <button type="button" class="setup-banner" (click)="openSetupModal()">
+        <span class="setup-banner-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 9v4" />
+            <path d="M12 17h.01" />
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+          </svg>
+        </span>
+        <span class="setup-banner-text">
+          <strong>{{ 'reports.dashboard.setupBannerTitle' | transloco }}</strong>
+          <span>{{ 'reports.dashboard.setupBannerText' | transloco }}</span>
+        </span>
+        <span class="setup-banner-cta">
+          {{ 'reports.dashboard.setupBannerCta' | transloco }}
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </span>
+      </button>
+    }
+
+    @if (loadingAny()) {
+      <div class="skeleton" style="height: 12rem; width: 100%"></div>
+    } @else {
+      <app-budget-hero-card
+        [totalExpense]="state.summary()?.total_expense ?? '0'"
+        [budgetLimit]="budgetService.monthlyBudget()"
+        [periodLabel]="heroPeriodLabel()"
+      />
+    }
+
+    <div class="comp-stats-strip">
+      @if (loadingAny()) {
+        @for (row of [1, 2, 3, 4]; track row) {
+          <div class="comp-stat"><div class="skeleton" style="height: 2.2rem; width: 100%"></div></div>
+        }
+      } @else {
+        <app-metric-card
+          [label]="'reports.dashboard.metricExpense' | transloco"
+          [value]="(state.summary()?.total_expense ?? '0') | brlAmount"
+          tone="red"
+          iconColor="var(--red)"
+          iconBackground="rgba(244, 63, 94, 0.1)"
+          iconBorderColor="rgba(244, 63, 94, 0.18)"
+        >
+          <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
+        </app-metric-card>
+        <app-metric-card
+          [label]="'reports.dashboard.metricBudget' | transloco"
+          [value]="budgetService.monthlyBudget() ? (budgetService.monthlyBudget()! | brlAmount) : '—'"
+          [subtitle]="
+            budgetUsagePercent() === null
+              ? ('reports.dashboard.metricBudgetNotSet' | transloco)
+              : ('reports.dashboard.metricBudgetUsage' | transloco: { percent: budgetUsagePercent()!.toFixed(0) })
+          "
+          iconColor="var(--accent)"
+          iconBackground="var(--acc-s)"
+          iconBorderColor="rgba(99, 102, 241, 0.2)"
+        >
+          <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+        </app-metric-card>
+        <app-metric-card
+          [label]="'reports.dashboard.metricTopCategory' | transloco"
+          [value]="state.summary()?.top_category?.name ?? '—'"
+          [subtitle]="
+            state.summary()?.top_category
+              ? ((state.summary()!.top_category!.total | brlAmount) + ' · ' + state.summary()!.top_category!.percentage.toFixed(0) + '%')
+              : null
+          "
+          iconColor="var(--violet)"
+          iconBackground="rgba(124, 58, 237, 0.1)"
+          iconBorderColor="rgba(124, 58, 237, 0.2)"
+        >
+          <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+            <line x1="7" y1="7" x2="7.01" y2="7" />
+          </svg>
+        </app-metric-card>
+        <app-metric-card
+          [label]="'reports.dashboard.metricBiggestExpense' | transloco"
+          [value]="(state.summary()?.biggest_transaction?.amount ?? '0') | brlAmount"
+          [subtitle]="state.summary()?.biggest_transaction?.description || ('reports.dashboard.metricBiggestExpenseEmpty' | transloco)"
+          iconColor="var(--amber)"
+          iconBackground="rgba(245, 158, 11, 0.1)"
+          iconBorderColor="rgba(245, 158, 11, 0.18)"
+        >
+          <svg icon width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" />
+            <line x1="1" y1="10" x2="23" y2="10" />
+          </svg>
+        </app-metric-card>
+      }
+    </div>
+
+    <div class="dashboard-cards-grid">
+      @for (cardId of visibleCards(); track cardId) {
+        @switch (cardId) {
+          @case ('monthly_trend') {
+            <div class="chart-card card-w-xl">
+              <div class="chart-card-head">
+                <div>
+                  <div class="chart-card-lbl">{{ 'reports.dashboard.trendBadge' | transloco }}</div>
+                  <div class="chart-card-title">{{ 'reports.dashboard.trendTitle' | transloco }}</div>
+                </div>
+              </div>
+              @if (state.evolutionLoading()) {
+                <div class="skeleton" style="height: 165px; width: 100%"></div>
+              } @else {
+                <app-line-chart [points]="state.monthlyEvolution()" [budgetLimit]="budgetService.monthlyBudget()" />
+              }
+            </div>
+          }
+
+          @case ('category_composition') {
+            <div class="chart-card card-w-sm">
+              <div class="chart-card-head">
+                <div>
+                  <div class="chart-card-lbl">{{ 'reports.dashboard.compositionBadge' | transloco }}</div>
+                  <div class="chart-card-title">{{ 'reports.dashboard.compositionTitle' | transloco }}</div>
+                </div>
+              </div>
+              @if (state.distributionLoading()) {
+                <div class="skeleton" style="height: 150px; width: 150px; border-radius: 50%; margin: 0 auto"></div>
+              } @else {
+                <app-donut-chart
+                  [items]="state.categoryDistribution()"
+                  [centerLabel]="(state.summary()?.total_expense ?? '0') | brlAmount"
+                  (sliceClick)="openCategoryModal($event)"
+                />
+                @if (state.categoryDistribution().length > 0) {
+                  <div class="chart-card-hint">{{ 'reports.dashboard.compositionHint' | transloco }}</div>
+                }
+              }
+            </div>
+          }
+
+          @case ('category_distribution') {
+            <div class="chart-card card-w-half">
+              <div class="chart-card-head">
+                <div>
+                  <div class="chart-card-lbl">{{ 'reports.dashboard.distributionBadge' | transloco }}</div>
+                  <div class="chart-card-title">{{ 'reports.dashboard.distributionTitle' | transloco }}</div>
+                </div>
+              </div>
+              @if (state.distributionLoading()) {
+                <div class="skeleton" style="height: 8rem; width: 100%"></div>
+              } @else {
+                <app-category-distribution-list
+                  [items]="state.categoryDistribution()"
+                  [clickable]="true"
+                  (itemClick)="openCategoryModal($event)"
+                />
+              }
+            </div>
+          }
+
+          @case ('recent_transactions') {
+            <div class="chart-card card-w-half">
+              <div class="chart-card-head">
+                <div>
+                  <div class="chart-card-lbl">{{ 'reports.dashboard.recentBadge' | transloco }}</div>
+                  <div class="chart-card-title">{{ 'reports.dashboard.recentTitle' | transloco }}</div>
+                </div>
+              </div>
+              @if (state.recentTransactionsLoading()) {
+                <div class="skeleton" style="height: 8rem; width: 100%"></div>
+              } @else {
+                <app-recent-transactions-list [transactions]="state.recentTransactions()?.items ?? []" />
+              }
+            </div>
+          }
+
+          @case ('payment_method_distribution') {
+            <div class="chart-card card-w-md">
+              <div class="chart-card-head">
+                <div>
+                  <div class="chart-card-lbl">{{ 'reports.dashboard.paymentMethodBadge' | transloco }}</div>
+                  <div class="chart-card-title">{{ 'reports.dashboard.paymentMethodTitle' | transloco }}</div>
+                </div>
+              </div>
+              @if (state.paymentMethodDistributionLoading()) {
+                <div class="skeleton" style="height: 8rem; width: 100%"></div>
+              } @else {
+                <app-payment-method-distribution-list
+                  [items]="state.paymentMethodDistribution()"
+                  [clickable]="true"
+                  (itemClick)="openPaymentMethodModal($event)"
+                />
+              }
+            </div>
+          }
+
+          @case ('paid_pending') {
+            <div class="chart-card card-w-lg">
+              <div class="chart-card-head">
+                <div>
+                  <div class="chart-card-lbl">{{ 'reports.dashboard.paidPendingBadge' | transloco }}</div>
+                  <div class="chart-card-title">{{ 'reports.dashboard.paidPendingTitle' | transloco }}</div>
+                </div>
+              </div>
+              @if (state.paidPendingLoading()) {
+                <div class="skeleton" style="height: 165px; width: 100%"></div>
+              } @else {
+                <app-paid-pending-bar-chart [points]="state.monthlyPaidPending()" />
+              }
+            </div>
+          }
+        }
+      }
+    </div>
+  }
+</div>
+
+<p-dialog
+  [visible]="selectedCategory() !== null"
+  (visibleChange)="!$event && closeCategoryModal()"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [style]="{ width: '28rem', maxWidth: '92vw' }"
+  [header]="selectedCategory()?.name ?? ''"
+>
+  @if (selectedCategory(); as cat) {
+    <div class="cat-modal-summary">
+      <span class="cat-modal-dot" [style.background]="cat.color"></span>
+      <div class="cat-modal-totals">
+        <strong class="cat-modal-total">{{ cat.total | brlAmount }}</strong>
+        <span class="cat-modal-pct">{{ 'reports.dashboard.categoryModalPercent' | transloco: { percent: cat.percentage.toFixed(0) } }}</span>
+      </div>
+    </div>
+
+    @if (categoryModalLoading()) {
+      <div class="skeleton" style="height: 6rem; width: 100%"></div>
+    } @else if (categoryModalTransactions().length === 0) {
+      <div class="state-panel">
+        <div class="state-sub">{{ 'reports.dashboard.categoryModalEmpty' | transloco }}</div>
+      </div>
+    } @else {
+      <div class="cat-modal-list">
+        @for (t of categoryModalTransactions(); track t.public_id) {
+          <div class="cat-modal-item">
+            <div class="cat-modal-item-main">
+              <span class="cat-modal-item-desc">{{ t.description }}</span>
+              <span class="cat-modal-item-date">{{ t.occurred_at | brDate }}</span>
+            </div>
+            <span class="cat-modal-item-val">{{ t.amount | brlAmount }}</span>
+          </div>
+        }
+      </div>
+      @if (categoryModalHasMore()) {
+        <a class="cat-modal-more" routerLink="/reports">{{ 'reports.dashboard.categoryModalMore' | transloco }}</a>
+      }
+    }
+  }
+</p-dialog>
+
+<p-dialog
+  [visible]="setupModalVisible()"
+  (visibleChange)="!$event && closeSetupModal()"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [style]="{ width: '26rem', maxWidth: '92vw' }"
+  [header]="'reports.dashboard.setupModalTitle' | transloco"
+>
+  <div class="field">
+    <label class="field-label" for="setup-budget">{{ 'reports.dashboard.setupBudgetLabel' | transloco }}</label>
+    <input
+      id="setup-budget"
+      class="field-input"
+      [class.invalid]="setupBudgetInvalid()"
+      type="text"
+      inputmode="decimal"
+      placeholder="0,00"
+      [ngModel]="setupBudgetDraft()"
+      (ngModelChange)="setupBudgetDraft.set($event)"
+    />
+    @if (setupBudgetInvalid()) {
+      <div class="field-error">{{ 'transactions.form.errors.amountInvalid' | transloco }}</div>
+    } @else {
+      <div class="field-hint">{{ 'auth.profile.budget.hint' | transloco }}</div>
+    }
+  </div>
+
+  <div class="field" style="margin-top: 0.85rem">
+    <label class="field-label" for="setup-phone">{{ 'reports.dashboard.setupPhoneLabel' | transloco }}</label>
+    <input
+      id="setup-phone"
+      class="field-input"
+      [class.invalid]="setupPhoneInvalid()"
+      type="tel"
+      placeholder="+55 (11) 00000-0000"
+      maxlength="20"
+      [ngModel]="setupPhoneDraft()"
+      (ngModelChange)="setupPhoneDraft.set($event)"
+      (input)="onSetupPhoneInput($event)"
+    />
+    @if (setupPhoneInvalid()) {
+      <div class="field-error">{{ 'auth.profile.personalInfo.phoneInvalid' | transloco }}</div>
+    } @else {
+      <div class="field-hint">{{ 'auth.profile.personalInfo.phoneNote' | transloco }}</div>
+    }
+  </div>
+
+  @if (setupError()) {
+    <div class="field-error" style="margin-top: 0.6rem">{{ setupError() | transloco }}</div>
+  }
+
+  <div class="dialog-actions" style="margin-top: 1rem">
+    <button class="comp-fb-btn" type="button" (click)="closeSetupModal()">
+      {{ 'transactions.form.cancel' | transloco }}
+    </button>
+    <button
+      class="comp-fb-btn primary"
+      type="button"
+      [disabled]="setupSaving() || setupBudgetInvalid() || setupPhoneInvalid()"
+      (click)="saveSetup()"
+    >
+      {{ (setupSaved() ? 'auth.profile.saved' : setupSaving() ? 'transactions.form.saving' : 'reports.dashboard.setupSave') | transloco }}
+    </button>
+  </div>
+</p-dialog>
+
+<p-dialog
+  [visible]="selectedPaymentMethod() !== null"
+  (visibleChange)="!$event && closePaymentMethodModal()"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [style]="{ width: '28rem', maxWidth: '92vw' }"
+  [header]="selectedPaymentMethodLabel()"
+>
+  @if (selectedPaymentMethod(); as pm) {
+    <div class="cat-modal-summary">
+      <div class="cat-modal-totals">
+        <strong class="cat-modal-total">{{ pm.total | brlAmount }}</strong>
+        <span class="cat-modal-pct">{{ 'reports.dashboard.paymentMethodModalPercent' | transloco: { percent: pm.percentage.toFixed(0) } }}</span>
+      </div>
+    </div>
+
+    @if (paymentMethodModalLoading()) {
+      <div class="skeleton" style="height: 6rem; width: 100%"></div>
+    } @else if (paymentMethodModalTransactions().length === 0) {
+      <div class="state-panel">
+        <div class="state-sub">{{ 'reports.dashboard.categoryModalEmpty' | transloco }}</div>
+      </div>
+    } @else {
+      <div class="cat-modal-list">
+        @for (t of paymentMethodModalTransactions(); track t.public_id) {
+          <div class="cat-modal-item">
+            <div class="cat-modal-item-main">
+              <span class="cat-modal-item-desc">{{ t.description }}</span>
+              <span class="cat-modal-item-date">{{ t.occurred_at | brDate }}</span>
+            </div>
+            <span class="cat-modal-item-val">{{ t.amount | brlAmount }}</span>
+          </div>
+        }
+      </div>
+      @if (paymentMethodModalHasMore()) {
+        <a class="cat-modal-more" routerLink="/reports">{{ 'reports.dashboard.categoryModalMore' | transloco }}</a>
+      }
+    }
+  }
+</p-dialog>
+
+<p-dialog
+  [visible]="dashboardLayoutService.customizeModalVisible()"
+  (visibleChange)="!$event && dashboardLayoutService.closeCustomizeModal()"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [style]="{ width: '26rem', maxWidth: '92vw' }"
+  [header]="'reports.dashboard.customizeModalTitle' | transloco"
+>
+  <div class="field-hint" style="margin-bottom: 0.8rem">{{ 'reports.dashboard.customizeModalHint' | transloco }}</div>
+
+  <div class="customize-list">
+    @for (preference of dashboardLayoutService.customizeDraft(); track preference.card; let i = $index) {
+      <div
+        class="customize-item"
+        [class.dragging]="dashboardLayoutService.dragOverIndex() === i"
+        [attr.data-index]="i"
+      >
+        <span
+          class="customize-item-handle"
+          (pointerdown)="dashboardLayoutService.onPointerDown($event, i)"
+          (pointermove)="dashboardLayoutService.onPointerMove($event)"
+          (pointerup)="dashboardLayoutService.onPointerUp()"
+          (pointercancel)="dashboardLayoutService.onPointerUp()"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="6" r="1" /><circle cx="15" cy="6" r="1" />
+            <circle cx="9" cy="12" r="1" /><circle cx="15" cy="12" r="1" />
+            <circle cx="9" cy="18" r="1" /><circle cx="15" cy="18" r="1" />
+          </svg>
+        </span>
+        <span class="customize-item-label">{{ cardLabelKeys[preference.card] | transloco }}</span>
+        <button
+          type="button"
+          class="customize-item-switch"
+          [class.on]="preference.visible"
+          role="switch"
+          [attr.aria-checked]="preference.visible"
+          (click)="dashboardLayoutService.toggleCardVisibility(preference.card)"
+        >
+          <span class="customize-item-switch-knob"></span>
+        </button>
+      </div>
+    }
+  </div>
+
+  <div class="dialog-actions" style="margin-top: 1rem">
+    <button class="comp-fb-btn" type="button" (click)="dashboardLayoutService.closeCustomizeModal()">
+      {{ 'reports.dashboard.customizeCancel' | transloco }}
+    </button>
+    <button
+      class="comp-fb-btn primary"
+      type="button"
+      [disabled]="dashboardLayoutService.saving()"
+      (click)="dashboardLayoutService.saveCustomization()"
+    >
+      {{ (dashboardLayoutService.saving() ? 'transactions.form.saving' : 'reports.dashboard.customizeSave') | transloco }}
+    </button>
+  </div>
+</p-dialog>
